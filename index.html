@@ -43,7 +43,7 @@
             width: 100%;
         }
 
-        /* LIVE BACKGROUND CANVAS - FIXED (Rings Removed) */
+        /* LIVE BACKGROUND CANVAS */
         #canvas-container {
             position: fixed;
             top: 0;
@@ -51,8 +51,7 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-            /* Changed from radial-gradient to solid color to remove banding rings */
-            background-color: #020203; 
+            background-color: #020203; /* Solid black to prevent banding */
         }
 
         /* TYPOGRAPHY & UTILS */
@@ -108,15 +107,12 @@
             z-index: 102; 
         }
 
-        /* Nav Links */
         .nav-links { display: flex; gap: 30px; }
         .nav-links a { font-size: 0.9rem; color: var(--text-secondary); }
         .nav-links a:hover { color: var(--accent); }
 
-        /* Mobile Menu Button */
         .menu-btn { display: none; cursor: pointer; z-index: 102; color: white; }
 
-        /* Mobile Menu Overlay */
         .mobile-menu {
             position: fixed;
             top: 0;
@@ -202,9 +198,20 @@
             justify-content: center;
         }
         
+        .btn:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--accent);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
         .btn-primary {
             background: var(--text-primary);
             color: var(--bg-color);
+        }
+        .btn-primary:hover {
+            background: #e2e2e2;
+            color: #000;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
         }
         
         /* SECTIONS */
@@ -359,6 +366,13 @@
             
             <div class="btn-group">
                 <a href="#projects" class="btn btn-primary">View Work</a>
+                
+                <!-- NEW DOWNLOAD BUTTON -->
+                <!-- Ensure your file is named resume.pdf and is in the same folder -->
+                <a href="resume.pdf" download="Jaimin_Rana_Resume.pdf" class="btn">
+                    <i data-lucide="download" size="18"></i> Resume
+                </a>
+
                 <a href="#contact" class="btn">Contact Me</a>
             </div>
         </div>
