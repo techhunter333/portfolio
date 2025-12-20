@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Jaimin Rana | Cybersecurity Analyst</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        :root {
+            --bg-color: #050507;
+            --card-bg: rgba(20, 20, 25, 0.7);
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --accent: #3b82f6; /* Cyber Blue */
+            --accent-glow: rgba(59, 130, 246, 0.5);
+            --border: rgba(255, 255, 255, 0.1);
+            --nav-height: 70px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        /* LIVE BACKGROUND CANVAS - FIXED (Rings Removed) */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            /* Changed from radial-gradient to solid color to remove banding rings */
+            background-color: #020203; 
+        }
+
+        /* TYPOGRAPHY & UTILS */
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+            width: 100%;
+        }
+
+        .section-title {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--accent);
+            padding-left: 1rem;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* HEADER */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: var(--nav-height);
+            display: flex;
+            align-items: center;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+            background: rgba(5, 5, 7, 0.7);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .logo { 
+            font-weight: 700; 
+            font-size: 1.2rem; 
+            letter-spacing: -0.5px;
+            z-index: 102; 
+        }
+
+        /* Nav Links */
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { font-size: 0.9rem; color: var(--text-secondary); }
+        .nav-links a:hover { color: var(--accent); }
+
+        /* Mobile Menu Button */
+        .menu-btn { display: none; cursor: pointer; z-index: 102; color: white; }
+
+        /* Mobile Menu Overlay */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            height: 100vh;
+            background: rgba(5, 5, 7, 0.98);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            transition: 0.3s ease-in-out;
+            z-index: 101;
+        }
+        .mobile-menu.active { right: 0; }
+        .mobile-menu a { font-size: 1.5rem; font-weight: 600; }
+
+        /* HERO SECTION */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 80px 20px 20px;
+        }
+
+        .hero h1 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            line-height: 1.1;
+            word-wrap: break-word;
+        }
+        
+        .hero h1::after {
+            content: '_';
+            color: var(--accent);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        .hero p {
+            font-size: clamp(0.9rem, 2vw, 1.2rem);
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            width: 100%; 
+            max-width: 900px; 
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeIn 2s ease-out;
+            padding: 0 10px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            animation: fadeIn 2.5s ease-out;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            width: auto;
+            justify-content: center;
+        }
+        
+        .btn-primary {
+            background: var(--text-primary);
+            color: var(--bg-color);
+        }
+        
+        /* SECTIONS */
+        section { padding: 80px 0; }
+        
+        /* GRID & CARDS */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            border-radius: 12px;
+            transition: 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            opacity: 0; 
+            transform: translateY(30px);
+        }
+        .card:hover { border-color: var(--accent); }
+
+        .card-meta {
+            font-size: 0.85rem;
+            color: var(--accent);
+            margin: 0.5rem 0 1rem 0;
+            display: block;
+            line-height: 1.4;
+        }
+
+        .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1rem; }
+        .tag {
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .timeline-item {
+            border-left: 2px solid var(--border);
+            padding-left: 1.5rem;
+            margin-bottom: 2.5rem;
+            position: relative;
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 6px;
+            width: 10px;
+            height: 10px;
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        @media(min-width: 600px) {
+            .contact-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .visible { animation: fadeIn 0.8s forwards; }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .menu-btn { display: block; }
+            section { padding: 60px 0; }
+            .btn { width: 100%; } 
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LIVE BACKGROUND -->
+    <div id="canvas-container">
+        <canvas id="starfield"></canvas>
+    </div>
+
+    <!-- MOBILE MENU OVERLAY -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#about" onclick="toggleMenu()">About</a>
+        <a href="#experience" onclick="toggleMenu()">Experience</a>
+        <a href="#projects" onclick="toggleMenu()">Projects</a>
+        <a href="#skills" onclick="toggleMenu()">Skills</a>
+        <a href="#contact" onclick="toggleMenu()">Contact</a>
+    </div>
+
+    <!-- HEADER -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo mono">JR_CYBER<span style="color:var(--accent)">.</span></div>
+                
+                <!-- Desktop Nav -->
+                <div class="nav-links">
+                    <a href="#about">About</a>
+                    <a href="#experience">Experience</a>
+                    <a href="#projects">Projects</a>
+                    <a href="#skills">Skills</a>
+                    <a href="#contact">Contact</a>
+                </div>
+
+                <!-- Mobile Hamburger -->
+                <div class="menu-btn" onclick="toggleMenu()">
+                    <i data-lucide="menu" size="28"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section id="home" class="hero">
+        <div class="container">
+            <h1 class="hacker-text" data-value="JAIMIN RANA">JAIMIN RANA</h1>
+            
+            <p class="mono">Cybersecurity Analyst | Python Developer | Threat Hunter</p>
+            
+            <div class="btn-group">
+                <a href="#projects" class="btn btn-primary">View Work</a>
+                <a href="#contact" class="btn">Contact Me</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about">
+        <div class="container">
+            <h2 class="section-title">Summary</h2>
+            <div class="card visible">
+                <p>Highly analytical Entry-Level Cybersecurity Analyst and Python Developer specializing in threat detection, vulnerability assessment, and incident response. Proficient in building secure web applications using Python (Flask/Django) while leveraging OWASP Top 10 secure coding practices. </p>
+                <div style="margin-top: 1.5rem; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <span class="tag" style="background:rgba(59, 130, 246, 0.2); border-color:var(--accent);">Google Cybersecurity Certified</span>
+                    <span class="tag" style="background:rgba(59, 130, 246, 0.2); border-color:var(--accent);">Google Cloud Security</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="experience">
+        <div class="container">
+            <h2 class="section-title">Experience</h2>
+            
+            <div class="timeline-item scroll-animate">
+                <h3 class="mono" style="font-size: 1.2rem;">AI Tutor (Localizations)</h3>
+                <span class="card-meta">xAI | Remote | Nov 2025 – Present</span>
+                <ul style="padding-left: 1rem; color: var(--text-secondary); font-size: 0.95rem;">
+                    <li style="margin-bottom:0.5rem;">• Translating and localizing X/Grok interface strings, prompts, and responses into Gujarati.</li>
+                    <li>• Performing data annotation tasks to ensure linguistic accuracy and cultural relevance for AI model training.</li>
+                </ul>
+            </div>
+
+            <h2 class="section-title" style="margin-top: 3rem;">Education</h2>
+            <div class="grid">
+                <div class="card scroll-animate">
+                    <h3 style="font-size: 1.1rem;">Master of Computer Applications (MCA)</h3>
+                    <span class="card-meta">PP Savani University | 2024 - 2026</span>
+                </div>
+                <div class="card scroll-animate">
+                    <h3 style="font-size: 1.1rem;">Bachelor of Computer Applications (BCA)</h3>
+                    <span class="card-meta">Veer Narmad South Gujarat University | 2021 - 2024</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects">
+        <div class="container">
+            <h2 class="section-title">Featured Projects</h2>
+            <div class="grid">
+                <div class="card scroll-animate">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <h3>Threat Analysis Lab</h3>
+                        <i data-lucide="shield" size="20" color="#3b82f6"></i>
+                    </div>
+                    <span class="card-meta mono">Splunk, Wireshark, Kali-Linux, Burp Suite</span>
+                    <p>Designed a multi-machine virtual environment for threat detection. Identified 5 critical OWASP vulnerabilities via automated penetration testing and implemented remediation steps.</p>
+                </div>
+
+                <div class="card scroll-animate">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <h3>Security Utilities Suite</h3>
+                        <i data-lucide="lock" size="20" color="#3b82f6"></i>
+                    </div>
+                    <span class="card-meta mono">Python, Flask, AES, HMAC</span>
+                    <p>Developed 4 Flask-based security utilities including CryptoGuard for AES encryption and Digital Signatures. Demonstrated applied cryptography in a secure web UI.</p>
+                </div>
+
+                <div class="card scroll-animate">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <h3>Real-time Threat Analysis App</h3>
+                        <i data-lucide="activity" size="20" color="#3b82f6"></i>
+                    </div>
+                    <span class="card-meta mono">Python, Flask, Public APIs</span>
+                    <p>Created Threat Indicator Lookup and Threat News Viewer tools. Aggregates real-time data to analyze hashes/IPs for rapid threat identification.</p>
+                </div>
+
+                 <div class="card scroll-animate">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <h3>Security Toolset</h3>
+                        <i data-lucide="code" size="20" color="#3b82f6"></i>
+                    </div>
+                    <span class="card-meta mono">Python</span>
+                    <p>Additional tools developed include a Password Strength Checker, Phishing Analyzer, and Steganography Tools.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills">
+        <div class="container">
+            <h2 class="section-title">Technical Arsenal</h2>
+            <div class="card scroll-animate">
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 class="mono" style="margin-bottom:0.5rem; color:var(--accent);">Languages & Frameworks</h4>
+                    <div class="tags">
+                        <span class="tag">Python</span><span class="tag">JavaScript</span><span class="tag">C++</span>
+                        <span class="tag">Flask</span><span class="tag">Django</span>
+                    </div>
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 class="mono" style="margin-bottom:0.5rem; color:var(--accent);">Security Tools</h4>
+                    <div class="tags">
+                        <span class="tag">Burp-Suite</span><span class="tag">Splunk</span><span class="tag">Google Chronicle</span>
+                        <span class="tag">Wireshark</span><span class="tag">Nmap</span><span class="tag">Nessus</span><span class="tag">Snort</span>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="mono" style="margin-bottom:0.5rem; color:var(--accent);">Databases & Cloud</h4>
+                    <div class="tags">
+                        <span class="tag">MongoDB</span><span class="tag">PostgreSQL</span><span class="tag">MySQL</span>
+                        <span class="tag">Google Cloud IAM</span><span class="tag">Microsoft Defender</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+        <div class="container">
+            <h2 class="section-title">Initialize Handshake</h2>
+            <p style="color:var(--text-secondary); margin-bottom: 1.5rem; text-align: center;">
+                I am currently open to opportunities in Cybersecurity and Python Development. 
+            </p>
+            <div class="contact-grid">
+                <a href="mailto:hunterlord469@gmail.com" class="contact-item">
+                    <i data-lucide="mail"></i>
+                    <span>Email Me</span>
+                </a>
+                <a href="https://linkedin.com/in/jaimin-r-cyber" target="_blank" class="contact-item">
+                    <i data-lucide="linkedin"></i>
+                    <span>LinkedIn</span>
+                </a>
+                <a href="https://github.com/techhunter333" target="_blank" class="contact-item">
+                    <i data-lucide="github"></i>
+                    <span>GitHub</span>
+                </a>
+                <a href="https://cybersuite.pythonanywhere.com/" target="_blank" class="contact-item">
+                    <i data-lucide="globe"></i>
+                    <span>CyberSuite Live</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 Jaimin Rana. Built with Secure Coding Practices.</p>
+        </div>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script>
+        lucide.createIcons();
+
+        function toggleMenu() {
+            document.getElementById('mobileMenu').classList.toggle('active');
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.section-title, .scroll-animate').forEach(el => observer.observe(el));
+
+        // Hacker Text Logic
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+        const headerText = document.querySelector(".hacker-text");
+
+        function runHackerEffect(target) {
+            let iteration = 0;
+            let interval = null;
+            clearInterval(interval);
+            const originalValue = target.dataset.value;
+
+            interval = setInterval(() => {
+                target.innerText = originalValue
+                    .split("")
+                    .map((letter, index) => {
+                        if(index < iteration) return originalValue[index];
+                        return letters[Math.floor(Math.random() * letters.length)];
+                    })
+                    .join("");
+                
+                if(iteration >= originalValue.length) clearInterval(interval);
+                iteration += 1 / 3; 
+            }, 30);
+        }
+
+        headerText.onmouseover = event => runHackerEffect(event.target);
+        window.onload = () => setTimeout(() => runHackerEffect(headerText), 500);
+
+        // Canvas Background
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2;
+                this.opacity = Math.random() * 0.5 + 0.1;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0) this.x = width;
+                if (this.x > width) this.x = 0;
+                if (this.y < 0) this.y = height;
+                if (this.y > height) this.y = 0;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            const density = window.innerWidth < 768 ? 20 : 10;
+            const particleCount = Math.floor(window.innerWidth / density); 
+            for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach((p, index) => {
+                p.update();
+                p.draw();
+                for (let j = index + 1; j < particles.length; j++) {
+                    const p2 = particles[j];
+                    const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+                    const connectDist = window.innerWidth < 768 ? 60 : 100;
+                    if (dist < connectDist) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(59, 130, 246, ${0.1 - dist/1000})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                }
+            });
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', () => { resize(); initParticles(); });
+        resize(); initParticles(); animate();
+    </script>
+</body>
+</html>
