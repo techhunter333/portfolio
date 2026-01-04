@@ -178,19 +178,13 @@
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
 
 
-        /* --- UPDATED CARD STYLES --- */
+        /* --- CARD STYLES --- */
         .card {
             position: relative;
-            /* 1. Fully Transparent Background */
             background: transparent; 
-            
-            /* 2. No Blur (Exact match to footer) */
             backdrop-filter: none;
             -webkit-backdrop-filter: none;
-            
-            /* 3. Static Border */
-            border: 1px solid #1f2228;
-            
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             opacity: 0;
             transform: translateY(30px);
@@ -198,39 +192,23 @@
             isolation: isolate;
         }
 
-        /* THE MOVING BORDER */
         .card::before {
             content: "";
             position: absolute;
             inset: -1px; 
             padding: 2px; 
             border-radius: 12px;
-            
-            background: conic-gradient(
-                from var(--angle), 
-                transparent 10%, 
-                var(--accent) 50%, 
-                transparent 80%
-            );
-            
-            mask: 
-                linear-gradient(#fff 0 0) content-box, 
-                linear-gradient(#fff 0 0);
+            background: conic-gradient(from var(--angle), transparent 10%, var(--accent) 50%, transparent 80%);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             mask-composite: exclude;
-
-            -webkit-mask: 
-                linear-gradient(#fff 0 0) content-box, 
-                linear-gradient(#fff 0 0);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
-            
             pointer-events: none;
             z-index: 3;
             animation: rotateBorder 4s linear infinite;
         }
 
-        @keyframes rotateBorder {
-            to { --angle: 360deg; }
-        }
+        @keyframes rotateBorder { to { --angle: 360deg; } }
 
         .card-inner {
             background: transparent;
@@ -240,23 +218,106 @@
             position: relative;
             z-index: 2;
         }
-        /* -------------------------------------- */
 
+        /* --- LINKEDIN STYLE TIMELINE --- */
+        
+        .experience-group {
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        /* Company Header */
+        .company-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .company-logo-box {
+            width: 48px;
+            height: 48px;
+            background: #fff;
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            border-radius: 4px;
+        }
+
+        .company-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 2px;
+        }
+        
+        .company-info span {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Group Roles Wrapper (The Vertical Line) */
+        .company-roles {
+            margin-left: 24px; /* Centers line under the 48px logo */
+            padding-left: 32px; /* Space between line and role text */
+            border-left: 2px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        /* Single Role Item */
+        .role-item {
+            position: relative;
+            margin-bottom: 2.5rem;
+        }
+        .role-item:last-child { margin-bottom: 0; }
+
+        /* The Timeline Dot */
+        .role-item::before {
+            content: '';
+            position: absolute;
+            left: -38px; /* Adjust to sit perfectly on line */
+            top: 6px;
+            width: 10px;
+            height: 10px;
+            background: var(--text-secondary);
+            border-radius: 50%;
+            box-shadow: 0 0 0 6px var(--bg-color); /* Cutout effect */
+        }
+
+        /* Active/Current Role Dot (Blue) */
+        .role-item.active::before {
+            background: var(--accent);
+            box-shadow: 0 0 0 6px var(--bg-color), 0 0 10px var(--accent-glow);
+        }
+
+        .role-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+
+        .role-meta {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
+        /* --------------------------- */
 
         .card-meta { font-size: 0.85rem; color: var(--accent); margin: 0.5rem 0 1rem 0; display: block; line-height: 1.4; }
         .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1rem; }
         .tag { font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-secondary); }
 
-        .timeline-item { border-left: 2px solid var(--border); padding-left: 1.5rem; margin-bottom: 2.5rem; position: relative; opacity: 0; transform: translateX(-20px); }
-        .timeline-item::before { content: ''; position: absolute; left: -6px; top: 6px; width: 10px; height: 10px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 10px var(--accent); }
-
         .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100%, 1fr)); gap: 1rem; margin-top: 2rem; }
         @media(min-width: 600px) { .contact-grid { grid-template-columns: repeat(2, 1fr); } }
 
-        /* Updated Contact Items to match exact footer transparency */
         .contact-item { 
             display: flex; align-items: center; gap: 15px; padding: 15px 20px; 
-            background: transparent; /* Fully transparent */
+            background: transparent; 
             backdrop-filter: none;
             border: 1px solid var(--border); 
             border-radius: 8px; font-weight: 500; 
@@ -273,6 +334,14 @@
             .menu-btn { display: block; }
             section { padding: 60px 0; }
             .btn { width: 100%; } 
+            
+            .company-roles {
+                margin-left: 20px;
+                padding-left: 20px;
+            }
+            .role-item::before {
+                left: -26px;
+            }
         }
     </style>
 </head>
@@ -346,14 +415,72 @@
     <section id="experience">
         <div class="container">
             <h2 class="section-title">Experience</h2>
-            <div class="timeline-item scroll-animate">
-                <h3 class="mono" style="font-size: 1.2rem;">X/Grok - Localization (Human Data Team)</h3>
-                <span class="card-meta">xAI | Remote | Nov 2025 – Present</span>
-                <ul style="padding-left: 1rem; color: var(--text-secondary); font-size: 0.95rem;">
-                    <li style="margin-bottom:0.5rem;">• Translating and localizing X/Grok interface strings, prompts, and responses into Gujarati.</li>
-                    <li>• Performing data annotation tasks to ensure linguistic accuracy and cultural relevance for AI model training.</li>
-                </ul>
+            
+            <!-- X/Grok COMPANY GROUP -->
+            <div class="experience-group scroll-animate">
+                <!-- Company Header -->
+                <div class="company-header">
+                    <div class="company-logo-box">X</div> <!-- Placeholder X Logo -->
+                    <div class="company-info">
+                        <h3>xAI</h3>
+                        <span>Remote</span>
+                    </div>
+                </div>
+
+                <!-- Roles Timeline -->
+                <div class="company-roles">
+                    
+                    <!-- Role 1 -->
+                    <div class="role-item active">
+                        <div class="role-title">Web Developer Tutor</div>
+                        <span class="role-meta">Dec 2025 – Present · 2 mos</span>
+                        <p style="color:var(--text-secondary); font-size:0.95rem;">
+                            Training AI models on web development concepts and best practices.
+                        </p>
+                    </div>
+
+                    <!-- Role 2 -->
+                    <div class="role-item active">
+                        <div class="role-title">X/Grok - Localization (Human Data Team)</div>
+                        <span class="role-meta">Nov 2025 – Present · 3 mos</span>
+                        <ul style="padding-left: 1rem; color: var(--text-secondary); font-size: 0.95rem; margin-top:0.5rem;">
+                            <li>• Translating and localizing X/Grok interface strings into Gujarati.</li>
+                            <li>• Performing data annotation to ensure linguistic accuracy.</li>
+                        </ul>
+                        <div class="tags" style="margin-top:0.5rem">
+                            <span class="tag">Translation</span>
+                            <span class="tag">Data Annotation</span>
+                        </div>
+                    </div>
+
+                </div>
             </div>
+            <!-- END xAI GROUP -->
+
+
+            <!-- Labelbox - Separate Timeline Item -->
+            <div class="experience-group scroll-animate">
+                <div class="company-header">
+                    <div class="company-logo-box"><i data-lucide="box" color="black"></i></div>
+                    <div class="company-info">
+                        <h3>Labelbox</h3>
+                        <span>Remote · Freelance</span>
+                    </div>
+                </div>
+                
+                <div class="company-roles" style="border-left:none; padding-left:0; margin-left:0;">
+                    <!-- Adjusted padding since there is no vertical line needed for single item -->
+                    <div class="role-item" style="padding-left: 24px; margin-left: 24px; border-left: 2px solid var(--border); padding-bottom: 0;">
+                         <div class="role-title">AI Data Annotator</div>
+                         <span class="role-meta">Dec 2025 – Present · 2 mos</span>
+                         <div class="tags" style="margin-top:0.5rem">
+                            <span class="tag">Data Analysis</span>
+                            <span class="tag">Annotation</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
             <h2 class="section-title" style="margin-top: 3rem;">Education</h2>
             <div class="grid">
@@ -577,5 +704,3 @@
     </script>
 </body>
 </html>
-
-
