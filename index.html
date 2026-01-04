@@ -178,13 +178,13 @@
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
 
 
-        /* --- CARD STYLES --- */
+        /* --- CARD STYLES (Hover Effect Only) --- */
         .card {
             position: relative;
             background: transparent; 
             backdrop-filter: none;
             -webkit-backdrop-filter: none;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             opacity: 0;
             transform: translateY(30px);
@@ -192,6 +192,7 @@
             isolation: isolate;
         }
 
+        /* The Neon Border - Hidden by default */
         .card::before {
             content: "";
             position: absolute;
@@ -205,7 +206,16 @@
             -webkit-mask-composite: xor;
             pointer-events: none;
             z-index: 3;
-            animation: rotateBorder 4s linear infinite;
+            
+            /* UPDATED: Opacity 0 by default, Slower Animation */
+            opacity: 0; 
+            transition: opacity 0.6s ease;
+            animation: rotateBorder 8s linear infinite; 
+        }
+
+        /* SHOW Border on Hover */
+        .card:hover::before {
+            opacity: 1;
         }
 
         @keyframes rotateBorder { to { --angle: 360deg; } }
@@ -219,22 +229,18 @@
             z-index: 2;
         }
 
-        /* --- LINKEDIN STYLE TIMELINE --- */
-        
+        /* --- EXPERIENCE TIMELINE --- */
         .experience-group {
             margin-bottom: 3rem;
             opacity: 0;
             transform: translateY(20px);
         }
-
-        /* Company Header */
         .company-header {
             display: flex;
             align-items: center;
             gap: 12px;
             margin-bottom: 0.5rem;
         }
-        
         .company-logo-box {
             width: 48px;
             height: 48px;
@@ -248,63 +254,22 @@
             font-family: 'JetBrains Mono', monospace;
             border-radius: 4px;
         }
-
-        .company-info h3 {
-            font-size: 1.2rem;
-            margin-bottom: 2px;
-        }
-        
-        .company-info span {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        /* Group Roles Wrapper (The Vertical Line) */
+        .company-info h3 { font-size: 1.2rem; margin-bottom: 2px; }
+        .company-info span { color: var(--text-secondary); font-size: 0.9rem; }
         .company-roles {
-            margin-left: 24px; /* Centers line under the 48px logo */
-            padding-left: 32px; /* Space between line and role text */
-            border-left: 2px solid var(--border);
-            padding-bottom: 0.5rem;
+            margin-left: 24px; padding-left: 32px; border-left: 2px solid var(--border); padding-bottom: 0.5rem;
         }
-
-        /* Single Role Item */
-        .role-item {
-            position: relative;
-            margin-bottom: 2.5rem;
-        }
+        .role-item { position: relative; margin-bottom: 2.5rem; }
         .role-item:last-child { margin-bottom: 0; }
-
-        /* The Timeline Dot */
         .role-item::before {
-            content: '';
-            position: absolute;
-            left: -38px; /* Adjust to sit perfectly on line */
-            top: 6px;
-            width: 10px;
-            height: 10px;
-            background: var(--text-secondary);
-            border-radius: 50%;
-            box-shadow: 0 0 0 6px var(--bg-color); /* Cutout effect */
+            content: ''; position: absolute; left: -38px; top: 6px; width: 10px; height: 10px;
+            background: var(--text-secondary); border-radius: 50%; box-shadow: 0 0 0 6px var(--bg-color);
         }
-
-        /* Active/Current Role Dot (Blue) */
         .role-item.active::before {
-            background: var(--accent);
-            box-shadow: 0 0 0 6px var(--bg-color), 0 0 10px var(--accent-glow);
+            background: var(--accent); box-shadow: 0 0 0 6px var(--bg-color), 0 0 10px var(--accent-glow);
         }
-
-        .role-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 0.2rem;
-        }
-
-        .role-meta {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-bottom: 0.8rem;
-            display: block;
-        }
+        .role-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.2rem; }
+        .role-meta { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.8rem; display: block; }
 
         /* --------------------------- */
 
@@ -335,13 +300,8 @@
             section { padding: 60px 0; }
             .btn { width: 100%; } 
             
-            .company-roles {
-                margin-left: 20px;
-                padding-left: 20px;
-            }
-            .role-item::before {
-                left: -26px;
-            }
+            .company-roles { margin-left: 20px; padding-left: 20px; }
+            .role-item::before { left: -26px; }
         }
     </style>
 </head>
@@ -416,18 +376,16 @@
         <div class="container">
             <h2 class="section-title">Experience</h2>
             
-            <!-- X/Grok COMPANY GROUP -->
+            <!-- xAI GROUP -->
             <div class="experience-group scroll-animate">
-                <!-- Company Header -->
                 <div class="company-header">
-                    <div class="company-logo-box">X</div> <!-- Placeholder X Logo -->
+                    <div class="company-logo-box">X</div> 
                     <div class="company-info">
                         <h3>xAI</h3>
                         <span>Remote</span>
                     </div>
                 </div>
 
-                <!-- Roles Timeline -->
                 <div class="company-roles">
                     
                     <!-- Role 1 -->
@@ -444,8 +402,8 @@
                         <div class="role-title">X/Grok - Localization (Human Data Team)</div>
                         <span class="role-meta">Nov 2025 – Present · 3 mos</span>
                         <ul style="padding-left: 1rem; color: var(--text-secondary); font-size: 0.95rem; margin-top:0.5rem;">
-                            <li>• Translating and localizing X/Grok interface strings into Gujarati.</li>
-                            <li>• Performing data annotation to ensure linguistic accuracy.</li>
+                            <li>• Translating and localizing X/Grok interface strings, prompts, and responses into Gujarati.</li>
+                            <li>• Performing data annotation tasks to ensure linguistic accuracy.</li>
                         </ul>
                         <div class="tags" style="margin-top:0.5rem">
                             <span class="tag">Translation</span>
@@ -455,10 +413,8 @@
 
                 </div>
             </div>
-            <!-- END xAI GROUP -->
 
-
-            <!-- Labelbox - Separate Timeline Item -->
+            <!-- Labelbox -->
             <div class="experience-group scroll-animate">
                 <div class="company-header">
                     <div class="company-logo-box"><i data-lucide="box" color="black"></i></div>
@@ -469,7 +425,6 @@
                 </div>
                 
                 <div class="company-roles" style="border-left:none; padding-left:0; margin-left:0;">
-                    <!-- Adjusted padding since there is no vertical line needed for single item -->
                     <div class="role-item" style="padding-left: 24px; margin-left: 24px; border-left: 2px solid var(--border); padding-bottom: 0;">
                          <div class="role-title">AI Data Annotator</div>
                          <span class="role-meta">Dec 2025 – Present · 2 mos</span>
