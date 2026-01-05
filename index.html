@@ -178,13 +178,13 @@
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
 
 
-        /* --- CARD STYLES (Hover Effect Only) --- */
+        /* --- CARD STYLES --- */
         .card {
             position: relative;
             background: transparent; 
             backdrop-filter: none;
             -webkit-backdrop-filter: none;
-            border: 2px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             opacity: 0;
             transform: translateY(30px);
@@ -192,7 +192,6 @@
             isolation: isolate;
         }
 
-        /* The Neon Border - Hidden by default */
         .card::before {
             content: "";
             position: absolute;
@@ -206,18 +205,12 @@
             -webkit-mask-composite: xor;
             pointer-events: none;
             z-index: 3;
-            
-            /* UPDATED: Opacity 0 by default, Slower Animation */
             opacity: 0; 
             transition: opacity 0.6s ease;
             animation: rotateBorder 8s linear infinite; 
         }
 
-        /* SHOW Border on Hover */
-        .card:hover::before {
-            opacity: 1;
-        }
-
+        .card:hover::before { opacity: 1; }
         @keyframes rotateBorder { to { --angle: 360deg; } }
 
         .card-inner {
@@ -229,18 +222,20 @@
             z-index: 2;
         }
 
-        /* --- EXPERIENCE TIMELINE --- */
+        /* --- FIXED LINKEDIN TIMELINE --- */
         .experience-group {
             margin-bottom: 3rem;
             opacity: 0;
             transform: translateY(20px);
         }
+        
         .company-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 0.5rem;
+            gap: 16px;
+            margin-bottom: 8px; /* Closer to the line start */
         }
+        
         .company-logo-box {
             width: 48px;
             height: 48px;
@@ -253,28 +248,63 @@
             font-size: 1.5rem;
             font-family: 'JetBrains Mono', monospace;
             border-radius: 4px;
+            flex-shrink: 0; /* Prevents squishing */
+            z-index: 2;
         }
+
         .company-info h3 { font-size: 1.2rem; margin-bottom: 2px; }
         .company-info span { color: var(--text-secondary); font-size: 0.9rem; }
+
+        /* The Vertical Line Container */
         .company-roles {
-            margin-left: 24px; padding-left: 32px; border-left: 2px solid var(--border); padding-bottom: 0.5rem;
+            /* 
+               Logo width is 48px. Center is 24px.
+               Line width is 2px.
+               Margin-left should be 23px to center the 2px line under the 48px logo.
+            */
+            margin-left: 23px; 
+            padding-left: 32px; 
+            border-left: 2px solid var(--border); 
+            padding-bottom: 0.5rem;
+            padding-top: 0.5rem;
         }
+
         .role-item { position: relative; margin-bottom: 2.5rem; }
         .role-item:last-child { margin-bottom: 0; }
+
+        /* The Dot */
         .role-item::before {
-            content: ''; position: absolute; left: -38px; top: 6px; width: 10px; height: 10px;
-            background: var(--text-secondary); border-radius: 50%; box-shadow: 0 0 0 6px var(--bg-color);
+            content: ''; 
+            position: absolute; 
+            /* 
+               Padding-left is 32px.
+               Border width is 2px.
+               Dot width is 10px (radius 5px).
+               Left calculation: -32px (padding) - 1px (border center) - 5px (radius) = -38px
+            */
+            left: -38px; 
+            top: 6px; 
+            width: 10px; height: 10px;
+            background: var(--text-secondary); 
+            border-radius: 50%; 
+            box-shadow: 0 0 0 6px var(--bg-color); /* Cutout effect */
         }
+
         .role-item.active::before {
-            background: var(--accent); box-shadow: 0 0 0 6px var(--bg-color), 0 0 10px var(--accent-glow);
+            background: var(--accent); 
+            box-shadow: 0 0 0 6px var(--bg-color), 0 0 10px var(--accent-glow);
         }
+
         .role-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.2rem; }
         .role-meta { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.8rem; display: block; }
+        .role-desc { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 0.5rem; }
+        .role-desc ul { padding-left: 1rem; list-style: disc; margin-left: 1rem; }
+        .role-desc li { margin-bottom: 0.3rem; }
 
         /* --------------------------- */
 
         .card-meta { font-size: 0.85rem; color: var(--accent); margin: 0.5rem 0 1rem 0; display: block; line-height: 1.4; }
-        .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1rem; }
+        .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 0.5rem; }
         .tag { font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-secondary); }
 
         .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100%, 1fr)); gap: 1rem; margin-top: 2rem; }
@@ -300,6 +330,7 @@
             section { padding: 60px 0; }
             .btn { width: 100%; } 
             
+            /* Mobile Alignment Fix */
             .company-roles { margin-left: 20px; padding-left: 20px; }
             .role-item::before { left: -26px; }
         }
@@ -387,34 +418,30 @@
                 </div>
 
                 <div class="company-roles">
-                    
-                    <!-- Role 1 -->
                     <div class="role-item active">
                         <div class="role-title">Web Developer Tutor</div>
                         <span class="role-meta">Dec 2025 – Present · 2 mos</span>
-                        <p style="color:var(--text-secondary); font-size:0.95rem;">
-                            Training AI models on web development concepts and best practices.
-                        </p>
+                        <p class="role-desc">Training AI models on web development concepts and best practices.</p>
                     </div>
 
-                    <!-- Role 2 -->
                     <div class="role-item active">
                         <div class="role-title">X/Grok - Localization (Human Data Team)</div>
                         <span class="role-meta">Nov 2025 – Present · 3 mos</span>
-                        <ul style="padding-left: 1rem; color: var(--text-secondary); font-size: 0.95rem; margin-top:0.5rem;">
-                            <li>• Translating and localizing X/Grok interface strings, prompts, and responses into Gujarati.</li>
-                            <li>• Performing data annotation tasks to ensure linguistic accuracy.</li>
-                        </ul>
-                        <div class="tags" style="margin-top:0.5rem">
+                        <div class="role-desc">
+                            <ul>
+                                <li>Translating and localizing X/Grok interface strings into Gujarati.</li>
+                                <li>Performing data annotation tasks to ensure linguistic accuracy.</li>
+                            </ul>
+                        </div>
+                        <div class="tags">
                             <span class="tag">Translation</span>
                             <span class="tag">Data Annotation</span>
                         </div>
                     </div>
-
                 </div>
             </div>
 
-            <!-- Labelbox -->
+            <!-- Labelbox GROUP -->
             <div class="experience-group scroll-animate">
                 <div class="company-header">
                     <div class="company-logo-box"><i data-lucide="box" color="black"></i></div>
@@ -424,13 +451,46 @@
                     </div>
                 </div>
                 
-                <div class="company-roles" style="border-left:none; padding-left:0; margin-left:0;">
-                    <div class="role-item" style="padding-left: 24px; margin-left: 24px; border-left: 2px solid var(--border); padding-bottom: 0;">
+                <div class="company-roles">
+                    <div class="role-item active">
                          <div class="role-title">AI Data Annotator</div>
                          <span class="role-meta">Dec 2025 – Present · 2 mos</span>
-                         <div class="tags" style="margin-top:0.5rem">
+                         <div class="tags">
                             <span class="tag">Data Analysis</span>
                             <span class="tag">Annotation</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEW SELF-EMPLOYED GROUP -->
+            <div class="experience-group scroll-animate">
+                <div class="company-header">
+                    <div class="company-logo-box"><i data-lucide="shield" color="black"></i></div>
+                    <div class="company-info">
+                        <h3>Self-employed</h3>
+                        <span>Cybersecurity Projects & Blue Team Focus</span>
+                    </div>
+                </div>
+                
+                <div class="company-roles">
+                    <div class="role-item active">
+                         <div class="role-title">Cybersecurity Projects | Python Web Developer</div>
+                         <span class="role-meta">Jan 2021 – Present · 5 yrs 1 mo</span>
+                         <div class="role-desc">
+                            <ul>
+                                <li>Completed Google Cybersecurity, IT Support, and Cloud Cybersecurity Professional Certificates.</li>
+                                <li>Hands-on labs with Kali Linux, Wireshark, SIEM tools, NIST.</li>
+                                <li>Personal homelab for Linux system hardening and network defense.</li>
+                                <li>Built and deployed web applications using Python (Flask/Django).</li>
+                                <li>Performed vulnerability assessments and penetration testing projects.</li>
+                                <li>Developed security automation scripts and tools.</li>
+                            </ul>
+                         </div>
+                         <div class="tags">
+                            <span class="tag">Cryptography</span>
+                            <span class="tag">Cybersecurity</span>
+                            <span class="tag">Python</span>
                         </div>
                     </div>
                 </div>
