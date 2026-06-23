@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Jaimin Rana</title>
+    <title>Jaimin Rana - QA Engineer</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -233,7 +233,7 @@
             display: flex;
             align-items: center;
             gap: 16px;
-            margin-bottom: 8px; /* Closer to the line start */
+            margin-bottom: 8px;
         }
         
         .company-logo-box {
@@ -248,20 +248,14 @@
             font-size: 1.5rem;
             font-family: 'JetBrains Mono', monospace;
             border-radius: 4px;
-            flex-shrink: 0; /* Prevents squishing */
+            flex-shrink: 0;
             z-index: 2;
         }
 
         .company-info h3 { font-size: 1.2rem; margin-bottom: 2px; }
         .company-info span { color: var(--text-secondary); font-size: 0.9rem; }
 
-        /* The Vertical Line Container */
         .company-roles {
-            /* 
-               Logo width is 48px. Center is 24px.
-               Line width is 2px.
-               Margin-left should be 23px to center the 2px line under the 48px logo.
-            */
             margin-left: 23px; 
             padding-left: 32px; 
             border-left: 2px solid var(--border); 
@@ -272,22 +266,15 @@
         .role-item { position: relative; margin-bottom: 2.5rem; }
         .role-item:last-child { margin-bottom: 0; }
 
-        /* The Dot */
         .role-item::before {
             content: ''; 
             position: absolute; 
-            /* 
-               Padding-left is 32px.
-               Border width is 2px.
-               Dot width is 10px (radius 5px).
-               Left calculation: -32px (padding) - 1px (border center) - 5px (radius) = -38px
-            */
             left: -38px; 
             top: 6px; 
             width: 10px; height: 10px;
             background: var(--text-secondary); 
             border-radius: 50%; 
-            box-shadow: 0 0 0 6px var(--bg-color); /* Cutout effect */
+            box-shadow: 0 0 0 6px var(--bg-color);
         }
 
         .role-item.active::before {
@@ -300,8 +287,6 @@
         .role-desc { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 0.5rem; }
         .role-desc ul { padding-left: 1rem; list-style: disc; margin-left: 1rem; }
         .role-desc li { margin-bottom: 0.3rem; }
-
-        /* --------------------------- */
 
         .card-meta { font-size: 0.85rem; color: var(--accent); margin: 0.5rem 0 1rem 0; display: block; line-height: 1.4; }
         .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 0.5rem; }
@@ -329,8 +314,6 @@
             .menu-btn { display: block; }
             section { padding: 60px 0; }
             .btn { width: 100%; } 
-            
-            /* Mobile Alignment Fix */
             .company-roles { margin-left: 20px; padding-left: 20px; }
             .role-item::before { left: -26px; }
         }
@@ -375,7 +358,7 @@
     <section id="home" class="hero">
         <div class="container">
             <h1 class="hacker-text" data-value="JAIMIN RANA">JAIMIN RANA</h1>
-            <p class="mono">Quality Assurance Engineer | Python Developer | Cybersecurity Analyst  </p>
+            <p class="mono">Quality Assurance Engineer | Python Developer | Cyber Security </p>
             <div class="btn-group">
                 <a href="#projects" class="btn btn-primary">View Work</a>
                 <a href="resume.pdf" download="Jaimin_Rana_Resume.pdf" class="btn">
@@ -392,10 +375,11 @@
             <h2 class="section-title">Summary</h2>
             <div class="card visible">
                 <div class="card-inner">
-                    <p>Highly analytical Entry-Level Cybersecurity Analyst and Python Developer specializing in threat detection, vulnerability assessment, and incident response. Proficient in building secure web applications using Python (Flask/Django) while leveraging OWASP Top 10 secure coding practices. </p>
+                    <p>Detail-oriented Quality Assurance Engineer with hands-on experience at xAI (SpaceXAI) testing and improving Grok Android and Web applications. Expertise in functional testing, regression testing, mobile compatibility testing, localization QA, and defect tracking. Strong Python developer skilled in building secure web applications with solid cybersecurity fundamentals and Google Professional Certifications.</p>
                     <div style="margin-top: 1.5rem; display: flex; gap: 10px; flex-wrap: wrap;">
+                        <span class="tag" style="background:rgba(59, 130, 246, 0.2); border-color:var(--accent);">QA & Testing</span>
+                        <span class="tag" style="background:rgba(59, 130, 246, 0.2); border-color:var(--accent);">Mobile App Testing</span>
                         <span class="tag" style="background:rgba(59, 130, 246, 0.2); border-color:var(--accent);">Google Cybersecurity Certified</span>
-                        <span class="tag" style="background:rgba(59, 130, 246, 0.2); border-color:var(--accent);">Google Cloud Security</span>
                     </div>
                 </div>
             </div>
@@ -416,16 +400,25 @@
                         <span>Remote · Contract · 8 mos</span>
                     </div>
                 </div>
-
                 
               <div class="company-roles">
                     <div class="role-item active">
                         <div class="role-title">Quality Assurance Engineer</div>
-                        <span class="role-meta">Jan 2026 – Present · 6 mos</span>
-                        <p class="role-desc">To make Grok Android and Web App best and contribute with Technical Team.</p>
+                        <span class="role-meta">Dec 2025 – Present · 7 mos</span>
+                        <div class="role-desc">
+                            <ul>
+                                <li>Conducted comprehensive QA testing for the Grok Android application.</li>
+                                <li>Validated new feature releases across various device form factors, screen sizes, and OS versions.</li>
+                                <li>Ensured seamless functionality, mobile compatibility, and optimal user experience.</li>
+                                <li>Performed exploratory and regression testing, accompanied by detailed defect tracking.</li>
+                            </ul>
+                        </div>
+                        <div class="tags">
+                            <span class="tag">Functional Testing</span>
+                            <span class="tag">Mobile QA</span>
+                            <span class="tag">Defect Tracking</span>
+                        </div>
                     </div>
-
-                
 
                     <div class="role-item active">
                         <div class="role-title">Multilingual Localization Specialist</div>
@@ -433,72 +426,48 @@
                         <div class="role-desc">
                             <ul>
                                 <li>Translating and localizing X/Grok interface strings into Gujarati.</li>
-                                <li>Performing data annotation tasks to ensure linguistic accuracy.</li>
+                                <li>Conducting localization QA to ensure linguistic accuracy and proper UI rendering across different device locales.</li>
                             </ul>
                         </div>
                         <div class="tags">
-                            <span class="tag">Translation</span>
-                            <span class="tag">Data Annotation</span>
+                            <span class="tag">Localization QA</span>
+                            <span class="tag">Linguistic Testing</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Labelbox GROUP -->
-            <div class="experience-group scroll-animate">
-                <div class="company-header">
-                    <div class="company-logo-box"><i data-lucide="box" color="black"></i></div>
-                    <div class="company-info">
-                        <h3>Labelbox</h3>
-                        <span>Remote · Freelance · 7 mos</span>
-                    </div>
-                </div>
-                
-                <div class="company-roles">
-                    <div class="role-item active">
-                         <div class="role-title">AI Data Annotator</div>
-                         <span class="role-meta">Dec 2025 – Present · 7 mos</span>
-                         <div class="tags">
-                            <span class="tag">Data Analysis</span>
-                            <span class="tag">Annotation</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- NEW SELF-EMPLOYED GROUP -->
+            <!-- SELF-EMPLOYED GROUP -->
             <div class="experience-group scroll-animate">
                 <div class="company-header">
                     <div class="company-logo-box"><i data-lucide="shield" color="black"></i></div>
                     <div class="company-info">
                         <h3>Self-employed</h3>
-                        <span>Cybersecurity Projects & Blue Team Focus</span>
+                        <span>Quality Assurance & Web Development Projects</span>
                     </div>
                 </div>
                 
                 <div class="company-roles">
                     <div class="role-item active">
-                         <div class="role-title">Cybersecurity Projects | Python Web Developer</div>
+                         <div class="role-title">Python Developer & Security QA Analyst</div>
                          <span class="role-meta">Jan 2021 – Apr 2026 · 5 yrs 4 mo</span>
                          <div class="role-desc">
                             <ul>
+                                <li>Built and deployed full-stack web applications using Python (Flask/Django), ensuring high-quality code through rigorous functional testing.</li>
+                                <li>Performed vulnerability assessments and penetration testing (Security QA) based on the OWASP Top 10 framework.</li>
+                                <li>Developed Python-based security automation scripts and testing tools to identify and mitigate threats.</li>
+                                <li>Maintained a personal homelab for Linux system hardening and evaluating network defense configurations.</li>
                                 <li>Completed Google Cybersecurity, IT Support, and Cloud Cybersecurity Professional Certificates.</li>
-                                <li>Hands-on labs with Kali Linux, Wireshark, SIEM tools, NIST.</li>
-                                <li>Personal homelab for Linux system hardening and network defense.</li>
-                                <li>Built and deployed web applications using Python (Flask/Django).</li>
-                                <li>Performed vulnerability assessments and penetration testing projects.</li>
-                                <li>Developed security automation scripts and tools.</li>
                             </ul>
                          </div>
                          <div class="tags">
-                            <span class="tag">Cryptography</span>
-                            <span class="tag">Cybersecurity</span>
-                            <span class="tag">Python</span>
+                            <span class="tag">Security Testing</span>
+                            <span class="tag">Python Testing</span>
+                            <span class="tag">Penetration Testing</span>
                         </div>
                     </div>
                 </div>
             </div>
-
 
             <h2 class="section-title" style="margin-top: 3rem;">Education</h2>
             <div class="grid">
@@ -526,11 +495,11 @@
                 <div class="card scroll-animate">
                     <div class="card-inner">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <h3>Threat Analysis Lab</h3>
+                            <h3>Security QA & Vulnerability Lab</h3>
                             <i data-lucide="shield" size="20" color="#3b82f6"></i>
                         </div>
-                        <span class="card-meta mono">Splunk, Wireshark, Kali-Linux, Burp Suite</span>
-                        <p>Designed a multi-machine virtual environment for threat detection. Identified 5 critical OWASP vulnerabilities via automated penetration testing.</p>
+                        <span class="card-meta mono">Penetration Testing, Burp Suite, Kali Linux</span>
+                        <p>Designed a multi-machine virtual environment for security testing. Conducted automated penetration testing to identify, track, and document 5 critical OWASP vulnerabilities.</p>
                     </div>
                 </div>
 
@@ -541,7 +510,7 @@
                             <i data-lucide="lock" size="20" color="#3b82f6"></i>
                         </div>
                         <span class="card-meta mono">Python, Flask, AES, HMAC</span>
-                        <p>Developed 4 Flask-based security utilities including CryptoGuard for AES encryption and Digital Signatures. Demonstrated applied cryptography.</p>
+                        <p>Developed and extensively tested a suite of 4 Flask-based security utilities including CryptoGuard for AES encryption and Digital Signatures to ensure robust data protection.</p>
                     </div>
                 </div>
 
@@ -552,18 +521,18 @@
                             <i data-lucide="activity" size="20" color="#3b82f6"></i>
                         </div>
                         <span class="card-meta mono">Python, Flask, Public APIs</span>
-                        <p>Created Threat Indicator Lookup and Threat News Viewer tools. Aggregates real-time data to analyze hashes/IPs for rapid threat identification.</p>
+                        <p>Created and validated Threat Indicator Lookup and Threat News Viewer tools. Performed functional testing on public API integrations to ensure reliable real-time data aggregation.</p>
                     </div>
                 </div>
 
                  <div class="card scroll-animate">
                     <div class="card-inner">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <h3>Security Toolset</h3>
+                            <h3>CyberSuite v2 Zero-Knowledge App</h3>
                             <i data-lucide="code" size="20" color="#3b82f6"></i>
                         </div>
-                        <span class="card-meta mono">Python</span>
-                        <p>Additional tools developed include a Password Strength Checker, Phishing Analyzer, and Steganography Tools.</p>
+                        <span class="card-meta mono">Python, Security Testing</span>
+                        <p>Developed a secure full-stack Flask web application with a zero-knowledge architecture. Executed comprehensive compatibility and security testing to guarantee application integrity.</p>
                     </div>
                 </div>
             </div>
@@ -577,24 +546,24 @@
             <div class="card scroll-animate">
                 <div class="card-inner">
                     <div style="margin-bottom: 1.5rem;">
-                        <h4 class="mono" style="margin-bottom:0.5rem; color:var(--accent);">Languages & Frameworks</h4>
+                        <h4 class="mono" style="margin-bottom:0.5rem; color:var(--accent);">QA & Testing Methods</h4>
                         <div class="tags">
-                            <span class="tag">Python</span><span class="tag">JavaScript</span><span class="tag">C++</span>
-                            <span class="tag">Flask</span><span class="tag">Django</span>
+                            <span class="tag">Functional Testing</span><span class="tag">Regression Testing</span><span class="tag">Mobile App Testing (Android)</span>
+                            <span class="tag">Localization QA</span><span class="tag">Exploratory Testing</span><span class="tag">Compatibility Testing</span><span class="tag">Defect Tracking</span><span class="tag">Penetration Testing</span><span class="tag">OWASP Top 10</span>
                         </div>
                     </div>
                     <div style="margin-bottom: 1.5rem;">
-                        <h4 class="mono" style="margin-bottom:0.5rem; color:var(--accent);">Security Tools</h4>
+                        <h4 class="mono" style="margin-bottom:0.5rem; color:var(--accent);">Programming & Frameworks</h4>
                         <div class="tags">
-                            <span class="tag">Burp-Suite</span><span class="tag">Splunk</span><span class="tag">Google Chronicle</span>
-                            <span class="tag">Wireshark</span><span class="tag">Nmap</span><span class="tag">Nessus</span><span class="tag">Snort</span>
+                            <span class="tag">Python</span><span class="tag">Flask</span><span class="tag">Django</span>
+                            <span class="tag">FastAPI</span><span class="tag">JavaScript</span><span class="tag">Git/GitHub</span>
                         </div>
                     </div>
                     <div>
-                        <h4 class="mono" style="margin-bottom:0.5rem; color:var(--accent);">Databases & Cloud</h4>
+                        <h4 class="mono" style="margin-bottom:0.5rem; color:var(--accent);">Databases, Cybersecurity & Tools</h4>
                         <div class="tags">
-                            <span class="tag">MongoDB</span><span class="tag">PostgreSQL</span><span class="tag">MySQL</span>
-                            <span class="tag">Google Cloud IAM</span><span class="tag">Microsoft Defender</span>
+                            <span class="tag">PostgreSQL</span><span class="tag">MySQL</span><span class="tag">Linux</span>
+                            <span class="tag">Burp Suite</span><span class="tag">Wireshark</span><span class="tag">Nmap</span><span class="tag">Kali Linux</span><span class="tag">Google Cloud IAM</span>
                         </div>
                     </div>
                 </div>
@@ -607,21 +576,26 @@
         <div class="container">
             <h2 class="section-title">Initialize Handshake</h2>
             <p style="color:var(--text-secondary); margin-bottom: 1.5rem; text-align: center;">
-                I am currently open to opportunities in Cybersecurity and Python Development. 
+                I am currently open to opportunities as a Quality Assurance Engineer and Software Tester.
             </p>
             <div class="contact-grid">
                 <a href="mailto:hunterlord469@gmail.com" class="contact-item">
                     <i data-lucide="mail"></i>
                     <span>Email Me</span>
                 </a>
+                
+                <!-- Fixed LinkedIn Icon -->
                 <a href="https://linkedin.com/in/jaimin-r-cyber" target="_blank" class="contact-item">
-                    <i data-lucide="linkedin"></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-linkedin"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
                     <span>LinkedIn</span>
                 </a>
+                
+                <!-- Fixed GitHub Icon -->
                 <a href="https://github.com/techhunter333" target="_blank" class="contact-item">
-                    <i data-lucide="github"></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-github"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.2c3-.3 6-1.5 6-6.5 0-1.4-.5-2.5-1.5-3.5.3-.7.3-2.2-.2-3.5 0 0-1-.3-3.3 1.2a11.5 11.5 0 0 0-6 0C6.2 1.5 5.2 1.8 5.2 1.8c-.5 1.3-.5 2.8-.2 3.5-1 .9-1.5 2.2-1.5 3.5 0 5 2.9 6.2 5.9 6.5-.3.3-.6.9-.6 1.9v4"/><path d="M9 20c-5 1.5-5-2.5-7-3"/></svg>
                     <span>GitHub</span>
                 </a>
+
                 <a href="https://www.cybersuite.in/" target="_blank" class="contact-item">
                     <i data-lucide="globe"></i>
                     <span>CyberSuite Live</span>
@@ -722,15 +696,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
