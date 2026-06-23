@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,7 +42,7 @@
             --shadow-bento: 0 10px 30px -15px rgba(0,0,0,1);
         }
 
-        /* Light Mode */
+        /* Light Mode Palette */
         body.light-mode {
             --bg-base: #ffffff; --bg-surface: #fafafa; --bg-surface-hover: #f0f0f0; --border-subtle: #eaeaea; --border-strong: #cccccc;
             --text-main: #111111; --text-muted: #666666; --accent-blue: #0055cc; --accent-blue-glow: rgba(0, 85, 204, 0.25);
@@ -81,6 +80,15 @@
 
         body { font-family: 'Inter', sans-serif; background-color: var(--bg-base); color: var(--text-main); line-height: 1.6; overflow-x: hidden; width: 100%; transition: background-color 0.3s ease, color 0.3s ease; }
 
+        /* MOBILE FIX: Prevent Code & Terminal Text Overflows */
+        pre, code, .terminal-output p, .json-code {
+            white-space: pre-wrap !important; 
+            word-wrap: break-word !important; 
+            overflow-wrap: break-word !important; 
+            word-break: break-word !important; 
+            max-width: 100%;
+        }
+
         /* BOOT SCREEN PRELOADER */
         #boot-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; color: #0f0; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; z-index: 9999; padding: 20px; display: flex; flex-direction: column; overflow: hidden; }
         #boot-output p { margin: 2px 0; opacity: 0.8; }
@@ -117,7 +125,7 @@
         .nav-links a:hover { color: var(--text-main); }
         .menu-btn { display: none; cursor: pointer; color: var(--text-main); }
 
-        /* BADGES & TOGGLES */
+        /* SHORTCUT BADGES & TOGGLES */
         .cmd-badge { display: flex; align-items: center; gap: 6px; padding: 0 12px; height: 34px; border-radius: 6px; background: var(--bg-surface); border: 1px solid var(--border-strong); font-size: 0.75rem; font-family: 'JetBrains Mono', monospace; color: var(--text-muted); cursor: pointer; transition: all 0.2s ease; }
         .cmd-badge:hover { border-color: var(--text-main); color: var(--text-main); }
         .cmd-kbd { margin-left: 2px; padding: 2px 4px; background: rgba(128,128,128,0.2); border-radius: 3px; }
@@ -160,9 +168,15 @@
         .view-toggle { display: flex; background: var(--bg-base); border: 1px solid var(--border-strong); border-radius: 6px; overflow: hidden; }
         .view-toggle button { background: transparent; border: none; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; padding: 8px 16px; cursor: pointer; transition: all 0.2s; outline: none; }
         .view-toggle button.active { background: var(--border-strong); color: var(--text-main); font-weight: 600; }
-        .profile-content { position: relative; min-height: 180px; }
-        .profile-view { position: absolute; top: 0; left: 0; width: 100%; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        
+        .profile-content { position: relative; min-height: 220px; width: 100%; max-width: 100%; }
+        .profile-view { position: absolute; top: 0; left: 0; width: 100%; max-width: 100%; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
         .profile-view.active { opacity: 1; pointer-events: auto; position: relative; }
+        
+        /* Interactive Editor Styling Fix */
+        .profile-view.mono pre { padding: 16px; border-radius: 8px; border: 1px solid transparent; transition: all 0.2s ease; outline: none; }
+        .profile-view.mono pre:focus { background: rgba(0, 102, 255, 0.05); border-color: rgba(0, 102, 255, 0.3); box-shadow: 0 0 15px rgba(0, 102, 255, 0.1); }
+        
         .py-keyword { color: var(--py-keyword); font-weight: 600; } .py-class { color: var(--py-class); } .py-string { color: var(--py-string); } .py-comment { color: var(--py-comment); font-style: italic; }
 
         /* 3D BENTO BOX & CARDS */
@@ -172,7 +186,7 @@
             border-radius: 12px; padding: 2.5rem; position: relative; box-shadow: var(--shadow-bento); 
             display: flex; flex-direction: column; 
             transition: transform 0.1s ease, border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
-            transform-style: preserve-3d; will-change: transform;
+            transform-style: preserve-3d; will-change: transform; max-width: 100%;
         }
         .card:hover { border-color: var(--text-muted); }
         .card::after { content: ''; position: absolute; inset: 0; border-radius: 12px; background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.06) 0%, transparent 60%); opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
@@ -250,12 +264,22 @@
         .cicd-line { flex: 1; height: 2px; background: var(--border-strong); margin: 0 16px; position: relative; overflow: hidden; min-width: 30px; }
         .cicd-line-progress { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: var(--success); transition: width 0.5s ease; }
 
-        .terminal-window { background: #0d0d0d; border: 1px solid var(--border-strong); border-radius: 12px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        .terminal-window { background: #0d0d0d; border: 1px solid var(--border-strong); border-radius: 12px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.5); position: relative; max-width: 100%; }
         .terminal-header { background: #1a1a1a; padding: 12px 16px; border-bottom: 1px solid #333; display: flex; align-items: center; gap: 8px; }
-        .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
-        .terminal-body { padding: 20px; min-height: 280px; display: flex; flex-direction: column; color: #f5f5f5; }
+        .terminal-header span { text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+        .terminal-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+        .terminal-body { padding: 20px; min-height: 280px; display: flex; flex-direction: column; color: #f5f5f5; position: relative; overflow: hidden; }
         .terminal-output p { margin-bottom: 6px; font-size: 0.9rem; opacity: 0; transform: translateY(5px); animation: termFade 0.2s forwards; }
         @keyframes termFade { to { opacity: 1; transform: translateY(0); } }
+        
+        /* Blinking Terminal Cursor */
+        @keyframes termBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        .terminal-cursor::after { content: '█'; animation: termBlink 1s infinite; color: var(--accent-blue); margin-left: 6px;}
+
+        /* Confetti Effect */
+        .term-particle { position: absolute; color: var(--success); font-family: 'JetBrains Mono', monospace; font-size: 14px; animation: floatUp 1.5s ease-out forwards; pointer-events: none; z-index: 10;}
+        @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-80px) scale(1.5) rotate(20deg); opacity: 0; } }
+
         .pass { color: var(--success); } .fail { color: #ff5f56; } .cmd { color: var(--accent-blue); }
 
         /* TICKETING SYSTEM CONTACT */
@@ -309,7 +333,7 @@
         .qa-bug { position: fixed; color: #ef4444; cursor: crosshair; z-index: 900; animation: bugCrawl 1s infinite alternate; }
         @keyframes bugCrawl { 0% { transform: scale(1) rotate(0deg); } 100% { transform: scale(1.2) rotate(15deg); } }
 
-        /* FIXED SYSTEM LOGGER HUD (MOVED UP) */
+        /* FIXED SYSTEM LOGGER HUD */
         .sys-logger {
             position: fixed; bottom: 80px; left: 24px; width: 340px; 
             background: var(--bg-surface);
@@ -415,6 +439,7 @@
                 <div class="shortcut-item"><span>Toggle Theme</span><kbd>T</kbd></div>
                 <div class="shortcut-item"><span>Show Shortcuts</span><kbd>Shift ?</kbd></div>
                 <div class="shortcut-item"><span>Close Modal</span><kbd>Esc</kbd></div>
+                <div class="shortcut-item"><span>Navigate Options</span><kbd>↓ ↑</kbd></div>
             </div>
             <button class="btn btn-secondary" style="width: 100%; margin-top: 2rem;" id="closeShortcutsBtn">Dismiss</button>
         </div>
@@ -507,7 +532,7 @@
         <div class="container" style="display: flex; flex-direction: column; align-items: center;">
             <div class="status-pill hero-element delay-1"><div class="status-dot"></div> System Active // SpaceXAI</div>
             <h1 class="hero-element delay-2"><span class="hacker-text" data-value="JAIMIN RANA">JAIMIN RANA</span></h1>
-            <p class="hero-element delay-3">Quality Assurance Engineer | Python Developer | Cybersecurity </p>
+            <p class="hero-element delay-3">Quality Assurance Engineer | Python Developer | Cybersecurity</p>
             <div class="btn-group hero-element delay-4">
                 <a href="#projects" class="btn btn-primary" id="e2e-btn-target">View Architectures</a>
                 <a href="resume.pdf" download="Jaimin_Rana_Resume.pdf" class="btn btn-secondary"><i data-lucide="download" size="18"></i> Resume</a>
@@ -541,9 +566,14 @@
                         </div>
                     </div>
 
-                    <!-- Python View -->
+                    <!-- Python View (Interactive Editor Fix) -->
                     <div id="viewPython" class="profile-view mono">
-<pre style="font-size: 0.9rem; line-height: 1.6;"><span class="py-keyword">class</span> <span class="py-class">QAEngineer</span>(Developer):
+                        <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
+                            <span style="font-size: 0.7rem; color: var(--accent-blue); padding: 4px 8px; background: rgba(0, 102, 255, 0.1); border: 1px solid rgba(0, 102, 255, 0.2); border-radius: 6px; display: inline-flex; align-items: center; gap: 6px;">
+                                <i data-lucide="edit-2" size="12"></i> Interactive Editor
+                            </span>
+                        </div>
+<pre style="font-size: 0.85rem; line-height: 1.6; padding: 16px; background: var(--bg-base); border-radius: 8px; border: 1px solid var(--border-strong); transition: all 0.2s ease; outline: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);" spellcheck="false" contenteditable="true" title="Go ahead, edit the code!"><span class="py-keyword">class</span> <span class="py-class">QAEngineer</span>(Developer):
     <span class="py-keyword">def</span> <span class="py-class">__init__</span>(<span class="py-keyword">self</span>):
         <span class="py-keyword">self</span>.name = <span class="py-string">"Jaimin Rana"</span>
         <span class="py-keyword">self</span>.current_role = <span class="py-string">"QA Engineer @ xAI (SpaceXAI)"</span>
@@ -810,7 +840,7 @@ jaimin = QAEngineer()</pre>
                     <span class="mono" style="margin-left:auto; font-size:0.8rem; color:#888;">pytest suite_execution.py</span>
                 </div>
                 <div class="terminal-body mono">
-                    <div id="term-content" class="terminal-output"><p><span class="cmd">jaimin@sys</span>:~/portfolio$ <span style="opacity:0.7">Waiting for pipeline trigger...</span></p></div>
+                    <div id="term-content" class="terminal-output"><p><span class="cmd">jaimin@sys</span>:~/portfolio$ <span class="terminal-cursor" style="opacity:0.7">Waiting for pipeline trigger...</span></p></div>
                     <button id="runTestsBtn" class="btn btn-primary" style="align-self: flex-start; margin-top: auto; font-family: 'JetBrains Mono'; font-size: 0.8rem;"><i data-lucide="play" size="14"></i> Trigger Pipeline</button>
                 </div>
             </div>
@@ -951,7 +981,6 @@ jaimin = QAEngineer()</pre>
                 inspectorTooltip.style.left = (e.clientX + 15) + 'px';
                 inspectorTooltip.style.top = (e.clientY + 15) + 'px';
                 
-                // Hide tooltip itself from pointer events so we can read what's beneath it
                 const target = document.elementFromPoint(e.clientX, e.clientY);
                 if(target && target !== inspectorTooltip && target.id !== 'ghost-cursor') {
                     const tag = target.tagName.toLowerCase();
@@ -1166,7 +1195,7 @@ jaimin = QAEngineer()</pre>
                 await sleep(1000); runTestTarget.click();
 
                 cursor.style.opacity = "0"; showToast("E2E Simulation Passed. 0 Errors.", "var(--success)");
-                logSysEvent("E2E Simulation Completed Successfully", "SUCCESS");
+                logSysEvent("E2E Simulation Completed Successfully", "ACTION");
                 setTimeout(() => { cursor.style.top = '50%'; cursor.style.left = '50%'; }, 1000);
             }
 
@@ -1451,14 +1480,14 @@ jaimin = QAEngineer()</pre>
                             } else if (step.action === 'done') {
                                 depNode.className = 'cicd-step passed';
                                 depNode.innerHTML = `<div class="cicd-step-icon"><i data-lucide="check" size="10"></i></div> Deploy`;
-                                logSysEvent("Pipeline Execution Passed", "SUCCESS");
+                                logSysEvent("Pipeline Execution Passed", "ACTION");
                             }
                             
                             lucide.createIcons();
                             setTimeout(() => { currentStep++; printLine(); }, step.delay);
                         } else {
                             setTimeout(() => {
-                                const resetP = document.createElement('p'); resetP.innerHTML = "<br><span class='cmd'>jaimin@sys</span>:~/portfolio$ <span style='opacity:0.7'>Awaiting next commit...</span>";
+                                const resetP = document.createElement('p'); resetP.innerHTML = "<br><span class='cmd'>jaimin@sys</span>:~/portfolio$ <span class='terminal-cursor' style='opacity:0.7'>Awaiting next commit...</span>";
                                 termContent.appendChild(resetP); runTestsBtn.innerHTML = '<i data-lucide="rotate-cw" size="14"></i> Re-Trigger Pipeline';
                                 runTestsBtn.style.display = 'flex'; lucide.createIcons();
                             }, 1000);
