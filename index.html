@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,350 +7,496 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Jaimin Rana - QA Engineer</title>
     
+    <meta name="color-scheme" content="dark light">
+    
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     
     <!-- Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
         :root {
-            --bg-color: #050507;
-            --text-primary: #ffffff;
-            --text-secondary: #a1a1aa;
-            --accent: #3b82f6; /* Cyber Blue */
-            --accent-glow: rgba(59, 130, 246, 0.5);
-            --border: rgba(255, 255, 255, 0.1);
-            --nav-height: 70px;
+            /* Heavy Engineering Palette (Dark Mode Default) */
+            --bg-base: #000000;
+            --bg-surface: #0a0a0a;
+            --bg-surface-hover: #111111;
+            --border-subtle: #1a1a1a;
+            --border-strong: #333333;
+            --text-main: #f5f5f5;
+            --text-muted: #888888;
+            --accent-blue: #0066ff;
+            --accent-blue-glow: rgba(0, 102, 255, 0.4);
+            --success: #10b981;
+            --success-bg: rgba(16, 185, 129, 0.1);
+            --warning: #f59e0b;
+            --json-key: #7dd3fc;
+            --json-str: #a3e635;
+            --json-num: #fca5a5;
+            --py-keyword: #c678dd;
+            --py-class: #e5c07b;
+            --py-string: #98c379;
+            --py-comment: #5c6370;
+            --nav-height: 64px;
+            --shadow-bento: 0 10px 30px -15px rgba(0,0,0,1);
         }
 
-        @property --angle {
-            syntax: '<angle>';
-            initial-value: 0deg;
-            inherits: false;
+        /* Light Mode */
+        body.light-mode {
+            --bg-base: #ffffff; --bg-surface: #fafafa; --bg-surface-hover: #f0f0f0; --border-subtle: #eaeaea; --border-strong: #cccccc;
+            --text-main: #111111; --text-muted: #666666; --accent-blue: #0055cc; --accent-blue-glow: rgba(0, 85, 204, 0.25);
+            --success: #059669; --success-bg: rgba(5, 150, 105, 0.1); --json-key: #0284c7; --json-str: #4d7c0f; --json-num: #b91c1c;
+            --py-keyword: #a626a4; --py-class: #c18401; --py-string: #50a14f; --py-comment: #a0a1a7; --shadow-bento: 0 10px 30px -15px rgba(0,0,0,0.08);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
+        /* SUDO MODE (MATRIX EASTER EGG) */
+        body.sudo-mode {
+            --bg-base: #000000; --bg-surface: rgba(0, 10, 0, 0.8); --bg-surface-hover: #001a00;
+            --border-subtle: #003300; --border-strong: #00ff00; --text-main: #00ff00; --text-muted: #009900;
+            --accent-blue: #00ff00; --accent-blue-glow: rgba(0, 255, 0, 0.6); --success: #00ff00; --success-bg: rgba(0, 255, 0, 0.2);
+            --shadow-bento: 0 10px 40px -10px rgba(0, 255, 0, 0.3);
         }
 
+        /* QA Debug Mode */
+        body.qa-debug-mode * { outline: 1px solid rgba(16, 185, 129, 0.4) !important; background: rgba(16, 185, 129, 0.02) !important; }
+
+        /* UI Inspector Mode */
+        #inspector-tooltip {
+            position: fixed; pointer-events: none; z-index: 99999; background: rgba(0, 0, 0, 0.9); color: var(--success);
+            border: 1px solid var(--accent-blue); border-radius: 4px; padding: 6px 10px; font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem; display: none; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.5); transform: translate(15px, 15px);
+        }
+        body.inspector-active * { cursor: crosshair !important; }
+        body.inspector-active *:hover { outline: 1px dashed var(--accent-blue) !important; background: rgba(0, 102, 255, 0.05) !important; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html { scroll-behavior: smooth; }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            line-height: 1.6;
-            overflow-x: hidden;
-            width: 100%;
-        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-base); }
+        ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
-        /* LIVE BACKGROUND */
-        #canvas-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background-color: #020203; 
-        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-base); color: var(--text-main); line-height: 1.6; overflow-x: hidden; width: 100%; transition: background-color 0.3s ease, color 0.3s ease; }
 
-        /* TYPOGRAPHY */
-        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        /* BOOT SCREEN PRELOADER */
+        #boot-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; color: #0f0; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; z-index: 9999; padding: 20px; display: flex; flex-direction: column; overflow: hidden; }
+        #boot-output p { margin: 2px 0; opacity: 0.8; }
+        .boot-cursor { display: inline-block; width: 8px; height: 15px; background: #0f0; animation: blink 1s infinite; }
+
+        /* MATRIX CANVAS */
+        #matrixCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; opacity: 0; pointer-events: none; transition: opacity 2s ease; }
+        body.sudo-mode #matrixCanvas { opacity: 0.2; }
+
+        /* BACKGROUND GRID */
+        .bg-grid { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2; background-image: linear-gradient(var(--border-subtle) 1px, transparent 1px), linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px); background-size: 40px 40px; mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 10%, rgba(0,0,0,0) 70%); -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 10%, rgba(0,0,0,0) 80%); pointer-events: none; transition: background-image 0.3s ease; }
+
+        a { text-decoration: none; color: inherit; transition: 0.2s ease; }
         ul { list-style: none; }
-        
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 20px;
-            position: relative;
-            z-index: 1;
-            width: 100%;
-        }
-
-        .section-title {
-            font-size: clamp(1.8rem, 4vw, 2.5rem);
-            margin-bottom: 2rem;
-            border-left: 4px solid var(--accent);
-            padding-left: 1rem;
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
         .mono { font-family: 'JetBrains Mono', monospace; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; width: 100%; }
 
-        /* HEADER */
-        header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            height: var(--nav-height);
-            display: flex;
-            align-items: center;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
-            z-index: 100;
-            background: rgba(5, 5, 7, 0.7);
-        }
+        /* SECTIONS */
+        section { padding: 120px 0; border-bottom: 1px solid var(--border-subtle); transition: border-color 0.3s ease; }
+        section:last-of-type { border-bottom: none; }
+        .section-header { margin-bottom: 3.5rem; }
+        .section-badge { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--accent-blue); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px; }
+        .section-badge::before { content: ''; width: 24px; height: 1px; background: var(--accent-blue); }
+        .section-title { font-size: clamp(2rem, 4vw, 2.5rem); font-weight: 700; letter-spacing: -0.03em; }
+
+        /* HEADER & NAVIGATION */
+        header { position: fixed; top: 0; width: 100%; height: var(--nav-height); display: flex; align-items: center; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-subtle); z-index: 100; transition: background 0.3s ease, border-color 0.3s ease; }
+        body.light-mode header { background: rgba(255, 255, 255, 0.85); }
+        nav { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .logo { font-weight: 700; font-size: 1.1rem; letter-spacing: -0.5px; color: var(--text-main); }
+        .nav-right { display: flex; align-items: center; gap: 24px; }
+        .nav-links { display: flex; gap: 32px; }
+        .nav-links a { font-size: 0.85rem; font-weight: 500; color: var(--text-muted); }
+        .nav-links a:hover { color: var(--text-main); }
+        .menu-btn { display: none; cursor: pointer; color: var(--text-main); }
+
+        /* BADGES & TOGGLES */
+        .cmd-badge { display: flex; align-items: center; gap: 6px; padding: 0 12px; height: 34px; border-radius: 6px; background: var(--bg-surface); border: 1px solid var(--border-strong); font-size: 0.75rem; font-family: 'JetBrains Mono', monospace; color: var(--text-muted); cursor: pointer; transition: all 0.2s ease; }
+        .cmd-badge:hover { border-color: var(--text-main); color: var(--text-main); }
+        .cmd-kbd { margin-left: 2px; padding: 2px 4px; background: rgba(128,128,128,0.2); border-radius: 3px; }
         
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-        }
+        .theme-toggle { background: transparent; border: 1px solid var(--border-strong); color: var(--text-main); width: 34px; height: 34px; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; }
+        .theme-toggle:hover { background: var(--bg-surface); border-color: var(--text-muted); }
 
-        .logo { font-weight: 700; font-size: 1.2rem; letter-spacing: -0.5px; z-index: 102; }
-        .nav-links { display: flex; gap: 30px; }
-        .nav-links a { font-size: 0.9rem; color: var(--text-secondary); }
-        .nav-links a:hover { color: var(--accent); }
-        .menu-btn { display: none; cursor: pointer; z-index: 102; color: white; }
+        /* MOBILE MENU */
+        .mobile-menu { position: fixed; top: 0; right: -100%; width: 100%; height: 100vh; background: var(--bg-base); border-left: 1px solid var(--border-subtle); display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2.5rem; transition: 0.4s cubic-bezier(0.77, 0, 0.175, 1); z-index: 101; }
+        .mobile-menu.active { right: 0; } .mobile-menu a { font-size: 1.5rem; font-weight: 600; color: var(--text-main); }
 
-        .mobile-menu {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 100%;
-            height: 100vh;
-            background: rgba(5, 5, 7, 0.98);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 2rem;
-            transition: 0.3s ease-in-out;
-            z-index: 101;
-        }
-        .mobile-menu.active { right: 0; }
-        .mobile-menu a { font-size: 1.5rem; font-weight: 600; }
+        /* HERO SECTION */
+        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 120px 20px 40px; border-bottom: 1px solid var(--border-subtle); }
+        .hero-element { opacity: 0; animation: heroFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .delay-1 { animation-delay: 0.1s; } .delay-2 { animation-delay: 0.2s; } .delay-3 { animation-delay: 0.3s; } .delay-4 { animation-delay: 0.4s; }
+        @keyframes heroFadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* HERO */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 80px 20px 20px;
-        }
+        .status-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 100px; background: var(--bg-surface); border: 1px solid var(--border-strong); font-size: 0.8rem; font-weight: 500; font-family: 'JetBrains Mono', monospace; margin-bottom: 2rem; color: var(--text-main); }
+        @keyframes pulse-dot { 0%, 100% { opacity: 1; box-shadow: 0 0 12px var(--accent-blue-glow); } 50% { opacity: 0.2; box-shadow: 0 0 2px transparent; } }
+        .status-dot { width: 8px; height: 8px; background: var(--accent-blue); border-radius: 50%; animation: pulse-dot 2s infinite ease-in-out; }
 
-        .hero h1 {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: clamp(2.5rem, 8vw, 5rem);
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 1rem;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: -2px;
-            line-height: 1.1;
-            word-wrap: break-word;
-        }
-        .hero h1::after { content: '_'; color: var(--accent); animation: blink 1s infinite; }
+        .hero h1 { font-size: clamp(3.5rem, 8vw, 6rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.1; margin-bottom: 1.5rem; color: var(--text-main); text-shadow: 0 0 30px rgba(255,255,255,0.1); }
+        body.light-mode .hero h1 { text-shadow: none; }
+        .hero h1 .hacker-text { display: inline-block; }
+        .hero h1::after { content: '_'; color: var(--accent-blue); animation: blink 1s infinite; font-family: 'JetBrains Mono', monospace; font-weight: 400;}
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        .hero p { font-size: clamp(1rem, 2vw, 1.15rem); color: var(--text-muted); font-weight: 400; width: 100%; max-width: 650px; margin: 0 auto 2.5rem auto; text-align: center; }
 
-        .hero p {
-            font-size: clamp(0.9rem, 2vw, 1.2rem);
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            width: 100%; max-width: 900px; text-align: center; margin-left: auto; margin-right: auto;
-            animation: fadeIn 2s ease-out; padding: 0 10px;
+        .btn-group { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+        .btn { padding: 12px 28px; border-radius: 6px; font-weight: 500; font-size: 0.95rem; display: flex; align-items: center; gap: 8px; justify-content: center; transition: all 0.2s ease; cursor: pointer; border: none; font-family: 'Inter', sans-serif; }
+        .btn-primary { background: var(--text-main); color: var(--bg-base); border: 1px solid transparent; }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(255,255,255,0.1); opacity: 0.9; }
+        .btn-secondary { background: var(--bg-surface); color: var(--text-main); border: 1px solid var(--border-strong); }
+        .btn-secondary:hover { background: var(--border-subtle); }
+        body.light-mode .btn-primary { background: #111; color: #fff; }
+        body.light-mode .btn-primary:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.15); opacity: 0.85; }
+
+        /* PYTHON / HUMAN TOGGLE */
+        .profile-toggle-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+        .view-toggle { display: flex; background: var(--bg-base); border: 1px solid var(--border-strong); border-radius: 6px; overflow: hidden; }
+        .view-toggle button { background: transparent; border: none; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; padding: 8px 16px; cursor: pointer; transition: all 0.2s; outline: none; }
+        .view-toggle button.active { background: var(--border-strong); color: var(--text-main); font-weight: 600; }
+        .profile-content { position: relative; min-height: 180px; }
+        .profile-view { position: absolute; top: 0; left: 0; width: 100%; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .profile-view.active { opacity: 1; pointer-events: auto; position: relative; }
+        .py-keyword { color: var(--py-keyword); font-weight: 600; } .py-class { color: var(--py-class); } .py-string { color: var(--py-string); } .py-comment { color: var(--py-comment); font-style: italic; }
+
+        /* 3D BENTO BOX & CARDS */
+        .bento-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; perspective: 1000px; }
+        .card { 
+            background: var(--bg-surface); border: 1px solid var(--border-subtle); border-top: 1px solid var(--border-strong); 
+            border-radius: 12px; padding: 2.5rem; position: relative; box-shadow: var(--shadow-bento); 
+            display: flex; flex-direction: column; 
+            transition: transform 0.1s ease, border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+            transform-style: preserve-3d; will-change: transform;
         }
+        .card:hover { border-color: var(--text-muted); }
+        .card::after { content: ''; position: absolute; inset: 0; border-radius: 12px; background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.06) 0%, transparent 60%); opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
+        .card:hover::after { opacity: 1; }
+        body.light-mode .card::after { background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0,0,0,0.04) 0%, transparent 60%); }
+        .card p { color: var(--text-muted); font-size: 0.95rem; margin-top: 1rem; line-height: 1.7; transform: translateZ(20px); }
+        .card h3 { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.02em; color: var(--text-main); transform: translateZ(30px); }
+        .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 1.5rem; transform: translateZ(10px); }
+        .tag { font-size: 0.75rem; font-weight: 500; font-family: 'JetBrains Mono', monospace; padding: 4px 10px; border-radius: 4px; background: var(--bg-base); border: 1px solid var(--border-strong); color: var(--text-muted); transition: all 0.3s ease; }
 
-        .btn-group { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; animation: fadeIn 2.5s ease-out; }
-        .btn {
-            padding: 12px 24px; border-radius: 6px; font-weight: 600;
-            border: 1px solid var(--border); background: rgba(255,255,255,0.05);
-            display: flex; align-items: center; gap: 8px; font-size: 0.95rem; justify-content: center;
-        }
-        .btn:hover { background: rgba(255,255,255,0.1); border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
-        .btn-primary { background: var(--text-primary); color: var(--bg-color); }
-        .btn-primary:hover { background: #e2e2e2; color: #000; box-shadow: 0 0 20px rgba(255, 255, 255, 0.4); }
-
-        /* SECTIONS & GRID */
-        section { padding: 80px 0; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
-
-
-        /* --- CARD STYLES --- */
-        .card {
-            position: relative;
-            background: transparent; 
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: 0.4s ease;
-            isolation: isolate;
-        }
-
-        .card::before {
-            content: "";
-            position: absolute;
-            inset: -1px; 
-            padding: 2px; 
-            border-radius: 12px;
-            background: conic-gradient(from var(--angle), transparent 10%, var(--accent) 50%, transparent 80%);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask-composite: exclude;
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            pointer-events: none;
-            z-index: 3;
-            opacity: 0; 
-            transition: opacity 0.6s ease;
-            animation: rotateBorder 8s linear infinite; 
-        }
-
-        .card:hover::before { opacity: 1; }
-        @keyframes rotateBorder { to { --angle: 360deg; } }
-
-        .card-inner {
-            background: transparent;
-            padding: 1.5rem;
-            height: 100%;
-            width: 100%;
-            position: relative;
-            z-index: 2;
-        }
-
-        /* --- FIXED LINKEDIN TIMELINE --- */
-        .experience-group {
-            margin-bottom: 3rem;
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        
-        .company-header {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 8px;
-        }
-        
-        .company-logo-box {
-            width: 48px;
-            height: 48px;
-            background: #fff;
-            color: #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 1.5rem;
-            font-family: 'JetBrains Mono', monospace;
-            border-radius: 4px;
-            flex-shrink: 0;
-            z-index: 2;
-        }
-
-        .company-info h3 { font-size: 1.2rem; margin-bottom: 2px; }
-        .company-info span { color: var(--text-secondary); font-size: 0.9rem; }
-
-        .company-roles {
-            margin-left: 23px; 
-            padding-left: 32px; 
-            border-left: 2px solid var(--border); 
-            padding-bottom: 0.5rem;
-            padding-top: 0.5rem;
-        }
-
-        .role-item { position: relative; margin-bottom: 2.5rem; }
+        /* PERFECTED TIMELINE */
+        .company-header { display: flex; align-items: center; gap: 20px; margin-bottom: 1.5rem; }
+        .company-logo-box { width: 50px; height: 50px; background: var(--bg-surface); border: 1px solid var(--border-strong); color: var(--text-main); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.5rem; border-radius: 8px; z-index: 2; }
+        .company-info h3 { font-size: 1.3rem; margin-bottom: 4px; font-weight: 600; color: var(--text-main); }
+        .company-info span { color: var(--text-muted); font-size: 0.85rem; font-family: 'JetBrains Mono', monospace; }
+        .company-roles { margin-left: 24px; padding-left: 32px; border-left: 2px solid var(--border-strong); padding-bottom: 0.5rem; padding-top: 0.5rem; transition: border-color 0.3s ease; }
+        .role-item { position: relative; margin-bottom: 3.5rem; }
         .role-item:last-child { margin-bottom: 0; }
+        
+        .role-item::before { 
+            content: ''; position: absolute; left: -33px; transform: translateX(-50%); 
+            top: 6px; width: 12px; height: 12px; background: var(--bg-base); border: 2px solid var(--text-muted); border-radius: 3px; transition: all 0.3s ease; 
+        }
+        .role-item.active::before { border-color: var(--accent-blue); background: var(--accent-blue); box-shadow: 0 0 10px var(--accent-blue-glow); }
+        
+        .role-title { font-size: 1.15rem; font-weight: 600; margin-bottom: 0.3rem; letter-spacing: -0.01em; color: var(--text-main); }
+        .role-meta { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem; display: block; font-family: 'JetBrains Mono', monospace;}
+        .role-desc { color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; }
+        .role-desc ul { padding-left: 0; list-style: none; }
+        .role-desc li { position: relative; padding-left: 20px; margin-bottom: 0.8rem; }
+        .role-desc li::before { content: ''; position: absolute; left: 0; top: 10px; width: 6px; height: 2px; background: var(--border-strong); transition: background 0.3s ease; }
+        .card-meta { font-size: 0.85rem; color: var(--text-muted); margin: 0.5rem 0 1rem 0; display: block; transform: translateZ(25px);}
+        .card-meta.highlight { color: var(--accent-blue); font-family: 'JetBrains Mono', monospace; }
 
-        .role-item::before {
-            content: ''; 
-            position: absolute; 
-            left: -38px; 
-            top: 6px; 
-            width: 10px; height: 10px;
-            background: var(--text-secondary); 
-            border-radius: 50%; 
-            box-shadow: 0 0 0 6px var(--bg-color);
+        /* JIRA / LINEAR TICKET HEADER */
+        .ticket-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 1rem; transform: translateZ(20px);}
+        .ticket-id { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+        .ticket-status { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 600; padding: 4px 8px; border-radius: 4px; background: var(--success-bg); color: var(--success); }
+
+        /* SKILLS BENTO */
+        .skills-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; perspective: 1000px;}
+        @media (max-width: 900px) { .skills-grid { grid-template-columns: repeat(1, 1fr); } }
+        .skill-panel { background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 2rem; border-radius: 12px; transition: transform 0.1s ease; transform-style: preserve-3d; will-change: transform;}
+        .skill-panel h4 { font-size: 1rem; color: var(--text-main); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 8px; transform: translateZ(30px);}
+        .skill-panel h4 i { color: var(--accent-blue); }
+
+        /* API SANDBOX */
+        .api-container { display: flex; border: 1px solid var(--border-strong); border-radius: 12px; overflow: hidden; background: var(--bg-surface); flex-wrap: wrap; }
+        .api-sidebar { width: 250px; background: var(--bg-base); border-right: 1px solid var(--border-subtle); padding: 10px 0; }
+        .api-endpoint { width: 100%; text-align: left; background: transparent; border: none; padding: 12px 20px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; cursor: pointer; transition: 0.2s; border-left: 2px solid transparent; }
+        .api-endpoint:hover { background: var(--bg-surface); color: var(--text-main); }
+        .api-endpoint.active { border-left-color: var(--accent-blue); color: var(--text-main); background: rgba(0, 102, 255, 0.05); }
+        .api-method { color: var(--success); font-weight: 600; margin-right: 8px; }
+        .api-viewer { flex: 1; padding: 20px; background: var(--bg-surface); min-height: 300px; overflow-x: auto; }
+        .json-code { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; white-space: pre-wrap; color: var(--text-main); }
+        .json-key { color: var(--json-key); } .json-string { color: var(--json-str); } .json-number { color: var(--json-num); }
+
+        /* CI/CD & AUTOMATION GAUGES */
+        .dashboard-header { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 2rem; }
+        .gauge-card { 
+            background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 12px; 
+            padding: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 20px; 
+        }
+        .circular-chart { display: block; max-width: 60px; max-height: 60px; flex-shrink: 0;}
+        .circle-bg { fill: none; stroke: var(--border-strong); stroke-width: 3.8; }
+        .circle { fill: none; stroke-width: 2.8; stroke-linecap: round; animation: progress 1s ease-out forwards; }
+        .gauge-text { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-main); display: flex; flex-direction: column; }
+        .gauge-val { font-size: 1.5rem; font-weight: 700; color: var(--text-main); line-height: 1.2; }
+        @keyframes progress { 0% { stroke-dasharray: 0 100; } }
+
+        .cicd-container { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; background: var(--bg-base); padding: 20px 24px; border: 1px solid var(--border-subtle); border-radius: 8px; overflow-x: auto;}
+        .cicd-step { display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted); transition: all 0.3s ease; white-space: nowrap; }
+        .cicd-step.active { color: var(--accent-blue); } .cicd-step.passed { color: var(--success); }
+        .cicd-step-icon { width: 16px; height: 16px; border-radius: 50%; border: 2px solid currentColor; display: flex; align-items: center; justify-content: center; }
+        .cicd-line { flex: 1; height: 2px; background: var(--border-strong); margin: 0 16px; position: relative; overflow: hidden; min-width: 30px; }
+        .cicd-line-progress { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: var(--success); transition: width 0.5s ease; }
+
+        .terminal-window { background: #0d0d0d; border: 1px solid var(--border-strong); border-radius: 12px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        .terminal-header { background: #1a1a1a; padding: 12px 16px; border-bottom: 1px solid #333; display: flex; align-items: center; gap: 8px; }
+        .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .terminal-body { padding: 20px; min-height: 280px; display: flex; flex-direction: column; color: #f5f5f5; }
+        .terminal-output p { margin-bottom: 6px; font-size: 0.9rem; opacity: 0; transform: translateY(5px); animation: termFade 0.2s forwards; }
+        @keyframes termFade { to { opacity: 1; transform: translateY(0); } }
+        .pass { color: var(--success); } .fail { color: #ff5f56; } .cmd { color: var(--accent-blue); }
+
+        /* TICKETING SYSTEM CONTACT */
+        .contact-layout { display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; }
+        .contact-links { display: flex; flex-direction: column; gap: 1rem; }
+        .contact-item { display: flex; align-items: center; gap: 12px; padding: 16px; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 8px; font-weight: 500; font-size: 0.95rem; color: var(--text-main); transition: all 0.2s ease; }
+        .contact-item:hover { border-color: var(--accent-blue); background: var(--bg-surface-hover); transform: translateX(4px); }
+        .ticket-form { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-top: 1px solid var(--border-strong); border-radius: 12px; padding: 2.5rem; box-shadow: var(--shadow-bento); }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+        .form-control { width: 100%; background: var(--bg-base); border: 1px solid var(--border-strong); border-radius: 6px; padding: 12px 16px; color: var(--text-main); font-family: 'Inter', sans-serif; font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
+        .form-control:focus { border-color: var(--accent-blue); }
+        textarea.form-control { resize: vertical; min-height: 120px; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;}
+
+        /* MODALS (CMD+K, DIAG, SHORTCUTS) */
+        .cmd-modal-overlay, .diag-modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 999; display: none; justify-content: center; align-items: flex-start; padding-top: 15vh; opacity: 0; transition: opacity 0.2s ease; }
+        .cmd-modal-overlay.active, .diag-modal-overlay.active { display: flex; opacity: 1; }
+        .cmd-palette { width: 100%; max-width: 600px; background: var(--bg-surface); border: 1px solid var(--border-strong); border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); overflow: hidden; transform: scale(0.95); transition: transform 0.2s ease; }
+        body.light-mode .cmd-palette { background: #fff; }
+        .cmd-modal-overlay.active .cmd-palette, .diag-modal-overlay.active .cmd-palette { transform: scale(1); }
+        
+        .cmd-input { width: 100%; padding: 20px; background: transparent; border: none; border-bottom: 1px solid var(--border-subtle); color: var(--text-main); font-size: 1.1rem; outline: none; font-family: 'Inter', sans-serif; }
+        
+        /* MAGIC COMMAND HINTS */
+        .cmd-hints { display: flex; gap: 8px; padding: 0 20px 12px 20px; align-items: center; border-bottom: 1px solid var(--border-subtle); }
+        .hint-chip { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; padding: 4px 8px; background: rgba(0, 102, 255, 0.1); color: var(--accent-blue); border: 1px solid rgba(0, 102, 255, 0.3); border-radius: 4px; cursor: pointer; transition: all 0.2s ease; }
+        .hint-chip:hover { background: var(--accent-blue); color: #fff; }
+
+        .cmd-list { max-height: 300px; overflow-y: auto; padding: 8px; }
+        .cmd-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: var(--text-muted); cursor: pointer; border-radius: 8px; transition: all 0.1s; font-size: 0.95rem; }
+        .cmd-item:hover, .cmd-item.selected { background: var(--accent-blue); color: #fff; }
+        .cmd-item kbd { margin-left: auto; font-family: 'JetBrains Mono'; font-size: 0.7rem; opacity: 0.7; }
+        
+        .toast { position: fixed; bottom: 80px; right: 24px; background: var(--success); color: #000; padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; z-index: 1000; display: none; box-shadow: 0 10px 20px rgba(0,0,0,0.2); animation: heroFadeUp 0.3s forwards; }
+
+        /* SHORTCUTS HELP MENU */
+        .shortcut-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;}
+        .shortcut-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.5rem;}
+        .shortcut-item span { color: var(--text-muted); font-size: 0.9rem; }
+        .shortcut-item kbd { background: var(--bg-base); border: 1px solid var(--border-strong); padding: 4px 8px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-main); }
+
+        /* GHOST CURSOR (E2E SIMULATOR) */
+        #ghost-cursor {
+            position: fixed; top: 50%; left: 50%; width: 24px; height: 24px;
+            color: var(--accent-blue); z-index: 99999; pointer-events: none; opacity: 0;
+            transition: top 0.8s cubic-bezier(0.25, 1, 0.5, 1), left 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
         }
 
-        .role-item.active::before {
-            background: var(--accent); 
-            box-shadow: 0 0 0 6px var(--bg-color), 0 0 10px var(--accent-glow);
+        /* BUG HUNTER GAME */
+        .qa-bug { position: fixed; color: #ef4444; cursor: crosshair; z-index: 900; animation: bugCrawl 1s infinite alternate; }
+        @keyframes bugCrawl { 0% { transform: scale(1) rotate(0deg); } 100% { transform: scale(1.2) rotate(15deg); } }
+
+        /* FIXED SYSTEM LOGGER HUD (MOVED UP) */
+        .sys-logger {
+            position: fixed; bottom: 80px; left: 24px; width: 340px; 
+            background: var(--bg-surface);
+            border: 1px solid var(--border-strong); border-radius: 8px;
+            z-index: 990; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; 
+            color: var(--text-muted); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: flex; flex-direction: column; overflow: hidden;
+            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+            max-height: 240px;
         }
-
-        .role-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.2rem; }
-        .role-meta { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.8rem; display: block; }
-        .role-desc { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 0.5rem; }
-        .role-desc ul { padding-left: 1rem; list-style: disc; margin-left: 1rem; }
-        .role-desc li { margin-bottom: 0.3rem; }
-
-        .card-meta { font-size: 0.85rem; color: var(--accent); margin: 0.5rem 0 1rem 0; display: block; line-height: 1.4; }
-        .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 0.5rem; }
-        .tag { font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-secondary); }
-
-        .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100%, 1fr)); gap: 1rem; margin-top: 2rem; }
-        @media(min-width: 600px) { .contact-grid { grid-template-columns: repeat(2, 1fr); } }
-
-        .contact-item { 
-            display: flex; align-items: center; gap: 15px; padding: 15px 20px; 
-            background: transparent; 
-            backdrop-filter: none;
-            border: 1px solid var(--border); 
-            border-radius: 8px; font-weight: 500; 
+        body.light-mode .sys-logger { background: #ffffff; }
+        .sys-logger.collapsed { max-height: 40px; opacity: 0.8; }
+        .sys-logger.collapsed:hover { opacity: 1; }
+        
+        .sys-logger-header {
+            padding: 0 14px; background: rgba(0,0,0,0.2); 
+            border-bottom: 1px solid var(--border-subtle); display: flex;
+            justify-content: space-between; align-items: center; cursor: pointer; 
+            color: var(--text-main); font-weight: 600; height: 40px; flex-shrink: 0;
         }
-        .contact-item:hover { border-color: var(--accent); }
+        .sys-logger-header i[data-lucide="chevron-up"] { transition: transform 0.3s ease; }
+        .sys-logger:not(.collapsed) .sys-logger-header i[data-lucide="chevron-up"] { transform: rotate(180deg); }
+        
+        .sys-logger-body { 
+            padding: 12px; overflow-y: auto; flex-grow: 1; 
+            display: flex; flex-direction: column; gap: 6px; 
+            background: var(--bg-base);
+            height: 200px;
+        }
+        .sys-log-line { animation: termFade 0.2s forwards; line-height: 1.4; word-wrap: break-word; }
+        .sys-log-time { color: var(--accent-blue); margin-right: 6px; }
 
-        footer { text-align: center; padding: 40px 20px; color: var(--text-secondary); font-size: 0.8rem; border-top: 1px solid var(--border); }
+        /* TELEMETRY FOOTER */
+        .system-telemetry { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; background: var(--bg-surface); border-top: 1px solid var(--border-subtle); font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted); position: relative; z-index: 10; }
+        .telemetry-group { display: flex; gap: 24px; }
+        .tel-val { color: var(--text-main); font-weight: 600; }
+        .pulse-green { display: inline-block; width: 6px; height: 6px; background: var(--success); border-radius: 50%; animation: pulse-dot 2s infinite ease-in-out; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .visible { animation: fadeIn 0.8s forwards; }
+        .scroll-animate { opacity: 0; transform: translateY(20px); }
+        .scroll-animate.visible { animation: scrollFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes scrollFadeUp { to { opacity: 1; transform: translateY(0); } }
 
+        @media (max-width: 900px) { .contact-layout { grid-template-columns: 1fr; } .dashboard-header { grid-template-columns: 1fr; } .skills-grid { grid-template-columns: repeat(1, 1fr); } }
+        
         @media (max-width: 768px) {
-            .nav-links { display: none; }
+            .nav-links { display: none; } 
             .menu-btn { display: block; }
-            section { padding: 60px 0; }
-            .btn { width: 100%; } 
-            .company-roles { margin-left: 20px; padding-left: 20px; }
-            .role-item::before { left: -26px; }
+            section { padding: 80px 0; } .btn { width: 100%; } 
+            .company-roles { margin-left: 16px; padding-left: 24px; } 
+            .role-item::before { left: -25px; } 
+            .hero h1 { font-size: 2.8rem; } .telemetry-group { display: none; }
+            .api-sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border-subtle); display: flex; overflow-x: auto;} 
+            .api-endpoint { white-space: nowrap; border-left: none; border-bottom: 2px solid transparent; } 
+            .api-endpoint.active { border-bottom-color: var(--accent-blue); border-left-color: transparent; }
+            .shortcut-grid { grid-template-columns: 1fr; }
+            .dashboard-header { grid-template-columns: 1fr; }
+            .gauge-card { flex-direction: column; text-align: center; gap: 12px; padding: 2rem 1.5rem; justify-content: center; }
+            .gauge-text { align-items: center; }
+            .cmd-text, .cmd-kbd { display: none; }
+            .cmd-badge { padding: 0; width: 34px; justify-content: center; display: flex !important; }
+            .sys-logger { display: none; }
+            .inspector-btn { display: none !important; }
         }
     </style>
 </head>
 <body>
 
-    <!-- LIVE BACKGROUND -->
-    <div id="canvas-container">
-        <canvas id="starfield"></canvas>
+    <!-- GHOST CURSOR (E2E) -->
+    <div id="ghost-cursor">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 4 7.07 17 2.51-7.39L21 11.07z"/></svg>
+    </div>
+
+    <!-- BOOT SCREEN PRELOADER -->
+    <div id="boot-screen">
+        <div id="boot-output"></div>
+        <div><span class="boot-cursor"></span></div>
+    </div>
+
+    <!-- MATRIX CANVAS (SUDO MODE) -->
+    <canvas id="matrixCanvas"></canvas>
+
+    <div class="bg-grid"></div>
+    <div id="toast" class="toast">Action Triggered.</div>
+
+    <!-- LIVE SYSTEM LOGGER HUD -->
+    <div id="sysLogger" class="sys-logger collapsed">
+        <div class="sys-logger-header" onclick="document.getElementById('sysLogger').classList.toggle('collapsed')" title="Click to lock open/close">
+            <span style="display:flex; align-items:center; gap:6px;"><i data-lucide="terminal" size="14"></i> SYS_EVENTS</span>
+            <i data-lucide="chevron-up" size="14"></i>
+        </div>
+        <div class="sys-logger-body" id="sysLoggerBody"></div>
+    </div>
+
+    <!-- KEYBOARD SHORTCUTS MODAL -->
+    <div class="diag-modal-overlay" id="shortcutsModal">
+        <div class="cmd-palette" style="padding: 24px;">
+            <h3 style="font-family: 'Inter'; margin-bottom: 0.5rem; color: var(--text-main); display: flex; align-items:center; gap: 8px;"><i data-lucide="keyboard" size="20"></i> Keyboard Shortcuts</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Navigate the system efficiently.</p>
+            <div class="shortcut-grid">
+                <div class="shortcut-item"><span>Command Palette</span><kbd>Ctrl K</kbd></div>
+                <div class="shortcut-item"><span>UI Inspector Tool</span><kbd>Ctrl I</kbd></div>
+                <div class="shortcut-item"><span>QA Debug Mode</span><kbd>Ctrl D</kbd></div>
+                <div class="shortcut-item"><span>Toggle Theme</span><kbd>T</kbd></div>
+                <div class="shortcut-item"><span>Show Shortcuts</span><kbd>Shift ?</kbd></div>
+                <div class="shortcut-item"><span>Close Modal</span><kbd>Esc</kbd></div>
+            </div>
+            <button class="btn btn-secondary" style="width: 100%; margin-top: 2rem;" id="closeShortcutsBtn">Dismiss</button>
+        </div>
+    </div>
+
+    <!-- SITE HEALTH DIAGNOSTIC MODAL -->
+    <div class="diag-modal-overlay" id="diagModal">
+        <div class="cmd-palette" style="padding: 24px;">
+            <h3 style="font-family: 'JetBrains Mono'; margin-bottom: 1rem; color: var(--accent-blue);">> Running Site Diagnostics...</h3>
+            <div id="diagOutput" class="mono" style="font-size: 0.85rem; color: var(--text-muted); line-height: 2;"></div>
+            <button class="btn btn-secondary" style="width: 100%; margin-top: 1.5rem;" id="closeDiagBtn">Close Inspector</button>
+        </div>
+    </div>
+
+    <!-- COMMAND PALETTE MODAL -->
+    <div class="cmd-modal-overlay" id="cmdModal">
+        <div class="cmd-palette">
+            <input type="text" class="cmd-input" id="cmdInput" placeholder="Search commands..." autocomplete="off">
+            
+            <!-- MAGIC HINTS FOR MOBILE & FIRST TIMERS -->
+            <div class="cmd-hints">
+                <span style="opacity:0.6; font-size: 0.8rem; font-family: 'JetBrains Mono', monospace;">> Magic:</span>
+                <span class="hint-chip" onclick="executeSecret('sudo')">sudo</span>
+                <span class="hint-chip" onclick="executeSecret('bug')">bug</span>
+                <span class="hint-chip" onclick="executeSecret('e2e')">e2e</span>
+            </div>
+
+            <div class="cmd-list" id="cmdList">
+                <div class="cmd-item" data-action="e2e" data-target=""><i data-lucide="bot" size="18"></i> Run E2E UI Automation Test <kbd>⏎</kbd></div>
+                <div class="cmd-item" data-action="bug" data-target=""><i data-lucide="bug" size="18"></i> Initialize QA Bug Hunter <kbd>⏎</kbd></div>
+                <div class="cmd-item" data-action="inspect" data-target=""><i data-lucide="scan-line" size="18"></i> Toggle UI Inspector Tool <kbd>Ctrl+I</kbd></div>
+                <div class="cmd-item" data-action="health" data-target=""><i data-lucide="activity" size="18"></i> Run Site Health Check <kbd>⏎</kbd></div>
+                <div class="cmd-item" data-action="navigate" data-target="#about"><i data-lucide="user" size="18"></i> Go to About <kbd>⏎</kbd></div>
+                <div class="cmd-item" data-action="navigate" data-target="#experience"><i data-lucide="briefcase" size="18"></i> Go to Experience <kbd>⏎</kbd></div>
+                <div class="cmd-item" data-action="navigate" data-target="#projects"><i data-lucide="folder" size="18"></i> Go to Projects <kbd>⏎</kbd></div>
+                <div class="cmd-item" data-action="navigate" data-target="#skills"><i data-lucide="code" size="18"></i> Go to Skills <kbd>⏎</kbd></div>
+                <div class="cmd-item" data-action="navigate" data-target="#api-gateway"><i data-lucide="server" size="18"></i> Go to API Sandbox <kbd>⏎</kbd></div>
+                <div class="cmd-item" data-action="navigate" data-target="#automation"><i data-lucide="terminal" size="18"></i> Go to Automation <kbd>⏎</kbd></div>
+                <div class="cmd-item" data-action="theme" data-target=""><i data-lucide="sun-moon" size="18"></i> Toggle Light/Dark Theme <kbd>T</kbd></div>
+                <div class="cmd-item" data-action="debug" data-target=""><i data-lucide="layout" size="18"></i> Toggle QA Debug Outline <kbd>Ctrl+D</kbd></div>
+                <div class="cmd-item" data-action="shortcuts" data-target=""><i data-lucide="keyboard" size="18"></i> View Keyboard Shortcuts <kbd>?</kbd></div>
+                <div class="cmd-item" data-action="link" data-target="resume.pdf"><i data-lucide="download" size="18"></i> Download Resume <kbd>⏎</kbd></div>
+            </div>
+        </div>
     </div>
 
     <!-- MOBILE MENU -->
     <div class="mobile-menu" id="mobileMenu">
-        <a href="#about" onclick="toggleMenu()">About</a>
-        <a href="#experience" onclick="toggleMenu()">Experience</a>
-        <a href="#projects" onclick="toggleMenu()">Projects</a>
-        <a href="#skills" onclick="toggleMenu()">Skills</a>
-        <a href="#contact" onclick="toggleMenu()">Contact</a>
+        <div id="closeMobileMenuBtn" style="position: absolute; top: 20px; right: 24px; cursor: pointer; color: var(--text-main);"><i data-lucide="x" size="28"></i></div>
+        <a href="#about" class="mobile-nav-link">About</a>
+        <a href="#experience" class="mobile-nav-link">Experience</a>
+        <a href="#projects" class="mobile-nav-link">Projects</a>
+        <a href="#api-gateway" class="mobile-nav-link">API Sandbox</a>
+        <a href="#automation" class="mobile-nav-link">Automation</a>
+        <a href="#contact" class="mobile-nav-link">Contact</a>
     </div>
 
     <!-- HEADER -->
     <header>
         <div class="container">
             <nav>
-                <div class="logo mono">JR_CYBER<span style="color:var(--accent)">.</span></div>
-                <div class="nav-links">
-                    <a href="#about">About</a>
-                    <a href="#experience">Experience</a>
-                    <a href="#projects">Projects</a>
-                    <a href="#skills">Skills</a>
-                    <a href="#contact">Contact</a>
-                </div>
-                <div class="menu-btn" onclick="toggleMenu()">
-                    <i data-lucide="menu" size="28"></i>
+                <div class="logo mono">JAIMIN<span style="color:var(--accent-blue)">.sys</span></div>
+                <div class="nav-right">
+                    <div class="nav-links">
+                        <a href="#about">About</a>
+                        <a href="#experience">Experience</a>
+                        <a href="#projects">Projects</a>
+                        <a href="#skills">Skills</a>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <!-- UI Inspector Tool -->
+                        <div class="cmd-badge inspector-btn" id="inspectorBtn" title="Toggle UI Inspector" onclick="toggleInspector()" style="padding: 0; width: 34px; justify-content: center;">
+                            <i data-lucide="scan-line" size="16"></i>
+                        </div>
+                        <div class="cmd-badge" id="openCmdBtn">
+                            <i data-lucide="search" size="14"></i> 
+                            <span class="cmd-text">Search</span> 
+                            <kbd class="cmd-kbd">Ctrl K</kbd>
+                        </div>
+                        <button id="themeToggle" class="theme-toggle" aria-label="Toggle Theme"></button>
+                        <div class="menu-btn" id="openMobileMenuBtn"><i data-lucide="menu" size="24"></i></div>
+                    </div>
                 </div>
             </nav>
         </div>
@@ -356,31 +504,63 @@
 
     <!-- HERO -->
     <section id="home" class="hero">
-        <div class="container">
-            <h1 class="hacker-text" data-value="JAIMIN RANA">JAIMIN RANA</h1>
-            <p class="mono">Quality Assurance Engineer | Python Developer | Cyber Security </p>
-            <div class="btn-group">
-                <a href="#projects" class="btn btn-primary">View Work</a>
-                <a href="resume.pdf" download="Jaimin_Rana_Resume.pdf" class="btn">
-                    <i data-lucide="download" size="18"></i> Resume
-                </a>
-                <a href="#contact" class="btn">Contact Me</a>
+        <div class="container" style="display: flex; flex-direction: column; align-items: center;">
+            <div class="status-pill hero-element delay-1"><div class="status-dot"></div> System Active // SpaceXAI</div>
+            <h1 class="hero-element delay-2"><span class="hacker-text" data-value="JAIMIN RANA">JAIMIN RANA</span></h1>
+            <p class="hero-element delay-3">Quality Assurance Engineer | Python Developer | Cybersecurity </p>
+            <div class="btn-group hero-element delay-4">
+                <a href="#projects" class="btn btn-primary" id="e2e-btn-target">View Architectures</a>
+                <a href="resume.pdf" download="Jaimin_Rana_Resume.pdf" class="btn btn-secondary"><i data-lucide="download" size="18"></i> Resume</a>
+                <a href="#contact" class="btn btn-secondary">Log a Ticket</a>
             </div>
         </div>
     </section>
 
-    <!-- ABOUT -->
+    <!-- ABOUT WITH PYTHON TOGGLE -->
     <section id="about">
         <div class="container">
-            <h2 class="section-title">Summary</h2>
-            <div class="card visible">
-                <div class="card-inner">
-                    <p>Detail-oriented Quality Assurance Engineer with hands-on experience at xAI (SpaceXAI) testing and improving Grok Android and Web applications. Expertise in functional testing, regression testing, mobile compatibility testing, localization QA, and defect tracking. Strong Python developer skilled in building secure web applications with solid cybersecurity fundamentals and Google Professional Certifications.</p>
-                    <div style="margin-top: 1.5rem; display: flex; gap: 10px; flex-wrap: wrap;">
-                        <span class="tag" style="background:rgba(59, 130, 246, 0.2); border-color:var(--accent);">QA & Testing</span>
-                        <span class="tag" style="background:rgba(59, 130, 246, 0.2); border-color:var(--accent);">Mobile App Testing</span>
-                        <span class="tag" style="background:rgba(59, 130, 246, 0.2); border-color:var(--accent);">Google Cybersecurity Certified</span>
+            <div class="profile-toggle-container scroll-animate">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div class="section-badge" style="margin: 0;">01 // INIT</div>
+                    <h2 class="section-title" style="margin: 0;">Profile Setup</h2>
+                </div>
+                <div class="view-toggle">
+                    <button id="btnHuman" class="active">Human.txt</button>
+                    <button id="btnPython">jaimin.py</button>
+                </div>
+            </div>
+            
+            <div class="card scroll-animate" style="max-width: 100%;">
+                <div class="profile-content">
+                    
+                    <!-- Human View -->
+                    <div id="viewHuman" class="profile-view active">
+                        <p style="font-size: 1.05rem; color: var(--text-main);">Detail-oriented Quality Assurance Engineer with hands-on experience at xAI (SpaceXAI) testing and improving Grok Android and Web applications. Expertise in functional testing, regression testing, mobile compatibility testing, localization QA, and defect tracking. Strong Python developer skilled in building secure web applications with solid cybersecurity fundamentals and Google Professional Certifications.</p>
+                        <div class="tags" style="padding-top: 2rem;">
+                            <span class="tag">QA & Testing</span><span class="tag">Mobile App Testing</span><span class="tag">Google Cybersecurity Certified</span>
+                        </div>
                     </div>
+
+                    <!-- Python View -->
+                    <div id="viewPython" class="profile-view mono">
+<pre style="font-size: 0.9rem; line-height: 1.6;"><span class="py-keyword">class</span> <span class="py-class">QAEngineer</span>(Developer):
+    <span class="py-keyword">def</span> <span class="py-class">__init__</span>(<span class="py-keyword">self</span>):
+        <span class="py-keyword">self</span>.name = <span class="py-string">"Jaimin Rana"</span>
+        <span class="py-keyword">self</span>.current_role = <span class="py-string">"QA Engineer @ xAI (SpaceXAI)"</span>
+        <span class="py-keyword">self</span>.specialties = [
+            <span class="py-string">"Functional Testing"</span>, 
+            <span class="py-string">"Regression QA"</span>, 
+            <span class="py-string">"Python Automation"</span>
+        ]
+        
+    <span class="py-keyword">def</span> <span class="py-class">get_summary</span>(<span class="py-keyword">self</span>):
+        <span class="py-comment"># Detail-oriented SDET with strong cyber fundamentals</span>
+        <span class="py-keyword">return</span> <span class="py-keyword">self</span>.specialties
+
+<span class="py-comment"># Instantiate profile</span>
+jaimin = QAEngineer()</pre>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -389,22 +569,18 @@
     <!-- EXPERIENCE -->
     <section id="experience">
         <div class="container">
-            <h2 class="section-title">Experience</h2>
+            <div class="section-header scroll-animate">
+                <div class="section-badge">02 // LOG</div><h2 class="section-title">Experience Matrix</h2>
+            </div>
             
-            <!-- xAI GROUP -->
             <div class="experience-group scroll-animate">
                 <div class="company-header">
                     <div class="company-logo-box">X</div> 
-                    <div class="company-info">
-                        <h3>SpaceXAI</h3>
-                        <span>Remote · Contract · 8 mos</span>
-                    </div>
+                    <div class="company-info"><h3>SpaceXAI</h3><span>Remote // Contract // 8 mos</span></div>
                 </div>
-                
               <div class="company-roles">
                     <div class="role-item active">
-                        <div class="role-title">Quality Assurance Engineer</div>
-                        <span class="role-meta">Dec 2025 – Present · 7 mos</span>
+                        <div class="role-title">Quality Assurance Engineer</div><span class="role-meta">Dec 2025 – Present · 7 mos</span>
                         <div class="role-desc">
                             <ul>
                                 <li>Conducted comprehensive QA testing for the Grok Android application.</li>
@@ -413,128 +589,112 @@
                                 <li>Performed exploratory and regression testing, accompanied by detailed defect tracking.</li>
                             </ul>
                         </div>
-                        <div class="tags">
-                            <span class="tag">Functional Testing</span>
-                            <span class="tag">Mobile QA</span>
-                            <span class="tag">Defect Tracking</span>
+                        <div class="tags" style="margin-top: 1rem; padding-top: 0;">
+                            <span class="tag">Functional Testing</span><span class="tag">Mobile QA</span><span class="tag">Defect Tracking</span>
                         </div>
                     </div>
-
                     <div class="role-item active">
-                        <div class="role-title">Multilingual Localization Specialist</div>
-                        <span class="role-meta">Nov 2025 – Present · 8 mos</span>
+                        <div class="role-title">Multilingual Localization Specialist</div><span class="role-meta">Nov 2025 – Present · 8 mos</span>
                         <div class="role-desc">
                             <ul>
                                 <li>Translating and localizing X/Grok interface strings into Gujarati.</li>
                                 <li>Conducting localization QA to ensure linguistic accuracy and proper UI rendering across different device locales.</li>
                             </ul>
                         </div>
-                        <div class="tags">
-                            <span class="tag">Localization QA</span>
-                            <span class="tag">Linguistic Testing</span>
-                        </div>
+                        <div class="tags" style="margin-top: 1rem; padding-top: 0;"><span class="tag">Localization QA</span><span class="tag">Linguistic Testing</span></div>
                     </div>
                 </div>
             </div>
 
-            <!-- SELF-EMPLOYED GROUP -->
             <div class="experience-group scroll-animate">
                 <div class="company-header">
-                    <div class="company-logo-box"><i data-lucide="shield" color="black"></i></div>
-                    <div class="company-info">
-                        <h3>Self-employed</h3>
-                        <span>Quality Assurance & Web Development Projects</span>
-                    </div>
+                    <div class="company-logo-box"><i data-lucide="shield" size="24"></i></div>
+                    <div class="company-info"><h3>Self-employed</h3><span>QA & Web Development Projects</span></div>
                 </div>
-                
                 <div class="company-roles">
                     <div class="role-item active">
-                         <div class="role-title">Python Developer & Security QA Analyst</div>
-                         <span class="role-meta">Jan 2021 – Apr 2026 · 5 yrs 4 mo</span>
+                         <div class="role-title">Python Developer & Security QA Analyst</div><span class="role-meta">Jan 2021 – Apr 2026 · 5 yrs 4 mo</span>
                          <div class="role-desc">
                             <ul>
                                 <li>Built and deployed full-stack web applications using Python (Flask/Django), ensuring high-quality code through rigorous functional testing.</li>
-                                <li>Performed vulnerability assessments and penetration testing (Security QA) based on the OWASP Top 10 framework.</li>
+                                <li>Performed vulnerability assessments and penetration testing (Security QA) based on OWASP Top 10.</li>
                                 <li>Developed Python-based security automation scripts and testing tools to identify and mitigate threats.</li>
                                 <li>Maintained a personal homelab for Linux system hardening and evaluating network defense configurations.</li>
                                 <li>Completed Google Cybersecurity, IT Support, and Cloud Cybersecurity Professional Certificates.</li>
                             </ul>
                          </div>
-                         <div class="tags">
-                            <span class="tag">Security Testing</span>
-                            <span class="tag">Python Testing</span>
-                            <span class="tag">Penetration Testing</span>
+                         <div class="tags" style="margin-top: 1rem; padding-top: 0;">
+                            <span class="tag">Security Testing</span><span class="tag">Python Testing</span><span class="tag">Penetration Testing</span>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <h2 class="section-title" style="margin-top: 3rem;">Education</h2>
-            <div class="grid">
-                <div class="card scroll-animate">
-                    <div class="card-inner">
-                        <h3 style="font-size: 1.1rem;">Master of Computer Applications (MCA)</h3>
-                        <span class="card-meta">PP Savani University | 2024 - 2026</span>
-                    </div>
-                </div>
-                <div class="card scroll-animate">
-                    <div class="card-inner">
-                        <h3 style="font-size: 1.1rem;">Bachelor of Computer Applications (BCA)</h3>
-                        <span class="card-meta">Veer Narmad South Gujarat University | 2021 - 2024</span>
-                    </div>
-                </div>
+            
+            <div class="section-header scroll-animate" style="margin-top: 5rem; margin-bottom: 2rem;"><h2 class="section-title" style="font-size: 1.8rem;">Education</h2></div>
+            <div class="bento-grid">
+                <div class="card scroll-animate" style="padding: 2rem;"><h3 style="font-size: 1.1rem;">Master of Computer Applications (MCA)</h3><span class="card-meta">PP Savani University | 2024 - 2026</span></div>
+                <div class="card scroll-animate" style="padding: 2rem;"><h3 style="font-size: 1.1rem;">Bachelor of Computer Applications (BCA)</h3><span class="card-meta">Veer Narmad South Gujarat University | 2021 - 2024</span></div>
             </div>
         </div>
     </section>
 
-    <!-- PROJECTS -->
+    <!-- LINEAR STYLE TICKETS (PROJECTS) -->
     <section id="projects">
         <div class="container">
-            <h2 class="section-title">Featured Projects</h2>
-            <div class="grid">
+            <div class="section-header scroll-animate">
+                <div class="section-badge">03 // DEPLOY</div><h2 class="section-title">Issue Tracker / Projects</h2>
+                <p style="color:var(--text-muted); max-width:600px;">Featured projects formatted as verified QA implementation tickets.</p>
+            </div>
+            <div class="bento-grid">
+                
                 <div class="card scroll-animate">
-                    <div class="card-inner">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <h3>Security QA & Vulnerability Lab</h3>
-                            <i data-lucide="shield" size="20" color="#3b82f6"></i>
-                        </div>
-                        <span class="card-meta mono">Penetration Testing, Burp Suite, Kali Linux</span>
-                        <p>Designed a multi-machine virtual environment for security testing. Conducted automated penetration testing to identify, track, and document 5 critical OWASP vulnerabilities.</p>
+                    <div class="ticket-header">
+                        <span class="ticket-id"><i data-lucide="check-circle-2" size="14" style="color:var(--success)"></i> QA-101</span>
+                        <span class="ticket-status">VERIFIED</span>
                     </div>
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 0.5rem;">
+                        <h3>Security QA & Vulnerability Lab</h3>
+                    </div>
+                    <p>Designed a multi-machine virtual environment for security testing. Conducted automated penetration testing to identify and document 5 critical OWASP vulnerabilities.</p>
+                    <div class="tags"><span class="tag">Pen Testing</span><span class="tag">Kali Linux</span></div>
                 </div>
 
                 <div class="card scroll-animate">
-                    <div class="card-inner">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <h3>Security Utilities Suite</h3>
-                            <i data-lucide="lock" size="20" color="#3b82f6"></i>
-                        </div>
-                        <span class="card-meta mono">Python, Flask, AES, HMAC</span>
-                        <p>Developed and extensively tested a suite of 4 Flask-based security utilities including CryptoGuard for AES encryption and Digital Signatures to ensure robust data protection.</p>
+                    <div class="ticket-header">
+                        <span class="ticket-id"><i data-lucide="check-circle-2" size="14" style="color:var(--success)"></i> DEV-204</span>
+                        <span class="ticket-status">VERIFIED</span>
                     </div>
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 0.5rem;">
+                        <h3>Security Utilities Suite</h3>
+                    </div>
+                    <p>Developed and extensively tested a suite of 4 Flask-based security utilities including CryptoGuard for AES encryption and Digital Signatures to ensure robust data protection.</p>
+                    <div class="tags"><span class="tag">Python</span><span class="tag">Flask</span><span class="tag">AES Crypto</span></div>
                 </div>
 
                 <div class="card scroll-animate">
-                    <div class="card-inner">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <h3>Real-time Threat Analysis App</h3>
-                            <i data-lucide="activity" size="20" color="#3b82f6"></i>
-                        </div>
-                        <span class="card-meta mono">Python, Flask, Public APIs</span>
-                        <p>Created and validated Threat Indicator Lookup and Threat News Viewer tools. Performed functional testing on public API integrations to ensure reliable real-time data aggregation.</p>
+                    <div class="ticket-header">
+                        <span class="ticket-id"><i data-lucide="check-circle-2" size="14" style="color:var(--success)"></i> API-089</span>
+                        <span class="ticket-status">VERIFIED</span>
                     </div>
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 0.5rem;">
+                        <h3>Real-time Threat Analysis App</h3>
+                    </div>
+                    <p>Created and validated Threat Indicator Lookup and Threat News Viewer tools. Performed functional testing on public API integrations to ensure reliable real-time data aggregation.</p>
+                    <div class="tags"><span class="tag">API Integration</span><span class="tag">Data Aggregation</span></div>
                 </div>
 
                  <div class="card scroll-animate">
-                    <div class="card-inner">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <h3>CyberSuite v2 Zero-Knowledge App</h3>
-                            <i data-lucide="code" size="20" color="#3b82f6"></i>
-                        </div>
-                        <span class="card-meta mono">Python, Security Testing</span>
-                        <p>Developed a secure full-stack Flask web application with a zero-knowledge architecture. Executed comprehensive compatibility and security testing to guarantee application integrity.</p>
+                    <div class="ticket-header">
+                        <span class="ticket-id"><i data-lucide="check-circle-2" size="14" style="color:var(--success)"></i> SEC-300</span>
+                        <span class="ticket-status">VERIFIED</span>
                     </div>
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 0.5rem;">
+                        <h3>CyberSuite v2 Zero-Knowledge</h3>
+                    </div>
+                    <p>Developed a secure full-stack Flask web application with a zero-knowledge architecture. Executed comprehensive compatibility and security testing to guarantee application integrity.</p>
+                    <div class="tags"><span class="tag">Zero-Knowledge Arch</span><span class="tag">Security Testing</span></div>
                 </div>
+
             </div>
         </div>
     </section>
@@ -542,157 +702,772 @@
     <!-- SKILLS -->
     <section id="skills">
         <div class="container">
-            <h2 class="section-title">Technical Arsenal</h2>
-            <div class="card scroll-animate">
-                <div class="card-inner">
-                    <div style="margin-bottom: 1.5rem;">
-                        <h4 class="mono" style="margin-bottom:0.5rem; color:var(--accent);">QA & Testing Methods</h4>
-                        <div class="tags">
-                            <span class="tag">Functional Testing</span><span class="tag">Regression Testing</span><span class="tag">Mobile App Testing (Android)</span>
-                            <span class="tag">Localization QA</span><span class="tag">Exploratory Testing</span><span class="tag">Compatibility Testing</span><span class="tag">Defect Tracking</span><span class="tag">Penetration Testing</span><span class="tag">OWASP Top 10</span>
-                        </div>
-                    </div>
-                    <div style="margin-bottom: 1.5rem;">
-                        <h4 class="mono" style="margin-bottom:0.5rem; color:var(--accent);">Programming & Frameworks</h4>
-                        <div class="tags">
-                            <span class="tag">Python</span><span class="tag">Flask</span><span class="tag">Django</span>
-                            <span class="tag">FastAPI</span><span class="tag">JavaScript</span><span class="tag">Git/GitHub</span>
-                        </div>
-                    </div>
-                    <div>
-                        <h4 class="mono" style="margin-bottom:0.5rem; color:var(--accent);">Databases, Cybersecurity & Tools</h4>
-                        <div class="tags">
-                            <span class="tag">PostgreSQL</span><span class="tag">MySQL</span><span class="tag">Linux</span>
-                            <span class="tag">Burp Suite</span><span class="tag">Wireshark</span><span class="tag">Nmap</span><span class="tag">Kali Linux</span><span class="tag">Google Cloud IAM</span>
-                        </div>
-                    </div>
+            <div class="section-header scroll-animate">
+                <div class="section-badge">04 // CONFIG</div><h2 class="section-title">Technical Arsenal</h2>
+            </div>
+            <div class="skills-grid scroll-animate">
+                <div class="skill-panel card" style="padding: 2rem;">
+                    <h4 class="mono"><i data-lucide="check-circle" size="18"></i> QA & Testing</h4>
+                    <div class="tags"><span class="tag">Functional</span><span class="tag">Regression</span><span class="tag">Mobile (Android)</span><span class="tag">Localization QA</span><span class="tag">Exploratory</span><span class="tag">Compatibility</span><span class="tag">Defect Tracking</span><span class="tag">Penetration Testing</span><span class="tag">OWASP Top 10</span></div>
+                </div>
+                <div class="skill-panel card" style="padding: 2rem;">
+                    <h4 class="mono"><i data-lucide="terminal-square" size="18"></i> Stack</h4>
+                    <div class="tags"><span class="tag">Python</span><span class="tag">Flask</span><span class="tag">Django</span><span class="tag">FastAPI</span><span class="tag">JavaScript</span><span class="tag">Git/GitHub</span></div>
+                </div>
+                <div class="skill-panel card" style="padding: 2rem;">
+                    <h4 class="mono"><i data-lucide="database" size="18"></i> Ops & Sec Tools</h4>
+                    <div class="tags"><span class="tag">PostgreSQL</span><span class="tag">MySQL</span><span class="tag">Linux</span><span class="tag">Burp Suite</span><span class="tag">Wireshark</span><span class="tag">Nmap</span><span class="tag">Kali Linux</span><span class="tag">Google Cloud IAM</span></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CONTACT -->
-    <section id="contact">
+    <!-- API GATEWAY SANDBOX -->
+    <section id="api-gateway">
         <div class="container">
-            <h2 class="section-title">Initialize Handshake</h2>
-            <p style="color:var(--text-secondary); margin-bottom: 1.5rem; text-align: center;">
-                I am currently open to opportunities as a Quality Assurance Engineer and Software Tester.
-            </p>
-            <div class="contact-grid">
-                <a href="mailto:hunterlord469@gmail.com" class="contact-item">
-                    <i data-lucide="mail"></i>
-                    <span>Email Me</span>
-                </a>
-                
-                <!-- Fixed LinkedIn Icon -->
-                <a href="https://linkedin.com/in/jaimin-r-cyber" target="_blank" class="contact-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-linkedin"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
-                    <span>LinkedIn</span>
-                </a>
-                
-                <!-- Fixed GitHub Icon -->
-                <a href="https://github.com/techhunter333" target="_blank" class="contact-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-github"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.2c3-.3 6-1.5 6-6.5 0-1.4-.5-2.5-1.5-3.5.3-.7.3-2.2-.2-3.5 0 0-1-.3-3.3 1.2a11.5 11.5 0 0 0-6 0C6.2 1.5 5.2 1.8 5.2 1.8c-.5 1.3-.5 2.8-.2 3.5-1 .9-1.5 2.2-1.5 3.5 0 5 2.9 6.2 5.9 6.5-.3.3-.6.9-.6 1.9v4"/><path d="M9 20c-5 1.5-5-2.5-7-3"/></svg>
-                    <span>GitHub</span>
-                </a>
-
-                <a href="https://www.cybersuite.in/" target="_blank" class="contact-item">
-                    <i data-lucide="globe"></i>
-                    <span>CyberSuite Live</span>
-                </a>
+            <div class="section-header scroll-animate">
+                <div class="section-badge">05 // API_GATEWAY</div>
+                <h2 class="section-title">Backend API Sandbox</h2>
+                <p style="color:var(--text-muted); max-width:600px;">Interactive JSON API tester. Click an endpoint to simulate a backend server response payload.</p>
+            </div>
+            <div class="api-container scroll-animate" id="e2e-api-target">
+                <div class="api-sidebar" id="apiSidebar">
+                    <button class="api-endpoint active" data-endpoint="profile"><span class="api-method">GET</span> /api/v1/profile</button>
+                    <button class="api-endpoint" data-endpoint="certifications"><span class="api-method">GET</span> /api/v1/certifications</button>
+                    <button class="api-endpoint" id="apiContactBtn" data-endpoint="contact"><span class="api-method">GET</span> /api/v1/contact</button>
+                </div>
+                <div class="api-viewer">
+                    <div id="jsonViewer" class="json-code"></div>
+                </div>
             </div>
         </div>
     </section>
 
-    <footer>
+    <!-- AUTOMATION W/ METRICS & CI-CD PIPELINE -->
+    <section id="automation">
         <div class="container">
-            <p>© 2026 Jaimin Rana. Built with Secure Coding Practices.</p>
+            <div class="section-header scroll-animate">
+                <div class="section-badge">06 // AUTOMATION</div>
+                <h2 class="section-title">Pipeline Diagnostics</h2>
+                <p style="color:var(--text-muted); max-width:600px;">Real-time automated testing execution and CI/CD deployment logic.</p>
+            </div>
+
+            <!-- LIVE QA METRIC GAUGES -->
+            <div class="dashboard-header scroll-animate">
+                <div class="gauge-card">
+                    <svg viewBox="0 0 36 36" class="circular-chart">
+                        <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                        <path class="circle" stroke="var(--success)" stroke-dasharray="94, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                    </svg>
+                    <div class="gauge-text">
+                        <span class="gauge-val">94%</span> Test Coverage
+                    </div>
+                </div>
+                <div class="gauge-card">
+                    <svg viewBox="0 0 36 36" class="circular-chart">
+                        <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                        <path class="circle" stroke="var(--accent-blue)" stroke-dasharray="88, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                    </svg>
+                    <div class="gauge-text">
+                        <span class="gauge-val">88%</span> Automation Ratio
+                    </div>
+                </div>
+                <div class="gauge-card">
+                    <svg viewBox="0 0 36 36" class="circular-chart">
+                        <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                        <path class="circle" stroke="var(--success)" stroke-dasharray="100, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                    </svg>
+                    <div class="gauge-text">
+                        <span class="gauge-val">100%</span> Pass Rate
+                    </div>
+                </div>
+            </div>
+            
+            <div class="cicd-container scroll-animate">
+                <div class="cicd-step active" id="cicd-build">
+                    <div class="cicd-step-icon"><i data-lucide="package" size="10"></i></div> Build
+                </div>
+                <div class="cicd-line"><div class="cicd-line-progress" id="line-1"></div></div>
+                
+                <div class="cicd-step" id="cicd-test">
+                    <div class="cicd-step-icon"><i data-lucide="test-tube" size="10"></i></div> Test
+                </div>
+                <div class="cicd-line"><div class="cicd-line-progress" id="line-2"></div></div>
+                
+                <div class="cicd-step" id="cicd-sec">
+                    <div class="cicd-step-icon"><i data-lucide="shield" size="10"></i></div> Security
+                </div>
+                <div class="cicd-line"><div class="cicd-line-progress" id="line-3"></div></div>
+                
+                <div class="cicd-step" id="cicd-deploy">
+                    <div class="cicd-step-icon"><i data-lucide="server" size="10"></i></div> Deploy
+                </div>
+            </div>
+
+            <div class="terminal-window scroll-animate">
+                <div class="terminal-header">
+                    <div class="terminal-dot" style="background: #ff5f56;"></div><div class="terminal-dot" style="background: #ffbd2e;"></div><div class="terminal-dot" style="background: #27c93f;"></div>
+                    <span class="mono" style="margin-left:auto; font-size:0.8rem; color:#888;">pytest suite_execution.py</span>
+                </div>
+                <div class="terminal-body mono">
+                    <div id="term-content" class="terminal-output"><p><span class="cmd">jaimin@sys</span>:~/portfolio$ <span style="opacity:0.7">Waiting for pipeline trigger...</span></p></div>
+                    <button id="runTestsBtn" class="btn btn-primary" style="align-self: flex-start; margin-top: auto; font-family: 'JetBrains Mono'; font-size: 0.8rem;"><i data-lucide="play" size="14"></i> Trigger Pipeline</button>
+                </div>
+            </div>
         </div>
-    </footer>
+    </section>
 
-    <!-- SCRIPTS -->
+    <!-- TICKETING SYSTEM CONTACT -->
+    <section id="contact" style="border-bottom: none;">
+        <div class="container">
+            <div class="section-header scroll-animate">
+                <div class="section-badge">07 // ENDPOINT</div>
+                <h2 class="section-title">Log a Ticket</h2>
+                <p style="color:var(--text-muted); max-width:600px;">Found a bug? Or want to hire me? Submit an issue directly to my inbox.</p>
+            </div>
+
+            <div class="contact-layout scroll-animate">
+                
+                <!-- Ticket Form -->
+                <div class="ticket-form">
+                    <div class="form-group">
+                        <label>SEVERITY</label>
+                        <select class="form-control" id="ticketSev" style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;">
+                            <option value="CRITICAL - Hire Request">CRITICAL - Hire Request</option>
+                            <option value="MAJOR - Project Inquiry">MAJOR - Project Inquiry</option>
+                            <option value="MINOR - Bug Report">MINOR - Bug Report</option>
+                            <option value="INFO - General Hello">INFO - General Message</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>TICKET SUMMARY</label>
+                        <input type="text" class="form-control" id="ticketTitle" placeholder="e.g. Need QA Automation for our Android app">
+                    </div>
+                    <div class="form-group">
+                        <label>STEPS TO REPRODUCE / DESCRIPTION</label>
+                        <textarea class="form-control" id="ticketDesc" placeholder="Enter message details here..."></textarea>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%;" id="submitTicketBtn"><i data-lucide="send" size="18"></i> Create Issue</button>
+                </div>
+
+                <!-- Contact Links -->
+                <div class="contact-links">
+                    <a href="mailto:hunterlord469@gmail.com" class="contact-item">
+                        <i data-lucide="mail" size="20" color="var(--accent-blue)"></i> Direct Email
+                    </a>
+                    <a href="https://linkedin.com/in/jaimin-r-cyber" target="_blank" class="contact-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg> 
+                        LinkedIn Profile
+                    </a>
+                    <a href="https://github.com/techhunter333" target="_blank" class="contact-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.2c3-.3 6-1.5 6-6.5 0-1.4-.5-2.5-1.5-3.5.3-.7.3-2.2-.2-3.5 0 0-1-.3-3.3 1.2a11.5 11.5 0 0 0-6 0C6.2 1.5 5.2 1.8 5.2 1.8c-.5 1.3-.5 2.8-.2 3.5-1 .9-1.5 2.2-1.5 3.5 0 5 2.9 6.2 5.9 6.5-.3.3-.6.9-.6 1.9v4"/><path d="M9 20c-5 1.5-5-2.5-7-3"/></svg> 
+                        GitHub Repositories
+                    </a>
+                    <a href="https://www.cybersuite.in/" target="_blank" class="contact-item">
+                        <i data-lucide="globe" size="20" color="var(--accent-blue)"></i> CyberSuite Portal
+                    </a>
+                    <div style="margin-top: auto; padding: 20px; background: rgba(0, 102, 255, 0.05); border: 1px dashed var(--accent-blue); border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-muted);">
+                        <span style="color:var(--text-main); font-weight: 600;">> SYS_STATUS:</span><br>
+                        Currently actively seeking roles as a QA Engineer or Python Developer. Will respond to CRITICAL tickets within 24 hours.
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- LIVE SYSTEM LOGGER HUD -->
+    <div id="sysLogger" class="sys-logger collapsed">
+        <div class="sys-logger-header" onclick="document.getElementById('sysLogger').classList.toggle('collapsed')" title="Click to lock open/close">
+            <span style="display:flex; align-items:center; gap:6px;"><i data-lucide="terminal" size="14"></i> SYS_EVENTS</span>
+            <i data-lucide="chevron-up" size="14"></i>
+        </div>
+        <div class="sys-logger-body" id="sysLoggerBody"></div>
+    </div>
+
+    <!-- TELEMETRY FOOTER -->
+    <div class="system-telemetry">
+        <div style="display:flex; align-items:center; gap:12px;">
+            <div class="pulse-green" style="margin:0;"></div>
+            <span class="mono" style="color:var(--text-main); font-weight:700;">Jaimin.sys <span style="color:var(--success); font-weight:400; opacity:0.8;">// ONLINE</span></span>
+        </div>
+        <div class="telemetry-group">
+            <div>DOM NODES: <span id="domNodes" class="tel-val">0</span></div>
+            <div>UPTIME: <span id="uptime" class="tel-val">00:00:00</span></div>
+            <div>MEM: <span id="memory" class="tel-val">24MB</span></div>
+            <div>PING: <span id="ping" class="tel-val">12ms</span></div>
+        </div>
+    </div>
+
+    <!-- SCRIPT LOGIC -->
     <script>
-        lucide.createIcons();
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            console.log("%c JAIMIN RANA | QA Automation Engineer", "color: #0066ff; font-size: 20px; font-weight: bold;");
+            console.log("%c System Online. Looking at the source code? Let's talk. hunterlord469@gmail.com", "color: #10b981; font-size: 14px;");
 
-        function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('active'); }
+            const themeToggle = document.getElementById('themeToggle');
+            const bootScreen = document.getElementById('boot-screen');
+            const bootOutput = document.getElementById('boot-output');
+            const matrixCanvas = document.getElementById('matrixCanvas');
+            const toast = document.getElementById('toast');
+            const btnHuman = document.getElementById('btnHuman');
+            const btnPython = document.getElementById('btnPython');
+            const jsonViewer = document.getElementById('jsonViewer');
+            const apiButtons = document.querySelectorAll('.api-endpoint');
+            const cmdModal = document.getElementById('cmdModal');
+            const shortcutsModal = document.getElementById('shortcutsModal');
+            const cmdInput = document.getElementById('cmdInput');
+            const cmdItems = document.querySelectorAll('.cmd-item');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const openCmdBtn = document.getElementById('openCmdBtn');
+            const submitTicketBtn = document.getElementById('submitTicketBtn');
+            const sysLogger = document.getElementById('sysLogger');
+            const sysLoggerBody = document.getElementById('sysLoggerBody');
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    entry.target.style.opacity = 1;
-                    entry.target.style.transform = 'translateY(0)';
+            // --- UI INSPECTOR (NEW) ---
+            let inspectorActive = false;
+            const inspectorTooltip = document.createElement('div');
+            inspectorTooltip.id = 'inspector-tooltip';
+            document.body.appendChild(inspectorTooltip);
+
+            window.toggleInspector = function() {
+                inspectorActive = !inspectorActive;
+                if(inspectorActive) {
+                    document.body.classList.add('inspector-active');
+                    inspectorTooltip.style.display = 'block';
+                    logSysEvent("UI Inspector Mode ENABLED", "WARN");
+                    showToast("UI Inspector Mode Active", "var(--accent-blue)");
+                } else {
+                    document.body.classList.remove('inspector-active');
+                    inspectorTooltip.style.display = 'none';
+                    logSysEvent("UI Inspector Mode DISABLED", "INFO");
+                    showToast("UI Inspector Deactivated", "var(--warning)");
+                }
+            };
+
+            document.addEventListener('mousemove', (e) => {
+                if(!inspectorActive) return;
+                inspectorTooltip.style.left = (e.clientX + 15) + 'px';
+                inspectorTooltip.style.top = (e.clientY + 15) + 'px';
+                
+                // Hide tooltip itself from pointer events so we can read what's beneath it
+                const target = document.elementFromPoint(e.clientX, e.clientY);
+                if(target && target !== inspectorTooltip && target.id !== 'ghost-cursor') {
+                    const tag = target.tagName.toLowerCase();
+                    const cls = target.className && typeof target.className === 'string' ? '.' + target.className.split(' ').join('.') : '';
+                    const rect = target.getBoundingClientRect();
+                    inspectorTooltip.innerHTML = `&lt;${tag}${cls}&gt;<br/>${Math.round(rect.width)}x${Math.round(rect.height)}px`;
                 }
             });
-        }, { threshold: 0.1 });
 
-        document.querySelectorAll('.section-title, .scroll-animate').forEach(el => observer.observe(el));
+            // --- SYS LOGGER HUD ---
+            let loggerTimeout;
+            function logSysEvent(msg, type = "INFO") {
+                if(!sysLoggerBody) return;
+                const p = document.createElement('div');
+                p.className = 'sys-log-line';
+                const now = new Date();
+                const time = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0') + ':' + now.getSeconds().toString().padStart(2,'0');
+                
+                let color = "var(--text-muted)";
+                if(type === "ACTION") color = "var(--success)";
+                if(type === "WARN") color = "var(--warning)";
+                if(type === "ERR") color = "#ff5f56";
 
-        // Hacker Text
-        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
-        const headerText = document.querySelector(".hacker-text");
-        function runHackerEffect(target) {
-            let iteration = 0; let interval = null; clearInterval(interval);
-            const originalValue = target.dataset.value;
-            interval = setInterval(() => {
-                target.innerText = originalValue.split("").map((letter, index) => {
-                    if(index < iteration) return originalValue[index];
-                    return letters[Math.floor(Math.random() * letters.length)];
-                }).join("");
-                if(iteration >= originalValue.length) clearInterval(interval);
-                iteration += 1 / 3; 
-            }, 30);
-        }
-        headerText.onmouseover = event => runHackerEffect(event.target);
-        window.onload = () => setTimeout(() => runHackerEffect(headerText), 500);
+                p.innerHTML = `<span class="sys-log-time">[${time}]</span> <span style="color:${color}">${msg}</span>`;
+                sysLoggerBody.appendChild(p);
+                sysLoggerBody.scrollTop = sysLoggerBody.scrollHeight;
 
-        // Canvas
-        const canvas = document.getElementById('starfield');
-        const ctx = canvas.getContext('2d');
-        let width, height, particles = [];
-
-        function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * width; this.y = Math.random() * height;
-                this.vx = (Math.random() - 0.5) * 0.5; this.vy = (Math.random() - 0.5) * 0.5;
-                this.size = Math.random() * 2; this.opacity = Math.random() * 0.5 + 0.1;
+                if (window.innerWidth > 768) {
+                    sysLogger.classList.remove('collapsed');
+                    clearTimeout(loggerTimeout);
+                    loggerTimeout = setTimeout(() => { sysLogger.classList.add('collapsed'); }, 4000);
+                }
             }
-            update() {
-                this.x += this.vx; this.y += this.vy;
-                if (this.x < 0) this.x = width; if (this.x > width) this.x = 0;
-                if (this.y < 0) this.y = height; if (this.y > height) this.y = 0;
+
+            document.addEventListener('click', (e) => {
+                if(e.target.tagName === 'A' && e.target.href) {
+                    logSysEvent(`User routed to: ${e.target.innerText || 'External Link'}`, 'ACTION');
+                } else if(e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+                    logSysEvent(`Action triggered: button click`, 'INFO');
+                }
+            });
+
+            logSysEvent("DOM successfully parsed and loaded", "INFO");
+            logSysEvent("Network connection established", "ACTION");
+
+            // --- THEME ---
+            if(localStorage.getItem('theme') === 'light') { 
+                document.body.classList.add('light-mode'); 
+                themeToggle.innerHTML = `<i data-lucide="moon" size="18"></i>`; 
+            } else { 
+                themeToggle.innerHTML = `<i data-lucide="sun" size="18"></i>`; 
             }
-            draw() {
-                ctx.beginPath(); ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+            lucide.createIcons();
+
+            function toggleTheme() {
+                document.body.classList.toggle('light-mode');
+                const isLight = document.body.classList.contains('light-mode');
+                localStorage.setItem('theme', isLight ? 'light' : 'dark');
+                themeToggle.innerHTML = `<i data-lucide="${isLight ? 'moon' : 'sun'}" size="18"></i>`;
+                lucide.createIcons();
+                if(cmdModal.classList.contains('active')) closeCmd();
+                if (typeof window.renderJSON === 'function') window.renderJSON(); 
+                logSysEvent(`Theme updated to ${isLight ? 'Light' : 'Dark'}`, 'ACTION');
             }
-        }
-        function initParticles() {
-            particles = [];
-            const density = window.innerWidth < 768 ? 20 : 10;
-            const particleCount = Math.floor(window.innerWidth / density); 
-            for (let i = 0; i < particleCount; i++) particles.push(new Particle());
-        }
-        function animate() {
-            ctx.clearRect(0, 0, width, height);
-            particles.forEach((p, index) => {
-                p.update(); p.draw();
-                for (let j = index + 1; j < particles.length; j++) {
-                    const p2 = particles[j];
-                    const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
-                    const connectDist = window.innerWidth < 768 ? 60 : 100;
-                    if (dist < connectDist) {
-                        ctx.beginPath(); ctx.strokeStyle = `rgba(59, 130, 246, ${0.1 - dist/1000})`;
-                        ctx.lineWidth = 0.5; ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+            themeToggle.addEventListener('click', toggleTheme);
+
+            // --- BOOT PRELOADER ---
+            if (!sessionStorage.getItem('booted') && bootScreen) {
+                const bootLines = [
+                    "Loading kernel...", "Mounting /dev/sda1... [OK]", "Starting QA automation daemons... [OK]",
+                    "Initializing testing environment... [OK]", "Bypassing firewall... [AUTHORIZED]", "Loading JAIMIN_RANA.SYS v4.0..."
+                ];
+                let bootLineIdx = 0;
+                function printBootLine() {
+                    if (bootLineIdx < bootLines.length) {
+                        const p = document.createElement('p'); p.innerText = bootLines[bootLineIdx]; bootOutput.appendChild(p); bootLineIdx++;
+                        setTimeout(printBootLine, Math.random() * 150 + 50);
+                    } else {
+                        setTimeout(() => {
+                            bootScreen.style.transition = "opacity 0.5s ease"; bootScreen.style.opacity = "0";
+                            setTimeout(() => { bootScreen.style.display = "none"; }, 500);
+                            logSysEvent("Boot sequence completed", "ACTION");
+                        }, 400);
                     }
                 }
+                printBootLine();
+                sessionStorage.setItem('booted', 'true');
+            } else if (bootScreen) { 
+                bootScreen.style.display = 'none'; 
+            }
+
+            setTimeout(() => {
+                if(!sessionStorage.getItem('hint_shown')) {
+                    showToast("💡 TIP: Press Ctrl+K to open terminal. Try commands: sudo, bug, e2e", "var(--accent-blue)");
+                    sessionStorage.setItem('hint_shown', 'true');
+                    logSysEvent("Displayed system hint payload", "INFO");
+                }
+            }, 6000); 
+
+            function showToast(msg, color) {
+                toast.innerText = msg; toast.style.background = color || "var(--success)";
+                toast.style.display = "block";
+                setTimeout(() => { toast.style.display = "none"; }, 3000);
+            }
+
+            // --- DEBUG MODE ---
+            function toggleDebugMode() {
+                document.body.classList.toggle('qa-debug-mode');
+                if(document.body.classList.contains('qa-debug-mode')) { 
+                    showToast("QA Debug Mode Activated. Tracking DOM borders.", "var(--success)"); 
+                    logSysEvent("QA Debug Mode ENABLED", "WARN");
+                } else { 
+                    showToast("QA Debug Mode Deactivated.", "var(--warning)"); 
+                    logSysEvent("QA Debug Mode DISABLED", "INFO");
+                }
+            }
+
+            // --- MATRIX CANVAS (SUDO) ---
+            let matrixInterval;
+            if(matrixCanvas) {
+                const ctx = matrixCanvas.getContext('2d');
+                matrixCanvas.width = window.innerWidth; matrixCanvas.height = window.innerHeight;
+                const matrixChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*";
+                const fontSize = 14; const columns = matrixCanvas.width / fontSize;
+                const drops = Array(Math.floor(columns)).fill(1);
+
+                function drawMatrix() {
+                    ctx.fillStyle = "rgba(0, 0, 0, 0.05)"; ctx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+                    ctx.fillStyle = "#0F0"; ctx.font = fontSize + "px 'JetBrains Mono'";
+                    for (let i = 0; i < drops.length; i++) {
+                        const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+                        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                        if (drops[i] * fontSize > matrixCanvas.height && Math.random() > 0.975) drops[i] = 0;
+                        drops[i]++;
+                    }
+                }
+                window.startMatrix = function() {
+                    document.body.classList.add('sudo-mode'); matrixCanvas.style.opacity = "0.2"; matrixInterval = setInterval(drawMatrix, 33);
+                    showToast("SUDO MODE ENGAGED. SYSTEM OVERRIDE.", "var(--success)");
+                    document.getElementById('ping').innerText = "0.1ms"; document.getElementById('memory').innerText = "OVERFLOW";
+                    logSysEvent("SUDO COMMAND EXECUTED. MATRIX PROTOCOL ENGAGED.", "ERR");
+                }
+                window.stopMatrix = function() {
+                    document.body.classList.remove('sudo-mode'); matrixCanvas.style.opacity = "0"; clearInterval(matrixInterval);
+                    showToast("SUDO MODE TERMINATED.", "var(--warning)");
+                    logSysEvent("Matrix protocol terminated.", "INFO");
+                }
+            }
+
+            // --- QA BUG HUNTER GAME ---
+            let bugHuntActive = false; let bugScore = 0; let bugInterval;
+            window.initBugHunter = function() {
+                if(bugHuntActive) return;
+                bugHuntActive = true; bugScore = 0;
+                showToast("BUG HUNTER STARTED. 15 seconds to squash bugs!", "var(--success)");
+                logSysEvent("QA Bug Hunter initialized", "WARN");
+                
+                bugInterval = setInterval(() => {
+                    const bug = document.createElement('div');
+                    bug.className = 'qa-bug'; bug.innerHTML = '<i data-lucide="bug" size="32"></i>';
+                    bug.style.top = Math.random() * (window.innerHeight - 50) + 'px';
+                    bug.style.left = Math.random() * (window.innerWidth - 50) + 'px';
+                    document.body.appendChild(bug);
+                    lucide.createIcons();
+
+                    bug.addEventListener('click', function() {
+                        bugScore++; this.innerHTML = '<i data-lucide="x-circle" size="32" color="var(--success)"></i>';
+                        lucide.createIcons(); setTimeout(() => this.remove(), 300);
+                        logSysEvent(`Bug squashed. Score: ${bugScore}`, "ACTION");
+                    });
+                    setTimeout(() => { if(document.body.contains(bug)) bug.remove(); }, 2000);
+                }, 800);
+
+                setTimeout(() => {
+                    clearInterval(bugInterval); bugHuntActive = false;
+                    document.querySelectorAll('.qa-bug').forEach(b => b.remove());
+                    showToast(`TEST COMPLETE. You squashed ${bugScore} bugs!`, "var(--accent-blue)");
+                    logSysEvent(`Bug Hunter finished. Final Score: ${bugScore}`, "SUCCESS");
+                }, 15000);
+            }
+
+            // --- E2E PLAYWRIGHT SIMULATOR ---
+            const sleep = ms => new Promise(r => setTimeout(r, ms));
+            window.runE2ESimulator = async function() {
+                const cursor = document.getElementById('ghost-cursor');
+                const pyBtnElem = document.getElementById('btnPython');
+                const apiTarget = document.getElementById('e2e-api-target');
+                const apiBtnElem = document.getElementById('apiContactBtn');
+                const runTestTarget = document.getElementById('runTestsBtn');
+
+                if(!cursor) return;
+                cursor.style.opacity = "1";
+                showToast("Running Playwright E2E UI Test...", "var(--accent-blue)");
+                logSysEvent("E2E UI Simulation Script Started", "WARN");
+
+                const tRect = themeToggle.getBoundingClientRect();
+                cursor.style.top = (tRect.top + tRect.height/2) + 'px'; cursor.style.left = (tRect.left + tRect.width/2) + 'px';
+                await sleep(1000); themeToggle.click(); await sleep(800); themeToggle.click();
+
+                const pRect = pyBtnElem.getBoundingClientRect();
+                cursor.style.top = (pRect.top + pRect.height/2) + 'px'; cursor.style.left = (pRect.left + pRect.width/2) + 'px';
+                await sleep(1000); pyBtnElem.click(); await sleep(1000);
+
+                apiTarget.scrollIntoView({behavior: 'smooth', block: 'center'}); await sleep(1000);
+                const aRect = apiBtnElem.getBoundingClientRect();
+                cursor.style.top = (aRect.top + aRect.height/2) + 'px'; cursor.style.left = (aRect.left + aRect.width/2) + 'px';
+                await sleep(1000); apiBtnElem.click(); await sleep(1500);
+
+                runTestTarget.scrollIntoView({behavior: 'smooth', block: 'center'}); await sleep(1000);
+                const rRect = runTestTarget.getBoundingClientRect();
+                cursor.style.top = (rRect.top + rRect.height/2) + 'px'; cursor.style.left = (rRect.left + rRect.width/2) + 'px';
+                await sleep(1000); runTestTarget.click();
+
+                cursor.style.opacity = "0"; showToast("E2E Simulation Passed. 0 Errors.", "var(--success)");
+                logSysEvent("E2E Simulation Completed Successfully", "SUCCESS");
+                setTimeout(() => { cursor.style.top = '50%'; cursor.style.left = '50%'; }, 1000);
+            }
+
+            window.executeSecret = function(cmd) {
+                if(cmd === 'sudo') { window.startMatrix(); closeCmd(); }
+                else if(cmd === 'bug') { closeCmd(); window.initBugHunter(); }
+                else if(cmd === 'e2e') { closeCmd(); window.runE2ESimulator(); }
+            }
+
+            // --- PROFILE VIEW TOGGLE ---
+            if(btnHuman && btnPython) {
+                btnHuman.addEventListener('click', () => {
+                    btnPython.classList.remove('active'); btnHuman.classList.add('active');
+                    document.getElementById('viewPython').classList.remove('active'); document.getElementById('viewHuman').classList.add('active');
+                    logSysEvent("Profile view set to Human.txt", "INFO");
+                });
+                btnPython.addEventListener('click', () => {
+                    btnHuman.classList.remove('active'); btnPython.classList.add('active');
+                    document.getElementById('viewHuman').classList.remove('active'); document.getElementById('viewPython').classList.add('active');
+                    logSysEvent("Profile view set to Python Class", "ACTION");
+                });
+            }
+
+            // --- MAGNETIC 3D BENTO CARDS ---
+            document.querySelectorAll('.card').forEach(card => {
+                card.addEventListener('mousemove', e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+                    card.style.setProperty('--mouse-x', `${x}px`); card.style.setProperty('--mouse-y', `${y}px`);
+                    const centerX = rect.width / 2; const centerY = rect.height / 2;
+                    const rotateX = ((y - centerY) / centerY) * -5; 
+                    const rotateY = ((x - centerX) / centerX) * 5;
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)`;
+                });
             });
-            requestAnimationFrame(animate);
-        }
-        window.addEventListener('resize', () => { resize(); initParticles(); });
-        resize(); initParticles(); animate();
+
+            // --- API SANDBOX LOGIC ---
+            const apiData = {
+                profile: { "name": "Jaimin Rana", "role": "QA Engineer & Python Developer", "location": "Surat, India", "status": "Available for opportunities", "focus": ["Mobile Testing", "Web Automation", "Security QA", "Python Backend"] },
+                certifications: { "google_cybersecurity": "Completed", "google_cloud_security": "Completed", "google_it_support": "Completed", "google_deepmind_llm": "Completed" },
+                contact: { "email": "hunterlord469@gmail.com", "linkedin": "linkedin.com/in/jaimin-r-cyber", "github": "github.com/techhunter333", "portfolio": "cybersuite.in" }
+            };
+            let currentApi = 'profile'; 
+            function syntaxHighlight(json) {
+                json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                    let cls = 'json-number';
+                    if (/^"/.test(match)) { if (/:$/.test(match)) { cls = 'json-key'; } else { cls = 'json-string'; } } 
+                    else if (/true|false/.test(match)) { cls = 'json-number'; } else if (/null/.test(match)) { cls = 'json-number'; }
+                    return '<span class="' + cls + '">' + match + '</span>';
+                });
+            }
+            window.renderJSON = function() {
+                if(!jsonViewer) return;
+                const reqStr = `GET /api/v1/${currentApi} HTTP/1.1\nHost: jaimin.sys\nAccept: application/json\n\n`;
+                const dataStr = JSON.stringify({ status: 200, message: "OK", timestamp: new Date().toISOString(), data: apiData[currentApi] }, null, 2);
+                jsonViewer.innerHTML = `<span style="color:var(--warning); opacity:0.8">${reqStr}</span>` + syntaxHighlight(dataStr);
+            }
+            apiButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    apiButtons.forEach(b => b.classList.remove('active')); btn.classList.add('active'); currentApi = btn.dataset.endpoint;
+                    jsonViewer.innerHTML = "<span style='color:var(--text-muted)'>Connecting to server...</span>"; 
+                    logSysEvent(`GET /api/v1/${currentApi} requested`, "INFO");
+                    setTimeout(() => {
+                        window.renderJSON();
+                        logSysEvent(`200 OK: payload retrieved`, "SUCCESS");
+                    }, 400); 
+                });
+            });
+            window.renderJSON();
+
+            // --- TICKET SUBMISSION ---
+            if(submitTicketBtn) {
+                submitTicketBtn.addEventListener('click', () => {
+                    const sev = document.getElementById('ticketSev').value;
+                    const title = document.getElementById('ticketTitle').value || 'New Ticket Request';
+                    const desc = document.getElementById('ticketDesc').value || 'No description provided.';
+                    logSysEvent(`Ticket generated: [${sev}]`, "ACTION");
+                    const subject = encodeURIComponent(`[${sev}] ${title}`);
+                    const bodyStr = encodeURIComponent(`SEVERITY: ${sev}\n\nDESCRIPTION / MESSAGE:\n${desc}\n\n---\nSent via Jaimin Rana QA Terminal`);
+                    window.location.href = `mailto:hunterlord469@gmail.com?subject=${subject}&body=${bodyStr}`;
+                });
+            }
+
+            // --- SITE HEALTH DIAGNOSTIC ---
+            window.runHealthDiagnostic = function() {
+                const diagModal = document.getElementById('diagModal'); const output = document.getElementById('diagOutput');
+                diagModal.classList.add('active'); output.innerHTML = '';
+                logSysEvent("Running internal Site Health Diagnostics", "WARN");
+                const steps = [
+                    "[ OK ] Initializing Headless DOM Inspector...", "[ OK ] Simulating Lighthouse Audit...",
+                    "<span style='color:var(--success)'>[PASS]</span> Accessibility Score: 100/100",
+                    "<span style='color:var(--success)'>[PASS]</span> Best Practices Score: 100/100",
+                    "<span style='color:var(--success)'>[PASS]</span> SEO Score: 100/100",
+                    "[ OK ] Running Security Header Checks...",
+                    "<span style='color:var(--success)'>[PASS]</span> X-Frame-Options: DENY",
+                    "<span style='color:var(--success)'>[PASS]</span> Strict-Transport-Security enforced",
+                    "------------------------------------",
+                    "<span style='color:var(--success); font-weight:bold;'>Overall Site Health: Excellent. Ready for Deployment.</span>"
+                ];
+                let i = 0;
+                function printStep() { if(i < steps.length) { const p = document.createElement('div'); p.innerHTML = steps[i]; output.appendChild(p); i++; setTimeout(printStep, 400); } }
+                printStep();
+            }
+
+            // --- TELEMETRY FOOTER UPDATES ---
+            let seconds = 0;
+            const domNodesElem = document.getElementById('domNodes');
+            if(domNodesElem) domNodesElem.innerText = document.getElementsByTagName('*').length;
+            setInterval(() => {
+                seconds++;
+                const h = Math.floor(seconds / 3600).toString().padStart(2, '0');
+                const m = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
+                const s = (seconds % 60).toString().padStart(2, '0');
+                const uptimeElem = document.getElementById('uptime');
+                if(uptimeElem) uptimeElem.innerText = `${h}:${m}:${s}`;
+                
+                if(!document.body.classList.contains('sudo-mode')) {
+                    const memElem = document.getElementById('memory');
+                    const pingElem = document.getElementById('ping');
+                    if(memElem && seconds % 3 === 0) memElem.innerText = `${(20 + Math.random() * 8).toFixed(1)}MB`;
+                    if(pingElem && seconds % 2 === 0) pingElem.innerText = `${Math.floor(10 + Math.random() * 8)}ms`;
+                }
+            }, 1000);
+
+            // --- COMMAND PALETTE & SHORTCUTS ---
+            let selectedIndex = 0;
+            window.openCmd = function() { 
+                cmdModal.classList.add('active'); cmdInput.value = ''; filterCmds(''); 
+                logSysEvent("Command Palette accessed", "INFO");
+                setTimeout(() => cmdInput.focus(), 50); 
+            }
+            function closeCmd() { cmdModal.classList.remove('active'); shortcutsModal.classList.remove('active'); }
+
+            if(openCmdBtn) openCmdBtn.addEventListener('click', window.openCmd);
+
+            document.addEventListener('keydown', (e) => {
+                const isTyping = ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName);
+                if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); cmdModal.classList.contains('active') ? closeCmd() : window.openCmd(); }
+                if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'd') { e.preventDefault(); toggleDebugMode(); }
+                if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'i') { e.preventDefault(); window.toggleInspector(); }
+                if (e.key === '?' && !isTyping) { e.preventDefault(); shortcutsModal.classList.add('active'); logSysEvent("Shortcut menu opened", "INFO"); }
+                if (e.key.toLowerCase() === 't' && !isTyping) { e.preventDefault(); toggleTheme(); }
+                
+                if (cmdModal.classList.contains('active') || shortcutsModal.classList.contains('active')) {
+                    const visibleItems = Array.from(cmdItems).filter(item => item.style.display !== 'none');
+                    if (e.key === 'Escape') closeCmd();
+                    if (e.key === 'ArrowDown') { e.preventDefault(); selectedIndex = (selectedIndex + 1) % visibleItems.length; updateSelection(visibleItems); }
+                    if (e.key === 'ArrowUp') { e.preventDefault(); selectedIndex = (selectedIndex - 1 + visibleItems.length) % visibleItems.length; updateSelection(visibleItems); }
+                    if (e.key === 'Enter') { e.preventDefault(); if(visibleItems[selectedIndex]) visibleItems[selectedIndex].click(); }
+                }
+            });
+
+            cmdModal.addEventListener('click', (e) => { if(e.target === cmdModal) closeCmd(); });
+            shortcutsModal.addEventListener('click', (e) => { if(e.target === shortcutsModal) closeCmd(); });
+            
+            cmdInput.addEventListener('input', (e) => {
+                const val = e.target.value.toLowerCase();
+                if(val === 'sudo') { window.startMatrix(); cmdInput.value = ''; closeCmd(); return; } 
+                else if (val === 'exit' && document.body.classList.contains('sudo-mode')) { window.stopMatrix(); cmdInput.value = ''; closeCmd(); return; }
+                filterCmds(val);
+            });
+
+            function filterCmds(query) {
+                cmdItems.forEach(item => {
+                    if (item.innerText.toLowerCase().includes(query)) { item.style.display = 'flex'; } else { item.style.display = 'none'; }
+                    item.classList.remove('selected');
+                });
+                selectedIndex = 0;
+                const visibleItems = Array.from(cmdItems).filter(item => item.style.display !== 'none');
+                if(visibleItems.length > 0) visibleItems[0].classList.add('selected');
+            }
+
+            function updateSelection(visibleItems) {
+                cmdItems.forEach(item => item.classList.remove('selected'));
+                if(visibleItems[selectedIndex]) visibleItems[selectedIndex].classList.add('selected');
+            }
+
+            cmdItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const action = item.dataset.action; const target = item.dataset.target;
+                    if(action === 'navigate') { document.querySelector(target).scrollIntoView({behavior: 'smooth'}); logSysEvent(`CMD routed to ${target}`, "INFO");} 
+                    else if(action === 'theme') { toggleTheme(); } 
+                    else if(action === 'debug') { toggleDebugMode(); } 
+                    else if(action === 'inspect') { window.toggleInspector(); } 
+                    else if(action === 'health') { window.runHealthDiagnostic(); } 
+                    else if(action === 'shortcuts') { closeCmd(); shortcutsModal.classList.add('active'); return; }
+                    else if(action === 'e2e') { closeCmd(); window.runE2ESimulator(); return; }
+                    else if(action === 'bug') { closeCmd(); window.initBugHunter(); return; }
+                    else if(action === 'link') { 
+                        logSysEvent(`CMD executing external link...`, "WARN");
+                        target.includes('mailto') || target.includes('pdf') ? window.location.href = target : window.open(target, '_blank'); 
+                    }
+                    closeCmd();
+                });
+                item.addEventListener('mouseenter', () => {
+                    cmdItems.forEach(i => i.classList.remove('selected')); item.classList.add('selected');
+                    selectedIndex = Array.from(cmdItems).filter(i => i.style.display !== 'none').indexOf(item);
+                });
+            });
+
+            // --- MOBILE MENU ---
+            window.toggleMenu = function() { mobileMenu.classList.toggle('active'); }
+            document.querySelectorAll('.mobile-nav-link').forEach(link => { link.addEventListener('click', window.toggleMenu); });
+            document.getElementById('openMobileMenuBtn').addEventListener('click', window.toggleMenu);
+            document.getElementById('closeMobileMenuBtn').addEventListener('click', window.toggleMenu);
+            document.getElementById('closeShortcutsBtn').addEventListener('click', () => shortcutsModal.classList.remove('active'));
+            document.getElementById('closeDiagBtn').addEventListener('click', () => document.getElementById('diagModal').classList.remove('active'));
+
+            // --- SCROLL ANIMATIONS ---
+            const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } }); }, { threshold: 0.1 });
+            document.querySelectorAll('.section-header, .scroll-animate').forEach(el => observer.observe(el));
+
+            // --- HACKER TEXT EFFECT ---
+            const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*"; const headerText = document.querySelector(".hacker-text"); let hackerInterval = null; 
+            function runHackerEffect(target) {
+                if(!target) return;
+                let iteration = 0; clearInterval(hackerInterval); const originalValue = target.dataset.value;
+                hackerInterval = setInterval(() => {
+                    target.innerText = originalValue.split("").map((letter, index) => { if(index < iteration) return originalValue[index]; return letters[Math.floor(Math.random() * letters.length)]; }).join("");
+                    if(iteration >= originalValue.length) clearInterval(hackerInterval); iteration += 1 / 3; 
+                }, 30);
+            }
+            if (headerText) { headerText.onmouseover = event => runHackerEffect(event.target); setTimeout(() => runHackerEffect(headerText), 200); }
+
+            // --- CI/CD AUTOMATION SYNC ---
+            const runTestsBtn = document.getElementById('runTestsBtn'); const termContent = document.getElementById('term-content');
+            const buildNode = document.getElementById('cicd-build'); const testNode = document.getElementById('cicd-test');
+            const secNode = document.getElementById('cicd-sec'); const depNode = document.getElementById('cicd-deploy');
+            const line1 = document.getElementById('line-1'); const line2 = document.getElementById('line-2'); const line3 = document.getElementById('line-3');
+
+            if(runTestsBtn && termContent) {
+                const testScript = [
+                    { action: 'build_start', text: "<span class='cmd'>jaimin@sys</span>:~/portfolio$ Starting CI/CD build process...", delay: 600 },
+                    { action: 'test_start', text: "====================== test session starts ======================", delay: 500 },
+                    { action: 'testing', text: "test_ui_rendering.py::test_responsive_grid <span class='pass'>PASSED</span> [ 33%]", delay: 500 },
+                    { action: 'testing', text: "test_ui_rendering.py::test_dark_mode_toggle <span class='pass'>PASSED</span> [ 66%]", delay: 500 },
+                    { action: 'sec_start', text: "test_security.py::test_owasp_headers <span class='pass'>PASSED</span> [100%]", delay: 700 },
+                    { action: 'sec_scan', text: "<br><span class='cmd'>Running Static Application Security Testing (SAST)...</span>", delay: 800 },
+                    { action: 'sec_scan', text: "No vulnerabilities found. Security scan <span class='pass'>PASSED</span>.", delay: 600 },
+                    { action: 'deploy_start', text: "<br><span class='pass' style='font-weight:bold;'>All checks passed. Triggering deployment to production...</span>", delay: 800 },
+                    { action: 'done', text: "<span class='pass'>Deployment Successful. System Live.</span>", delay: 200 }
+                ];
+
+                runTestsBtn.addEventListener('click', () => {
+                    runTestsBtn.style.display = 'none'; termContent.innerHTML = ''; let currentStep = 0;
+                    logSysEvent("CI/CD Automation Pipeline Triggered", "ACTION");
+                    
+                    // Reset CI/CD UI
+                    buildNode.className = 'cicd-step active'; testNode.className = 'cicd-step'; secNode.className = 'cicd-step'; depNode.className = 'cicd-step';
+                    line1.style.width = '0%'; line2.style.width = '0%'; line3.style.width = '0%';
+                    buildNode.innerHTML = `<div class="cicd-step-icon"><i data-lucide="loader" size="10" class="spin"></i></div> Build`;
+                    lucide.createIcons();
+
+                    function printLine() {
+                        if(currentStep < testScript.length) {
+                            const step = testScript[currentStep];
+                            const p = document.createElement('p'); p.innerHTML = step.text; termContent.appendChild(p);
+                            
+                            // Sync CI/CD Visualizer
+                            if(step.action === 'test_start') {
+                                buildNode.className = 'cicd-step passed';
+                                buildNode.innerHTML = `<div class="cicd-step-icon"><i data-lucide="check" size="10"></i></div> Build`;
+                                line1.style.width = '100%';
+                                testNode.className = 'cicd-step active';
+                                testNode.innerHTML = `<div class="cicd-step-icon"><i data-lucide="loader" size="10" class="spin"></i></div> Test`;
+                            } else if(step.action === 'sec_start') {
+                                testNode.className = 'cicd-step passed';
+                                testNode.innerHTML = `<div class="cicd-step-icon"><i data-lucide="check" size="10"></i></div> Test`;
+                                line2.style.width = '100%';
+                                secNode.className = 'cicd-step active';
+                                secNode.innerHTML = `<div class="cicd-step-icon"><i data-lucide="loader" size="10" class="spin"></i></div> Security`;
+                            } else if(step.action === 'deploy_start') {
+                                secNode.className = 'cicd-step passed';
+                                secNode.innerHTML = `<div class="cicd-step-icon"><i data-lucide="check" size="10"></i></div> Security`;
+                                line3.style.width = '100%';
+                                depNode.className = 'cicd-step active';
+                                depNode.innerHTML = `<div class="cicd-step-icon"><i data-lucide="loader" size="10" class="spin"></i></div> Deploy`;
+                            } else if (step.action === 'done') {
+                                depNode.className = 'cicd-step passed';
+                                depNode.innerHTML = `<div class="cicd-step-icon"><i data-lucide="check" size="10"></i></div> Deploy`;
+                                logSysEvent("Pipeline Execution Passed", "SUCCESS");
+                            }
+                            
+                            lucide.createIcons();
+                            setTimeout(() => { currentStep++; printLine(); }, step.delay);
+                        } else {
+                            setTimeout(() => {
+                                const resetP = document.createElement('p'); resetP.innerHTML = "<br><span class='cmd'>jaimin@sys</span>:~/portfolio$ <span style='opacity:0.7'>Awaiting next commit...</span>";
+                                termContent.appendChild(resetP); runTestsBtn.innerHTML = '<i data-lucide="rotate-cw" size="14"></i> Re-Trigger Pipeline';
+                                runTestsBtn.style.display = 'flex'; lucide.createIcons();
+                            }, 1000);
+                        }
+                    }
+                    printLine();
+                });
+            }
+        });
     </script>
 </body>
 </html>
