@@ -1136,12 +1136,74 @@
         body.light-mode .cmd-palette { background: #fff; }
         .cmd-modal-overlay.active .cmd-palette, .diag-modal-overlay.active .cmd-palette { transform: scale(1); }
         
-        .cmd-input { width: 100%; padding: 20px; background: transparent; border: none; border-bottom: 1px solid var(--border-subtle); color: var(--text-main); font-size: 1.1rem; outline: none; font-family: 'Inter', sans-serif; }
+        .cmd-input {
+            width: 100%; padding: 1.1rem 1.25rem;
+            background: transparent; border: none;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-main); font-size: 1.05rem; outline: none;
+            font-family: 'Inter', sans-serif;
+            box-sizing: border-box;
+        }
+        .cmd-input::placeholder { color: var(--text-muted); }
         
-        /* MAGIC COMMAND HINTS */
-        .cmd-hints { display: flex; gap: 8px; padding: 0 20px 12px 20px; align-items: center; border-bottom: 1px solid var(--border-subtle); }
-        .hint-chip { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; padding: 4px 8px; background: color-mix(in srgb, var(--text-main) 6%, transparent); color: var(--text-main); border: 1px solid var(--border-subtle); border-radius: 999px; cursor: pointer; transition: all 0.2s ease; }
-        .hint-chip:hover { background: var(--text-main); color: var(--bg-base); }
+        /* MAGIC COMMAND HINTS — aligned with palette borders */
+        .cmd-hints {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.5rem 0.65rem;
+            padding: 0.7rem 1.25rem;
+            border-bottom: 1px solid var(--border-subtle);
+            background: color-mix(in srgb, var(--text-main) 2%, transparent);
+            box-sizing: border-box;
+        }
+        .cmd-hints-label {
+            flex-shrink: 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            line-height: 1;
+            margin: 0;
+            padding: 0;
+        }
+        .cmd-hints-chips {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.35rem;
+            min-width: 0;
+        }
+        .hint-chip {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 500;
+            line-height: 1;
+            min-height: 28px;
+            padding: 0 0.65rem;
+            background: var(--bg-base);
+            color: var(--text-main);
+            border: 1px solid var(--border-subtle);
+            border-radius: 999px;
+            cursor: pointer;
+            transition: background 0.15s var(--ease), color 0.15s var(--ease), border-color 0.15s var(--ease);
+            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
+        }
+        .hint-chip:hover {
+            background: var(--text-main);
+            color: var(--bg-base);
+            border-color: var(--text-main);
+        }
+        .hint-chip:focus-visible {
+            outline: 2px solid var(--text-main);
+            outline-offset: 2px;
+        }
 
         .cmd-list { max-height: 300px; overflow-y: auto; padding: 8px; }
         .cmd-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: var(--text-muted); cursor: pointer; border-radius: 8px; transition: all 0.1s; font-size: 0.95rem; }
@@ -1580,8 +1642,11 @@
                 align-items: flex-start;
             }
             .cmd-palette { max-width: 100%; border-radius: 16px; }
-            .cmd-input { padding: 16px; font-size: 16px; }
-            .cmd-hints { flex-wrap: wrap; padding: 0 14px 10px; }
+            .cmd-input { padding: 1rem; font-size: 16px; }
+            .cmd-hints { padding: 0.65rem 1rem; gap: 0.45rem 0.55rem; }
+            .cmd-hints-label { width: 100%; }
+            .cmd-hints-chips { width: 100%; }
+            .hint-chip { min-height: 32px; padding: 0 0.75rem; }
             .cmd-item { padding: 14px; font-size: 0.9rem; min-height: 48px; }
             .shortcut-grid { grid-template-columns: 1fr; gap: 0.75rem; }
 
@@ -1678,10 +1743,12 @@
             
             <!-- MAGIC HINTS FOR MOBILE & FIRST TIMERS -->
             <div class="cmd-hints">
-                <span style="opacity:0.6; font-size: 0.8rem; font-family: 'JetBrains Mono', monospace;">> Magic:</span>
-                <span class="hint-chip" onclick="executeSecret('sudo')">sudo</span>
-                <span class="hint-chip" onclick="executeSecret('bug')">bug</span>
-                <span class="hint-chip" onclick="executeSecret('e2e')">e2e</span>
+                <span class="cmd-hints-label">Magic</span>
+                <div class="cmd-hints-chips" role="group" aria-label="Magic commands">
+                    <button type="button" class="hint-chip" onclick="executeSecret('sudo')">sudo</button>
+                    <button type="button" class="hint-chip" onclick="executeSecret('bug')">bug</button>
+                    <button type="button" class="hint-chip" onclick="executeSecret('e2e')">e2e</button>
+                </div>
             </div>
 
             <div class="cmd-list" id="cmdList">
