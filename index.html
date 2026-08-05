@@ -145,10 +145,91 @@
             max-width: 100%;
         }
 
-        /* BOOT SCREEN PRELOADER */
-        #boot-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; color: #0f0; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; z-index: 9999; padding: 20px; display: flex; flex-direction: column; overflow: hidden; }
-        #boot-output p { margin: 2px 0; opacity: 0.8; }
-        .boot-cursor { display: inline-block; width: 8px; height: 15px; background: #0f0; animation: blink 1s infinite; }
+        /* BOOT SCREEN — premium product splash */
+        #boot-screen {
+            position: fixed; inset: 0; z-index: 9999;
+            display: flex; align-items: center; justify-content: center;
+            background: #000;
+            color: #fff;
+            padding: max(1.25rem, env(safe-area-inset-top)) max(1.25rem, env(safe-area-inset-right)) max(1.25rem, env(safe-area-inset-bottom)) max(1.25rem, env(safe-area-inset-left));
+            overflow: hidden;
+            transition: opacity 0.55s var(--ease), visibility 0.55s;
+        }
+        #boot-screen.is-done {
+            opacity: 0; visibility: hidden; pointer-events: none;
+        }
+        #boot-screen::before {
+            content: '';
+            position: absolute; inset: 0;
+            background:
+                radial-gradient(700px 320px at 50% 35%, rgba(255,255,255,0.06), transparent 60%),
+                radial-gradient(circle at 50% 100%, rgba(255,255,255,0.03), transparent 45%);
+            pointer-events: none;
+        }
+        .boot-panel {
+            position: relative; z-index: 1;
+            width: min(360px, 100%);
+            display: flex; flex-direction: column; align-items: center;
+            text-align: center; gap: 0;
+        }
+        .boot-mark {
+            width: 52px; height: 52px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 14px;
+            background: #fff; color: #000;
+            font-family: Inter, sans-serif;
+            font-size: 0.9rem; font-weight: 750;
+            letter-spacing: -0.04em;
+            margin-bottom: 1.15rem;
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 16px 40px rgba(0,0,0,0.45);
+            animation: bootMarkIn 0.7s var(--ease) both;
+        }
+        @keyframes bootMarkIn {
+            from { opacity: 0; transform: scale(0.88) translateY(8px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .boot-title {
+            font-family: Inter, sans-serif;
+            font-size: 1.35rem; font-weight: 650;
+            letter-spacing: -0.04em; color: #fff;
+            margin: 0 0 0.3rem;
+            animation: bootFadeUp 0.6s 0.1s var(--ease) both;
+        }
+        .boot-sub {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem; font-weight: 500;
+            letter-spacing: 0.12em; text-transform: uppercase;
+            color: #737373;
+            margin: 0 0 1.75rem;
+            animation: bootFadeUp 0.6s 0.18s var(--ease) both;
+        }
+        .boot-progress {
+            width: 100%;
+            height: 2px;
+            border-radius: 999px;
+            background: #262626;
+            overflow: hidden;
+            margin-bottom: 0.85rem;
+            animation: bootFadeUp 0.6s 0.25s var(--ease) both;
+        }
+        .boot-progress-bar {
+            height: 100%; width: 0%;
+            background: #fff;
+            border-radius: inherit;
+            transition: width 0.35s var(--ease);
+        }
+        .boot-status {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: #a3a3a3;
+            min-height: 1.2em;
+            letter-spacing: 0.02em;
+            animation: bootFadeUp 0.6s 0.3s var(--ease) both;
+        }
+        @keyframes bootFadeUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
         /* MATRIX CANVAS */
         #matrixCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; opacity: 0; pointer-events: none; transition: opacity 2s ease; }
@@ -1067,18 +1148,84 @@
         .cmd-item:hover, .cmd-item.selected { background: var(--text-main); color: var(--bg-base); }
         .cmd-item kbd { margin-left: auto; font-family: 'JetBrains Mono'; font-size: 0.7rem; opacity: 0.7; }
         
+        /* Toast / first-launch tip — top-center, clear of SYS_EVENTS + footer */
         .toast {
             position: fixed;
-            bottom: calc(5.5rem + env(safe-area-inset-bottom));
-            right: max(1rem, env(safe-area-inset-right));
-            left: auto;
-            max-width: min(320px, calc(100vw - 2rem));
-            background: var(--text-main); color: var(--bg-base);
-            padding: 12px 18px; border-radius: 12px; font-weight: 550; font-size: 0.85rem;
-            z-index: 1000; display: none;
-            box-shadow: 0 12px 28px rgba(0,0,0,0.35); animation: heroFadeUp 0.3s forwards;
-            border: 1px solid var(--border-subtle);
+            top: calc(var(--nav-height) + 0.75rem + env(safe-area-inset-top));
+            left: 50%;
+            right: auto;
+            bottom: auto;
+            transform: translateX(-50%) translateY(-6px);
+            width: min(400px, calc(100vw - 1.5rem));
+            max-width: min(400px, calc(100vw - 1.5rem));
+            z-index: 1000;
+            display: none;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.28s var(--ease), transform 0.28s var(--ease);
         }
+        .toast.is-visible {
+            display: block;
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(-50%) translateY(0);
+        }
+        .toast-card {
+            display: flex; align-items: flex-start; gap: 0.7rem;
+            padding: 0.85rem 0.95rem;
+            border-radius: 14px;
+            background: var(--bg-surface);
+            color: var(--text-main);
+            border: 1px solid var(--border-subtle);
+            box-shadow: var(--shadow-bento), 0 16px 40px rgba(0,0,0,0.28);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        body.light-mode .toast-card {
+            box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+        }
+        .toast-icon {
+            flex-shrink: 0;
+            width: 28px; height: 28px;
+            display: inline-flex; align-items: center; justify-content: center;
+            border-radius: 8px;
+            background: color-mix(in srgb, var(--text-main) 8%, transparent);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-main);
+        }
+        .toast-icon svg { width: 14px; height: 14px; }
+        .toast-body { min-width: 0; flex: 1; padding-top: 0.1rem; }
+        .toast-label {
+            font-size: 0.62rem; font-weight: 650;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            color: var(--text-muted); margin-bottom: 0.2rem;
+        }
+        .toast-msg {
+            font-size: 0.84rem; font-weight: 500;
+            color: var(--text-main); line-height: 1.4;
+            letter-spacing: -0.01em;
+        }
+        .toast-msg kbd {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem; font-weight: 600;
+            padding: 0.1rem 0.35rem;
+            border-radius: 5px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-base);
+            color: var(--text-main);
+            vertical-align: baseline;
+        }
+        .toast-close {
+            flex-shrink: 0;
+            width: 28px; height: 28px;
+            display: inline-flex; align-items: center; justify-content: center;
+            border: none; background: transparent;
+            color: var(--text-muted); border-radius: 8px;
+            cursor: pointer; padding: 0;
+            transition: color 0.15s, background 0.15s;
+        }
+        .toast-close:hover { color: var(--text-main); background: color-mix(in srgb, var(--text-main) 6%, transparent); }
 
         /* SHORTCUTS HELP MENU */
         .shortcut-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;}
@@ -1422,10 +1569,12 @@
             }
             .telemetry-group { display: none; }
             .toast {
-                left: 1rem; right: 1rem;
-                bottom: calc(4.5rem + env(safe-area-inset-bottom));
-                max-width: none; text-align: center; font-size: 0.82rem;
+                top: calc(var(--nav-height) + 0.55rem + env(safe-area-inset-top));
+                width: calc(100vw - 1.25rem);
+                max-width: calc(100vw - 1.25rem);
             }
+            .toast-card { padding: 0.75rem 0.8rem; gap: 0.55rem; }
+            .toast-msg { font-size: 0.8rem; }
             .cmd-modal-overlay, .diag-modal-overlay {
                 padding: max(12vh, env(safe-area-inset-top)) 0.75rem 0.75rem;
                 align-items: flex-start;
@@ -1437,7 +1586,10 @@
             .shortcut-grid { grid-template-columns: 1fr; gap: 0.75rem; }
 
             /* Boot screen */
-            #boot-screen { font-size: 0.75rem; padding: 16px; }
+            .boot-panel { width: min(300px, 100%); }
+            .boot-mark { width: 48px; height: 48px; font-size: 0.84rem; margin-bottom: 1rem; }
+            .boot-title { font-size: 1.2rem; }
+            .boot-sub { margin-bottom: 1.4rem; }
         }
 
         @media (max-width: 380px) {
@@ -1463,16 +1615,34 @@
     </div>
 
     <!-- BOOT SCREEN PRELOADER -->
-    <div id="boot-screen">
-        <div id="boot-output"></div>
-        <div><span class="boot-cursor"></span></div>
+    <div id="boot-screen" role="status" aria-live="polite" aria-label="Loading portfolio">
+        <div class="boot-panel">
+            <div class="boot-mark" aria-hidden="true">JR</div>
+            <h1 class="boot-title">Jaimin</h1>
+            <p class="boot-sub">Portfolio system</p>
+            <div class="boot-progress" aria-hidden="true">
+                <div class="boot-progress-bar" id="bootProgressBar"></div>
+            </div>
+            <div class="boot-status" id="bootStatus">Initializing…</div>
+        </div>
     </div>
 
     <!-- MATRIX CANVAS (SUDO MODE) -->
     <canvas id="matrixCanvas"></canvas>
 
     <div class="bg-grid"></div>
-    <div id="toast" class="toast">Action Triggered.</div>
+    <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true">
+        <div class="toast-card">
+            <span class="toast-icon" id="toastIcon" aria-hidden="true"><i data-lucide="info" size="14"></i></span>
+            <div class="toast-body">
+                <div class="toast-label" id="toastLabel">Notice</div>
+                <div class="toast-msg" id="toastMsg">Action triggered.</div>
+            </div>
+            <button type="button" class="toast-close" id="toastClose" aria-label="Dismiss">
+                <i data-lucide="x" size="14"></i>
+            </button>
+        </div>
+    </div>
 
     <!-- KEYBOARD SHORTCUTS MODAL -->
     <div class="diag-modal-overlay" id="shortcutsModal">
@@ -2386,9 +2556,15 @@ jaimin = QAEngineer()</pre>
 
             const themeToggle = document.getElementById('themeToggle');
             const bootScreen = document.getElementById('boot-screen');
-            const bootOutput = document.getElementById('boot-output');
+            const bootStatus = document.getElementById('bootStatus');
+            const bootProgressBar = document.getElementById('bootProgressBar');
             const matrixCanvas = document.getElementById('matrixCanvas');
             const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            const toastLabel = document.getElementById('toastLabel');
+            const toastIcon = document.getElementById('toastIcon');
+            const toastClose = document.getElementById('toastClose');
+            let toastTimer = null;
             const btnHuman = document.getElementById('btnHuman');
             const btnPython = document.getElementById('btnPython');
             const jsonViewer = document.getElementById('jsonViewer');
@@ -2415,12 +2591,12 @@ jaimin = QAEngineer()</pre>
                     document.body.classList.add('inspector-active');
                     inspectorTooltip.style.display = 'block';
                     logSysEvent("UI Inspector Mode ENABLED", "WARN");
-                    showToast("UI Inspector Mode Active", "var(--accent-blue)");
+                    showToast("UI Inspector Mode Active", "notice");
                 } else {
                     document.body.classList.remove('inspector-active');
                     inspectorTooltip.style.display = 'none';
                     logSysEvent("UI Inspector Mode DISABLED", "INFO");
-                    showToast("UI Inspector Deactivated", "var(--warning)");
+                    showToast("UI Inspector Deactivated", "warn");
                 }
             };
 
@@ -2619,53 +2795,114 @@ jaimin = QAEngineer()</pre>
             }
             themeToggle.addEventListener('click', toggleTheme);
 
-            // --- BOOT PRELOADER ---
-            if (!sessionStorage.getItem('booted') && bootScreen) {
-                const bootLines = [
-                    "Loading kernel...", "Mounting /dev/sda1... [OK]", "Starting QA automation daemons... [OK]",
-                    "Initializing testing environment... [OK]", "Bypassing firewall... [AUTHORIZED]", "Loading JAIMIN_RANA.SYS v4.0..."
-                ];
-                let bootLineIdx = 0;
-                function printBootLine() {
-                    if (bootLineIdx < bootLines.length) {
-                        const p = document.createElement('p'); p.innerText = bootLines[bootLineIdx]; bootOutput.appendChild(p); bootLineIdx++;
-                        setTimeout(printBootLine, Math.random() * 150 + 50);
-                    } else {
-                        setTimeout(() => {
-                            bootScreen.style.transition = "opacity 0.5s ease"; bootScreen.style.opacity = "0";
-                            setTimeout(() => { bootScreen.style.display = "none"; }, 500);
-                            logSysEvent("Boot sequence completed", "ACTION");
-                        }, 400);
-                    }
-                }
-                printBootLine();
-                sessionStorage.setItem('booted', 'true');
-            } else if (bootScreen) { 
-                bootScreen.style.display = 'none'; 
+            // --- BOOT PRELOADER (premium splash) ---
+            function finishBoot() {
+                if (!bootScreen) return;
+                bootScreen.classList.add('is-done');
+                setTimeout(() => {
+                    bootScreen.style.display = 'none';
+                    bootScreen.setAttribute('aria-hidden', 'true');
+                }, 600);
+                logSysEvent("Boot sequence completed", "ACTION");
+                // Tip after boot, top-center — never collides with SYS_EVENTS
+                setTimeout(showFirstVisitTip, 900);
             }
 
-            setTimeout(() => {
-                if(!sessionStorage.getItem('hint_shown')) {
-                    showToast("💡 TIP: Press Ctrl+K to open terminal. Try commands: sudo, bug, e2e", "var(--accent-blue)");
-                    sessionStorage.setItem('hint_shown', 'true');
-                    logSysEvent("Displayed system hint payload", "INFO");
-                }
-            }, 6000); 
+            function showFirstVisitTip() {
+                if (sessionStorage.getItem('hint_shown')) return;
+                sessionStorage.setItem('hint_shown', 'true');
+                const ua = navigator.userAgent || '';
+                const isMac = /Mac|iPhone|iPad|iPod/i.test(ua);
+                const key = isMac ? '⌘K' : 'Ctrl+K';
+                showToast(
+                    `Press <kbd>${key}</kbd> for the command palette. Try <kbd>bug</kbd> or <kbd>e2e</kbd>.`,
+                    'tip',
+                    5200
+                );
+                logSysEvent("Displayed system hint payload", "INFO");
+            }
 
-            function showToast(msg, color) {
-                toast.innerText = msg; toast.style.background = color || "var(--success)";
-                toast.style.display = "block";
-                setTimeout(() => { toast.style.display = "none"; }, 3000);
+            if (!sessionStorage.getItem('booted') && bootScreen) {
+                const bootSteps = [
+                    { label: 'Loading interface…', pct: 18 },
+                    { label: 'Mounting experience…', pct: 38 },
+                    { label: 'Preparing labs…', pct: 58 },
+                    { label: 'Checking systems…', pct: 78 },
+                    { label: 'Ready', pct: 100 }
+                ];
+                let bootIdx = 0;
+                function runBootStep() {
+                    if (bootIdx >= bootSteps.length) {
+                        setTimeout(finishBoot, 280);
+                        return;
+                    }
+                    const step = bootSteps[bootIdx];
+                    if (bootStatus) bootStatus.textContent = step.label;
+                    if (bootProgressBar) bootProgressBar.style.width = `${step.pct}%`;
+                    bootIdx++;
+                    setTimeout(runBootStep, bootIdx === bootSteps.length ? 320 : 220 + Math.random() * 120);
+                }
+                runBootStep();
+                sessionStorage.setItem('booted', 'true');
+            } else if (bootScreen) {
+                bootScreen.style.display = 'none';
+                bootScreen.setAttribute('aria-hidden', 'true');
+                // Returning visit: still show tip once per session if not shown
+                setTimeout(showFirstVisitTip, 1200);
+            }
+
+            function showToast(msg, kind = 'notice', duration = 3200) {
+                if (!toast || !toastMsg) return;
+                clearTimeout(toastTimer);
+                // Back-compat: old color tokens → kind
+                if (typeof kind === 'string' && kind.startsWith('var(')) {
+                    if (kind.includes('warning')) kind = 'warn';
+                    else if (kind.includes('success')) kind = 'success';
+                    else kind = 'notice';
+                }
+                const kinds = {
+                    tip: { label: 'Tip', icon: 'sparkles' },
+                    notice: { label: 'Notice', icon: 'info' },
+                    success: { label: 'Success', icon: 'check' },
+                    warn: { label: 'Heads up', icon: 'alert-triangle' }
+                };
+                const meta = kinds[kind] || kinds.notice;
+                if (toastLabel) toastLabel.textContent = meta.label;
+                // Allow safe <kbd> only — strip any other tags
+                if (/<kbd[\s>]/i.test(String(msg))) {
+                    toastMsg.innerHTML = String(msg)
+                        .replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;')
+                        .replace(/&lt;kbd&gt;/gi, '<kbd>')
+                        .replace(/&lt;\/kbd&gt;/gi, '</kbd>');
+                } else {
+                    toastMsg.textContent = msg;
+                }
+                if (toastIcon) {
+                    toastIcon.innerHTML = `<i data-lucide="${meta.icon}" size="14"></i>`;
+                    if (typeof lucide !== 'undefined') lucide.createIcons();
+                }
+                toast.classList.add('is-visible');
+                toastTimer = setTimeout(() => {
+                    toast.classList.remove('is-visible');
+                }, duration);
+            }
+            if (toastClose) {
+                toastClose.addEventListener('click', () => {
+                    clearTimeout(toastTimer);
+                    toast.classList.remove('is-visible');
+                });
             }
 
             // --- DEBUG MODE ---
             function toggleDebugMode() {
                 document.body.classList.toggle('qa-debug-mode');
                 if(document.body.classList.contains('qa-debug-mode')) { 
-                    showToast("QA Debug Mode Activated. Tracking DOM borders.", "var(--success)"); 
+                    showToast("QA Debug Mode Activated. Tracking DOM borders.", "success"); 
                     logSysEvent("QA Debug Mode ENABLED", "WARN");
                 } else { 
-                    showToast("QA Debug Mode Deactivated.", "var(--warning)"); 
+                    showToast("QA Debug Mode Deactivated.", "warn"); 
                     logSysEvent("QA Debug Mode DISABLED", "INFO");
                 }
             }
@@ -2691,13 +2928,13 @@ jaimin = QAEngineer()</pre>
                 }
                 window.startMatrix = function() {
                     document.body.classList.add('sudo-mode'); matrixCanvas.style.opacity = "0.2"; matrixInterval = setInterval(drawMatrix, 33);
-                    showToast("SUDO MODE ENGAGED. SYSTEM OVERRIDE.", "var(--success)");
+                    showToast("SUDO MODE ENGAGED. SYSTEM OVERRIDE.", "success");
                     document.getElementById('ping').innerText = "0.1ms"; document.getElementById('memory').innerText = "OVERFLOW";
                     logSysEvent("SUDO COMMAND EXECUTED. MATRIX PROTOCOL ENGAGED.", "ERR");
                 }
                 window.stopMatrix = function() {
                     document.body.classList.remove('sudo-mode'); matrixCanvas.style.opacity = "0"; clearInterval(matrixInterval);
-                    showToast("SUDO MODE TERMINATED.", "var(--warning)");
+                    showToast("SUDO MODE TERMINATED.", "warn");
                     logSysEvent("Matrix protocol terminated.", "INFO");
                 }
             }
@@ -2707,7 +2944,7 @@ jaimin = QAEngineer()</pre>
             window.initBugHunter = function() {
                 if(bugHuntActive) return;
                 bugHuntActive = true; bugScore = 0;
-                showToast("BUG HUNTER STARTED. 15 seconds to squash bugs!", "var(--success)");
+                showToast("BUG HUNTER STARTED. 15 seconds to squash bugs!", "success");
                 logSysEvent("QA Bug Hunter initialized", "WARN");
                 
                 bugInterval = setInterval(() => {
@@ -2729,7 +2966,7 @@ jaimin = QAEngineer()</pre>
                 setTimeout(() => {
                     clearInterval(bugInterval); bugHuntActive = false;
                     document.querySelectorAll('.qa-bug').forEach(b => b.remove());
-                    showToast(`TEST COMPLETE. You squashed ${bugScore} bugs!`, "var(--accent-blue)");
+                    showToast(`TEST COMPLETE. You squashed ${bugScore} bugs!`, "notice");
                     logSysEvent(`Bug Hunter finished. Final Score: ${bugScore}`, "SUCCESS");
                 }, 15000);
             }
@@ -2745,7 +2982,7 @@ jaimin = QAEngineer()</pre>
 
                 if(!cursor) return;
                 cursor.style.opacity = "1";
-                showToast("Running Playwright E2E UI Test...", "var(--accent-blue)");
+                showToast("Running Playwright E2E UI Test...", "notice");
                 logSysEvent("E2E UI Simulation Script Started", "WARN");
 
                 const tRect = themeToggle.getBoundingClientRect();
@@ -2766,7 +3003,7 @@ jaimin = QAEngineer()</pre>
                 cursor.style.top = (rRect.top + rRect.height/2) + 'px'; cursor.style.left = (rRect.left + rRect.width/2) + 'px';
                 await sleep(1000); runTestTarget.click();
 
-                cursor.style.opacity = "0"; showToast("E2E Simulation Passed. 0 Errors.", "var(--success)");
+                cursor.style.opacity = "0"; showToast("E2E Simulation Passed. 0 Errors.", "success");
                 logSysEvent("E2E Simulation Completed Successfully", "ACTION");
                 setTimeout(() => { cursor.style.top = '50%'; cursor.style.left = '50%'; }, 1000);
             }
