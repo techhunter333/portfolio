@@ -145,90 +145,265 @@
             max-width: 100%;
         }
 
-        /* BOOT SCREEN — premium product splash */
+        /* BOOT SCREEN — cinematic monochrome product load */
         #boot-screen {
             position: fixed; inset: 0; z-index: 9999;
             display: flex; align-items: center; justify-content: center;
             background: #000;
             color: #fff;
-            padding: max(1.25rem, env(safe-area-inset-top)) max(1.25rem, env(safe-area-inset-right)) max(1.25rem, env(safe-area-inset-bottom)) max(1.25rem, env(safe-area-inset-left));
+            padding: max(1.5rem, env(safe-area-inset-top)) max(1.25rem, env(safe-area-inset-right)) max(1.5rem, env(safe-area-inset-bottom)) max(1.25rem, env(safe-area-inset-left));
             overflow: hidden;
-            transition: opacity 0.55s var(--ease), visibility 0.55s;
+            transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.7s, filter 0.7s;
         }
         #boot-screen.is-done {
             opacity: 0; visibility: hidden; pointer-events: none;
+            filter: blur(6px);
         }
-        #boot-screen::before {
-            content: '';
-            position: absolute; inset: 0;
-            background:
-                radial-gradient(700px 320px at 50% 35%, rgba(255,255,255,0.06), transparent 60%),
-                radial-gradient(circle at 50% 100%, rgba(255,255,255,0.03), transparent 45%);
-            pointer-events: none;
+        .boot-ambient {
+            position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+        }
+        .boot-ambient-glow {
+            position: absolute; left: 50%; top: 42%;
+            width: min(720px, 140vw); height: min(420px, 70vh);
+            transform: translate(-50%, -50%);
+            background: radial-gradient(ellipse at center, rgba(255,255,255,0.09) 0%, transparent 62%);
+            animation: bootGlowPulse 3.2s ease-in-out infinite;
+        }
+        @keyframes bootGlowPulse {
+            0%, 100% { opacity: 0.55; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.06); }
+        }
+        .boot-ambient-grid {
+            position: absolute; inset: -20%;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+            background-size: 48px 48px;
+            mask-image: radial-gradient(ellipse at center, #000 15%, transparent 68%);
+            -webkit-mask-image: radial-gradient(ellipse at center, #000 15%, transparent 68%);
+            animation: bootGridDrift 18s linear infinite;
+            opacity: 0.7;
+        }
+        @keyframes bootGridDrift {
+            from { transform: translateY(0); }
+            to { transform: translateY(48px); }
+        }
+        .boot-ambient-orb {
+            position: absolute; border-radius: 50%;
+            filter: blur(40px); opacity: 0.22;
+            background: #fff;
+            animation: bootOrb 8s ease-in-out infinite;
+        }
+        .boot-ambient-orb.o1 { width: 180px; height: 180px; top: 12%; left: 8%; animation-delay: 0s; }
+        .boot-ambient-orb.o2 { width: 140px; height: 140px; bottom: 14%; right: 10%; animation-delay: -3s; opacity: 0.12; }
+        @keyframes bootOrb {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(18px, -14px); }
         }
         .boot-panel {
             position: relative; z-index: 1;
-            width: min(360px, 100%);
-            display: flex; flex-direction: column; align-items: center;
-            text-align: center; gap: 0;
+            width: min(400px, 100%);
+            display: flex; flex-direction: column; align-items: stretch;
+            text-align: center;
+            padding: 1.75rem 1.5rem 1.35rem;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 22px;
+            background:
+                linear-gradient(165deg, rgba(255,255,255,0.05) 0%, transparent 42%),
+                rgba(10,10,10,0.72);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.06) inset,
+                0 30px 80px rgba(0,0,0,0.55);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            animation: bootPanelIn 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        @keyframes bootPanelIn {
+            from { opacity: 0; transform: translateY(18px) scale(0.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .boot-mark-wrap {
+            position: relative;
+            width: 88px; height: 88px;
+            margin: 0 auto 1.35rem;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .boot-ring {
+            position: absolute; inset: 0;
+            width: 100%; height: 100%;
+            transform: rotate(-90deg);
+        }
+        .boot-ring-bg {
+            fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 2;
+        }
+        .boot-ring-fg {
+            fill: none; stroke: #fff; stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-dasharray: 251.2;
+            stroke-dashoffset: 251.2;
+            transition: stroke-dashoffset 0.55s cubic-bezier(0.22, 1, 0.36, 1);
         }
         .boot-mark {
-            width: 52px; height: 52px;
+            width: 56px; height: 56px;
             display: flex; align-items: center; justify-content: center;
-            border-radius: 14px;
+            border-radius: 16px;
             background: #fff; color: #000;
             font-family: Inter, sans-serif;
-            font-size: 0.9rem; font-weight: 750;
+            font-size: 0.95rem; font-weight: 750;
             letter-spacing: -0.04em;
-            margin-bottom: 1.15rem;
-            box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 16px 40px rgba(0,0,0,0.45);
-            animation: bootMarkIn 0.7s var(--ease) both;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            animation: bootMarkIn 0.9s 0.15s cubic-bezier(0.22, 1, 0.36, 1) both;
+            position: relative; z-index: 1;
         }
         @keyframes bootMarkIn {
-            from { opacity: 0; transform: scale(0.88) translateY(8px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
+            from { opacity: 0; transform: scale(0.82); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .boot-eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem; font-weight: 600;
+            letter-spacing: 0.16em; text-transform: uppercase;
+            color: #737373;
+            margin: 0 0 0.55rem;
+            animation: bootFadeUp 0.7s 0.2s both;
         }
         .boot-title {
             font-family: Inter, sans-serif;
-            font-size: 1.35rem; font-weight: 650;
-            letter-spacing: -0.04em; color: #fff;
-            margin: 0 0 0.3rem;
-            animation: bootFadeUp 0.6s 0.1s var(--ease) both;
+            font-size: clamp(1.45rem, 4vw, 1.75rem); font-weight: 650;
+            letter-spacing: -0.045em; color: #fff;
+            margin: 0 0 0.4rem; line-height: 1.15;
+            animation: bootFadeUp 0.7s 0.28s both;
         }
         .boot-sub {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.68rem; font-weight: 500;
-            letter-spacing: 0.12em; text-transform: uppercase;
-            color: #737373;
-            margin: 0 0 1.75rem;
-            animation: bootFadeUp 0.6s 0.18s var(--ease) both;
+            font-size: 0.7rem; font-weight: 500;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            color: #a3a3a3;
+            margin: 0 0 1.5rem;
+            animation: bootFadeUp 0.7s 0.35s both;
+        }
+        .boot-modules {
+            display: flex; flex-direction: column; gap: 0.4rem;
+            text-align: left;
+            margin: 0 0 1.35rem;
+            animation: bootFadeUp 0.7s 0.42s both;
+        }
+        .boot-mod {
+            display: flex; align-items: center; gap: 0.65rem;
+            padding: 0.55rem 0.7rem;
+            border-radius: 11px;
+            border: 1px solid rgba(255,255,255,0.06);
+            background: rgba(0,0,0,0.35);
+            opacity: 0.35;
+            transform: translateX(-4px);
+            transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s, background 0.3s;
+        }
+        .boot-mod.is-active {
+            opacity: 1;
+            transform: translateX(0);
+            border-color: rgba(255,255,255,0.14);
+            background: rgba(255,255,255,0.04);
+        }
+        .boot-mod.is-done {
+            opacity: 0.85;
+            transform: translateX(0);
+        }
+        .boot-mod-icon {
+            width: 22px; height: 22px; flex-shrink: 0;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.12);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.65rem; color: #737373;
+            background: #0a0a0a;
+            transition: color 0.3s, border-color 0.3s, background 0.3s;
+        }
+        .boot-mod.is-active .boot-mod-icon,
+        .boot-mod.is-done .boot-mod-icon {
+            color: #fff;
+            border-color: rgba(255,255,255,0.28);
+            background: #111;
+        }
+        .boot-mod.is-done .boot-mod-icon {
+            background: #fff; color: #000; border-color: #fff;
+        }
+        .boot-mod-text { min-width: 0; flex: 1; }
+        .boot-mod-name {
+            font-size: 0.78rem; font-weight: 550;
+            color: #e5e5e5; letter-spacing: -0.01em;
+            line-height: 1.25;
+        }
+        .boot-mod-meta {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem; color: #525252;
+            margin-top: 0.12rem; letter-spacing: 0.02em;
+        }
+        .boot-mod.is-active .boot-mod-meta { color: #a3a3a3; }
+        .boot-mod.is-done .boot-mod-meta { color: #737373; }
+        .boot-progress-row {
+            display: flex; align-items: center; gap: 0.75rem;
+            margin-bottom: 0.65rem;
+            animation: bootFadeUp 0.7s 0.48s both;
+        }
+        .boot-pct {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem; font-weight: 600;
+            color: #fff; min-width: 2.6rem;
+            font-variant-numeric: tabular-nums;
+            text-align: left;
         }
         .boot-progress {
-            width: 100%;
-            height: 2px;
+            flex: 1; height: 3px;
             border-radius: 999px;
             background: #262626;
             overflow: hidden;
-            margin-bottom: 0.85rem;
-            animation: bootFadeUp 0.6s 0.25s var(--ease) both;
         }
         .boot-progress-bar {
             height: 100%; width: 0%;
-            background: #fff;
+            background: linear-gradient(90deg, #a3a3a3, #fff);
             border-radius: inherit;
-            transition: width 0.35s var(--ease);
+            transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 0 0 12px rgba(255,255,255,0.35);
         }
         .boot-status {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             color: #a3a3a3;
-            min-height: 1.2em;
+            min-height: 1.25em;
             letter-spacing: 0.02em;
-            animation: bootFadeUp 0.6s 0.3s var(--ease) both;
+            text-align: left;
+            margin-bottom: 1.15rem;
+            animation: bootFadeUp 0.7s 0.52s both;
         }
+        .boot-status-dot {
+            display: inline-block; width: 5px; height: 5px;
+            border-radius: 50%; background: #fff;
+            margin-right: 0.4rem; vertical-align: middle;
+            box-shadow: 0 0 0 0 rgba(255,255,255,0.4);
+            animation: bootStatusPulse 1.4s ease-out infinite;
+        }
+        @keyframes bootStatusPulse {
+            0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.35); }
+            70% { box-shadow: 0 0 0 6px transparent; }
+            100% { box-shadow: 0 0 0 0 transparent; }
+        }
+        .boot-footer {
+            display: flex; align-items: center; justify-content: space-between;
+            padding-top: 0.85rem;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem; color: #525252;
+            letter-spacing: 0.04em;
+            animation: bootFadeUp 0.7s 0.58s both;
+        }
+        .boot-footer span:last-child { color: #737373; }
         @keyframes bootFadeUp {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .boot-ambient-grid, .boot-ambient-glow, .boot-ambient-orb, .boot-status-dot { animation: none !important; }
+            .boot-panel, .boot-mark, .boot-eyebrow, .boot-title, .boot-sub, .boot-modules,
+            .boot-progress-row, .boot-status, .boot-footer { animation: none !important; opacity: 1 !important; transform: none !important; }
         }
 
         /* MATRIX CANVAS */
@@ -1295,12 +1470,110 @@
         .shortcut-item span { color: var(--text-muted); font-size: 0.9rem; }
         .shortcut-item kbd { background: var(--bg-base); border: 1px solid var(--border-strong); padding: 4px 8px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-main); }
 
-        /* GHOST CURSOR (E2E SIMULATOR) */
+        /* GHOST CURSOR + E2E TOUR */
         #ghost-cursor {
             position: fixed; top: 50%; left: 50%; width: 24px; height: 24px;
-            color: var(--accent-blue); z-index: 99999; pointer-events: none; opacity: 0;
-            transition: top 0.8s cubic-bezier(0.25, 1, 0.5, 1), left 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+            color: var(--text-main); z-index: 100050; pointer-events: none; opacity: 0;
+            transition: top 0.65s cubic-bezier(0.22, 1, 0.36, 1), left 0.65s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.45));
+            margin-left: -2px; margin-top: -2px;
+        }
+        body.e2e-running { cursor: none; }
+        body.e2e-running a, body.e2e-running button { pointer-events: none; }
+        body.e2e-running #ghost-cursor { pointer-events: none; }
+        .e2e-target-flash {
+            outline: 2px solid var(--text-main) !important;
+            outline-offset: 3px !important;
+            box-shadow: 0 0 0 6px color-mix(in srgb, var(--text-main) 12%, transparent) !important;
+            transition: outline 0.2s ease, box-shadow 0.2s ease;
+            border-radius: 8px;
+        }
+        .e2e-click-ripple {
+            position: fixed; z-index: 100049; pointer-events: none;
+            width: 14px; height: 14px; margin: -7px 0 0 -7px;
+            border-radius: 50%;
+            border: 2px solid var(--text-main);
+            animation: e2eRipple 0.55s var(--ease) forwards;
+        }
+        @keyframes e2eRipple {
+            from { transform: scale(0.4); opacity: 0.9; }
+            to { transform: scale(2.8); opacity: 0; }
+        }
+        .e2e-hud {
+            position: fixed;
+            top: calc(var(--nav-height) + 0.75rem + env(safe-area-inset-top));
+            left: max(0.85rem, env(safe-area-inset-left));
+            z-index: 100040;
+            width: min(280px, calc(100vw - 1.5rem));
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            background: color-mix(in srgb, var(--bg-surface) 92%, transparent);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            box-shadow: var(--shadow-bento), 0 16px 40px rgba(0,0,0,0.25);
+            padding: 0.85rem 0.95rem 0.9rem;
+            opacity: 0;
+            transform: translateY(-8px);
+            pointer-events: none;
+            transition: opacity 0.25s var(--ease), transform 0.25s var(--ease);
+        }
+        .e2e-hud.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .e2e-hud-head {
+            display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
+            margin-bottom: 0.55rem;
+        }
+        .e2e-hud-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem; font-weight: 600;
+            letter-spacing: 0.04em; color: var(--text-main);
+        }
+        .e2e-hud-status {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem; font-weight: 650;
+            letter-spacing: 0.06em; text-transform: uppercase;
+            padding: 0.18rem 0.45rem; border-radius: 999px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-base); color: var(--text-muted);
+        }
+        .e2e-hud-status.is-pass {
+            color: var(--text-main);
+            border-color: color-mix(in srgb, var(--text-main) 30%, var(--border-subtle));
+        }
+        .e2e-hud-step {
+            font-size: 0.84rem; font-weight: 550;
+            color: var(--text-main); letter-spacing: -0.015em;
+            line-height: 1.35; margin-bottom: 0.65rem;
+            min-height: 2.4em;
+        }
+        .e2e-hud-bar {
+            height: 3px; border-radius: 999px;
+            background: var(--border-subtle); overflow: hidden;
+            margin-bottom: 0.45rem;
+        }
+        .e2e-hud-bar > div {
+            height: 100%; width: 0%;
+            background: var(--text-main);
+            border-radius: inherit;
+            transition: width 0.35s var(--ease);
+        }
+        .e2e-hud-meta {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem; color: var(--text-muted);
+            display: flex; justify-content: space-between; gap: 0.5rem;
+        }
+        @media (max-width: 640px) {
+            .e2e-hud {
+                left: 50%;
+                right: auto;
+                transform: translateX(-50%) translateY(-8px);
+                width: calc(100vw - 1.25rem);
+                max-width: 360px;
+            }
+            .e2e-hud.is-visible { transform: translateX(-50%) translateY(0); }
+            body.e2e-running { cursor: auto; }
         }
 
         /* BUG HUNTER GAME */
@@ -1651,10 +1924,13 @@
             .shortcut-grid { grid-template-columns: 1fr; gap: 0.75rem; }
 
             /* Boot screen */
-            .boot-panel { width: min(300px, 100%); }
-            .boot-mark { width: 48px; height: 48px; font-size: 0.84rem; margin-bottom: 1rem; }
-            .boot-title { font-size: 1.2rem; }
-            .boot-sub { margin-bottom: 1.4rem; }
+            .boot-panel { width: min(100%, 360px); padding: 1.4rem 1.15rem 1.15rem; border-radius: 18px; }
+            .boot-mark-wrap { width: 76px; height: 76px; margin-bottom: 1.1rem; }
+            .boot-mark { width: 48px; height: 48px; font-size: 0.84rem; border-radius: 13px; }
+            .boot-title { font-size: 1.3rem; }
+            .boot-sub { margin-bottom: 1.15rem; font-size: 0.65rem; }
+            .boot-mod { padding: 0.5rem 0.6rem; }
+            .boot-mod-name { font-size: 0.74rem; }
         }
 
         @media (max-width: 380px) {
@@ -1675,20 +1951,84 @@
 <body>
 
     <!-- GHOST CURSOR (E2E) -->
-    <div id="ghost-cursor">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 4 7.07 17 2.51-7.39L21 11.07z"/></svg>
+    <div id="ghost-cursor" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="var(--bg-base)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 4 7.07 17 2.51-7.39L21 11.07z"/></svg>
+    </div>
+
+    <!-- E2E RUN HUD -->
+    <div id="e2eHud" class="e2e-hud" aria-live="polite" aria-atomic="true" hidden>
+        <div class="e2e-hud-head">
+            <span class="e2e-hud-title">playwright · e2e</span>
+            <span class="e2e-hud-status" id="e2eHudStatus">running</span>
+        </div>
+        <div class="e2e-hud-step" id="e2eHudStep">Starting suite…</div>
+        <div class="e2e-hud-bar"><div id="e2eHudBar"></div></div>
+        <div class="e2e-hud-meta">
+            <span id="e2eHudMeta">0 / 0</span>
+            <span id="e2eHudTimer">0.0s</span>
+        </div>
     </div>
 
     <!-- BOOT SCREEN PRELOADER -->
     <div id="boot-screen" role="status" aria-live="polite" aria-label="Loading portfolio">
+        <div class="boot-ambient" aria-hidden="true">
+            <div class="boot-ambient-glow"></div>
+            <div class="boot-ambient-grid"></div>
+            <div class="boot-ambient-orb o1"></div>
+            <div class="boot-ambient-orb o2"></div>
+        </div>
         <div class="boot-panel">
-            <div class="boot-mark" aria-hidden="true">JR</div>
-            <h1 class="boot-title">Jaimin</h1>
-            <p class="boot-sub">Portfolio system</p>
-            <div class="boot-progress" aria-hidden="true">
-                <div class="boot-progress-bar" id="bootProgressBar"></div>
+            <div class="boot-mark-wrap">
+                <svg class="boot-ring" viewBox="0 0 88 88" aria-hidden="true">
+                    <circle class="boot-ring-bg" cx="44" cy="44" r="40"></circle>
+                    <circle class="boot-ring-fg" id="bootRingFg" cx="44" cy="44" r="40"></circle>
+                </svg>
+                <div class="boot-mark">JR</div>
             </div>
-            <div class="boot-status" id="bootStatus">Initializing…</div>
+            <p class="boot-eyebrow">System boot</p>
+            <h1 class="boot-title">Jaimin Rana</h1>
+            <p class="boot-sub">QA · Python · Security</p>
+            <div class="boot-modules" id="bootModules">
+                <div class="boot-mod" data-mod="0">
+                    <span class="boot-mod-icon" aria-hidden="true">○</span>
+                    <div class="boot-mod-text">
+                        <div class="boot-mod-name">Interface shell</div>
+                        <div class="boot-mod-meta">nav · theme · command palette</div>
+                    </div>
+                </div>
+                <div class="boot-mod" data-mod="1">
+                    <span class="boot-mod-icon" aria-hidden="true">○</span>
+                    <div class="boot-mod-text">
+                        <div class="boot-mod-name">Experience ledger</div>
+                        <div class="boot-mod-meta">career · education · logos</div>
+                    </div>
+                </div>
+                <div class="boot-mod" data-mod="2">
+                    <span class="boot-mod-icon" aria-hidden="true">○</span>
+                    <div class="boot-mod-text">
+                        <div class="boot-mod-name">Interactive labs</div>
+                        <div class="boot-mod-meta">API · pipeline · triage</div>
+                    </div>
+                </div>
+                <div class="boot-mod" data-mod="3">
+                    <span class="boot-mod-icon" aria-hidden="true">○</span>
+                    <div class="boot-mod-text">
+                        <div class="boot-mod-name">Security surface</div>
+                        <div class="boot-mod-meta">CSP · hardening · telemetry</div>
+                    </div>
+                </div>
+            </div>
+            <div class="boot-progress-row">
+                <span class="boot-pct" id="bootPct">0%</span>
+                <div class="boot-progress" aria-hidden="true">
+                    <div class="boot-progress-bar" id="bootProgressBar"></div>
+                </div>
+            </div>
+            <div class="boot-status" id="bootStatus"><span class="boot-status-dot" aria-hidden="true"></span>Initializing kernel…</div>
+            <div class="boot-footer">
+                <span>optimusbot.dev</span>
+                <span id="bootBuildMeta">build · ready</span>
+            </div>
         </div>
     </div>
 
@@ -2625,6 +2965,11 @@ jaimin = QAEngineer()</pre>
             const bootScreen = document.getElementById('boot-screen');
             const bootStatus = document.getElementById('bootStatus');
             const bootProgressBar = document.getElementById('bootProgressBar');
+            const bootPct = document.getElementById('bootPct');
+            const bootRingFg = document.getElementById('bootRingFg');
+            const bootModules = document.getElementById('bootModules');
+            const bootBuildMeta = document.getElementById('bootBuildMeta');
+            const BOOT_RING_LEN = 2 * Math.PI * 40; // r=40
             const matrixCanvas = document.getElementById('matrixCanvas');
             const toast = document.getElementById('toast');
             const toastMsg = document.getElementById('toastMsg');
@@ -2862,17 +3207,71 @@ jaimin = QAEngineer()</pre>
             }
             themeToggle.addEventListener('click', toggleTheme);
 
-            // --- BOOT PRELOADER (premium splash) ---
+            // --- BOOT PRELOADER (cinematic product load ~4s) ---
+            function bootSetProgress(pct) {
+                const p = Math.max(0, Math.min(100, pct));
+                if (bootProgressBar) bootProgressBar.style.width = `${p}%`;
+                if (bootPct) bootPct.textContent = `${Math.round(p)}%`;
+                if (bootRingFg) {
+                    const offset = BOOT_RING_LEN * (1 - p / 100);
+                    bootRingFg.style.strokeDasharray = String(BOOT_RING_LEN);
+                    bootRingFg.style.strokeDashoffset = String(offset);
+                }
+            }
+
+            function bootSetStatus(text) {
+                if (!bootStatus) return;
+                bootStatus.innerHTML = `<span class="boot-status-dot" aria-hidden="true"></span>${text}`;
+            }
+
+            function bootSetModule(index, state) {
+                if (!bootModules) return;
+                const mods = bootModules.querySelectorAll('.boot-mod');
+                mods.forEach((mod, i) => {
+                    if (i < index) {
+                        mod.classList.add('is-done');
+                        mod.classList.remove('is-active');
+                        const icon = mod.querySelector('.boot-mod-icon');
+                        if (icon) icon.textContent = '✓';
+                        const meta = mod.querySelector('.boot-mod-meta');
+                        if (meta && !meta.dataset.ok) {
+                            meta.dataset.ok = '1';
+                            meta.textContent = 'loaded';
+                        }
+                    } else if (i === index && state === 'active') {
+                        mod.classList.add('is-active');
+                        mod.classList.remove('is-done');
+                        const icon = mod.querySelector('.boot-mod-icon');
+                        if (icon) icon.textContent = '●';
+                    } else if (i === index && state === 'done') {
+                        mod.classList.remove('is-active');
+                        mod.classList.add('is-done');
+                        const icon = mod.querySelector('.boot-mod-icon');
+                        if (icon) icon.textContent = '✓';
+                        const meta = mod.querySelector('.boot-mod-meta');
+                        if (meta) { meta.dataset.ok = '1'; meta.textContent = 'loaded'; }
+                    }
+                });
+            }
+
             function finishBoot() {
                 if (!bootScreen) return;
-                bootScreen.classList.add('is-done');
+                bootSetProgress(100);
+                bootSetStatus('Systems online');
+                if (bootBuildMeta) bootBuildMeta.textContent = 'status · online';
+                // Mark all modules done
+                if (bootModules) {
+                    bootModules.querySelectorAll('.boot-mod').forEach((mod, i) => bootSetModule(i, 'done'));
+                }
                 setTimeout(() => {
-                    bootScreen.style.display = 'none';
-                    bootScreen.setAttribute('aria-hidden', 'true');
-                }, 600);
-                logSysEvent("Boot sequence completed", "ACTION");
-                // Tip after boot, top-center — never collides with SYS_EVENTS
-                setTimeout(showFirstVisitTip, 900);
+                    bootScreen.classList.add('is-done');
+                    setTimeout(() => {
+                        bootScreen.style.display = 'none';
+                        bootScreen.setAttribute('aria-hidden', 'true');
+                    }, 720);
+                    logSysEvent("Boot sequence completed", "ACTION");
+                    setTimeout(showFirstVisitTip, 1000);
+                }, 650);
             }
 
             function showFirstVisitTip() {
@@ -2890,31 +3289,39 @@ jaimin = QAEngineer()</pre>
             }
 
             if (!sessionStorage.getItem('booted') && bootScreen) {
-                const bootSteps = [
-                    { label: 'Loading interface…', pct: 18 },
-                    { label: 'Mounting experience…', pct: 38 },
-                    { label: 'Preparing labs…', pct: 58 },
-                    { label: 'Checking systems…', pct: 78 },
-                    { label: 'Ready', pct: 100 }
-                ];
-                let bootIdx = 0;
-                function runBootStep() {
-                    if (bootIdx >= bootSteps.length) {
-                        setTimeout(finishBoot, 280);
-                        return;
-                    }
-                    const step = bootSteps[bootIdx];
-                    if (bootStatus) bootStatus.textContent = step.label;
-                    if (bootProgressBar) bootProgressBar.style.width = `${step.pct}%`;
-                    bootIdx++;
-                    setTimeout(runBootStep, bootIdx === bootSteps.length ? 320 : 220 + Math.random() * 120);
+                if (bootRingFg) {
+                    bootRingFg.style.strokeDasharray = String(BOOT_RING_LEN);
+                    bootRingFg.style.strokeDashoffset = String(BOOT_RING_LEN);
                 }
-                runBootStep();
+                bootSetProgress(0);
+
+                // Staged sequence — long enough to read (~4–4.5s total)
+                const bootSteps = [
+                    { delay: 400,  pct: 8,  mod: 0, state: 'active', status: 'Mounting interface shell…', meta: 'init · shell' },
+                    { delay: 900,  pct: 22, mod: 0, state: 'done',   status: 'Interface shell ready', meta: 'shell · ok' },
+                    { delay: 1300, pct: 34, mod: 1, state: 'active', status: 'Loading experience ledger…', meta: 'career · load' },
+                    { delay: 1850, pct: 48, mod: 1, state: 'done',   status: 'Experience ledger mounted', meta: 'career · ok' },
+                    { delay: 2250, pct: 62, mod: 2, state: 'active', status: 'Warming interactive labs…', meta: 'labs · warm' },
+                    { delay: 2850, pct: 76, mod: 2, state: 'done',   status: 'Labs online (API · pipeline · triage)', meta: 'labs · ok' },
+                    { delay: 3250, pct: 88, mod: 3, state: 'active', status: 'Applying security surface…', meta: 'sec · check' },
+                    { delay: 3750, pct: 96, mod: 3, state: 'done',   status: 'Security checks passed', meta: 'sec · ok' },
+                    { delay: 4100, pct: 100, mod: 3, state: 'done',  status: 'Handing off to portfolio…', meta: 'handoff' }
+                ];
+
+                bootSteps.forEach((step) => {
+                    setTimeout(() => {
+                        bootSetProgress(step.pct);
+                        bootSetModule(step.mod, step.state);
+                        bootSetStatus(step.status);
+                        if (bootBuildMeta) bootBuildMeta.textContent = step.meta;
+                    }, step.delay);
+                });
+
+                setTimeout(finishBoot, 4550);
                 sessionStorage.setItem('booted', 'true');
             } else if (bootScreen) {
                 bootScreen.style.display = 'none';
                 bootScreen.setAttribute('aria-hidden', 'true');
-                // Returning visit: still show tip once per session if not shown
                 setTimeout(showFirstVisitTip, 1200);
             }
 
@@ -3038,41 +3445,313 @@ jaimin = QAEngineer()</pre>
                 }, 15000);
             }
 
-            // --- E2E PLAYWRIGHT SIMULATOR ---
+            // --- E2E PLAYWRIGHT SIMULATOR (full-site interactive tour) ---
             const sleep = ms => new Promise(r => setTimeout(r, ms));
+            let e2eRunning = false;
+            let e2eTimerIv = null;
+
+            function e2eSetHud({ step, index, total, status, elapsed }) {
+                const hud = document.getElementById('e2eHud');
+                const stepEl = document.getElementById('e2eHudStep');
+                const barEl = document.getElementById('e2eHudBar');
+                const metaEl = document.getElementById('e2eHudMeta');
+                const statusEl = document.getElementById('e2eHudStatus');
+                const timerEl = document.getElementById('e2eHudTimer');
+                if (stepEl && step != null) stepEl.textContent = step;
+                if (barEl && total) barEl.style.width = `${Math.round((index / total) * 100)}%`;
+                if (metaEl && total) metaEl.textContent = `${index} / ${total} passed`;
+                if (statusEl && status) {
+                    statusEl.textContent = status;
+                    statusEl.classList.toggle('is-pass', status === 'passed');
+                }
+                if (timerEl && elapsed != null) timerEl.textContent = `${elapsed.toFixed(1)}s`;
+                if (hud) {
+                    hud.hidden = false;
+                    hud.classList.add('is-visible');
+                }
+            }
+
+            function e2eHideHud() {
+                const hud = document.getElementById('e2eHud');
+                if (!hud) return;
+                hud.classList.remove('is-visible');
+                setTimeout(() => { hud.hidden = true; }, 280);
+            }
+
+            function e2eRippleAt(x, y) {
+                const r = document.createElement('div');
+                r.className = 'e2e-click-ripple';
+                r.style.left = `${x}px`;
+                r.style.top = `${y}px`;
+                document.body.appendChild(r);
+                setTimeout(() => r.remove(), 600);
+            }
+
+            function e2eFlash(el) {
+                if (!el) return;
+                el.classList.add('e2e-target-flash');
+                setTimeout(() => el.classList.remove('e2e-target-flash'), 700);
+            }
+
+            async function e2eMoveCursor(el, cursor) {
+                if (!el || !cursor) return null;
+                el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+                await sleep(550);
+                const rect = el.getBoundingClientRect();
+                // Prefer visible center
+                const x = rect.left + Math.min(Math.max(rect.width / 2, 12), rect.width - 12);
+                const y = rect.top + Math.min(Math.max(rect.height / 2, 12), rect.height - 12);
+                cursor.style.top = `${y}px`;
+                cursor.style.left = `${x}px`;
+                await sleep(650);
+                return { x, y, el };
+            }
+
+            async function e2eClick(el, cursor) {
+                const pos = await e2eMoveCursor(el, cursor);
+                if (!pos) return;
+                e2eFlash(el);
+                e2eRippleAt(pos.x, pos.y);
+                await sleep(180);
+                // Temporarily allow the click on this target
+                const prev = el.style.pointerEvents;
+                el.style.pointerEvents = 'auto';
+                try { el.click(); } catch (_) { /* ignore */ }
+                el.style.pointerEvents = prev;
+                await sleep(420);
+            }
+
+            async function e2eType(input, text, cursor) {
+                if (!input) return;
+                await e2eMoveCursor(input, cursor);
+                e2eFlash(input);
+                input.focus();
+                input.value = '';
+                for (let i = 0; i < text.length; i++) {
+                    input.value += text[i];
+                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                    await sleep(35 + Math.random() * 40);
+                }
+                await sleep(400);
+            }
+
             window.runE2ESimulator = async function() {
+                if (e2eRunning) {
+                    showToast('E2E suite already running…', 'warn');
+                    return;
+                }
                 const cursor = document.getElementById('ghost-cursor');
-                const pyBtnElem = document.getElementById('btnPython');
-                const apiTarget = document.getElementById('e2e-api-target');
-                const apiBtnElem = document.getElementById('apiContactBtn');
-                const runTestTarget = document.getElementById('runTestsBtn');
+                if (!cursor) return;
 
-                if(!cursor) return;
-                cursor.style.opacity = "1";
-                showToast("Running Playwright E2E UI Test...", "notice");
-                logSysEvent("E2E UI Simulation Script Started", "WARN");
+                // Close overlays that would block the tour
+                try { closeCmd(); } catch (_) {}
+                if (typeof window.toggleMenu === 'function') window.toggleMenu(true);
+                document.getElementById('shortcutsModal')?.classList.remove('active');
+                document.getElementById('diagModal')?.classList.remove('active');
 
-                const tRect = themeToggle.getBoundingClientRect();
-                cursor.style.top = (tRect.top + tRect.height/2) + 'px'; cursor.style.left = (tRect.left + tRect.width/2) + 'px';
-                await sleep(1000); themeToggle.click(); await sleep(800); themeToggle.click();
+                e2eRunning = true;
+                document.body.classList.add('e2e-running');
+                cursor.style.opacity = '1';
+                cursor.style.top = '40%';
+                cursor.style.left = '50%';
 
-                const pRect = pyBtnElem.getBoundingClientRect();
-                cursor.style.top = (pRect.top + pRect.height/2) + 'px'; cursor.style.left = (pRect.left + pRect.width/2) + 'px';
-                await sleep(1000); pyBtnElem.click(); await sleep(1000);
+                const started = performance.now();
+                e2eTimerIv = setInterval(() => {
+                    e2eSetHud({ elapsed: (performance.now() - started) / 1000 });
+                }, 100);
 
-                apiTarget.scrollIntoView({behavior: 'smooth', block: 'center'}); await sleep(1000);
-                const aRect = apiBtnElem.getBoundingClientRect();
-                cursor.style.top = (aRect.top + aRect.height/2) + 'px'; cursor.style.left = (aRect.left + aRect.width/2) + 'px';
-                await sleep(1000); apiBtnElem.click(); await sleep(1500);
+                showToast('Playwright E2E suite started — touring the site', 'notice', 2800);
+                logSysEvent('E2E UI Simulation Script Started', 'WARN');
 
-                runTestTarget.scrollIntoView({behavior: 'smooth', block: 'center'}); await sleep(1000);
-                const rRect = runTestTarget.getBoundingClientRect();
-                cursor.style.top = (rRect.top + rRect.height/2) + 'px'; cursor.style.left = (rRect.left + rRect.width/2) + 'px';
-                await sleep(1000); runTestTarget.click();
+                const steps = [
+                    {
+                        name: 'Home · open projects CTA',
+                        run: async () => {
+                            const home = document.getElementById('home');
+                            home?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            await sleep(500);
+                            await e2eClick(document.getElementById('e2e-btn-target'), cursor);
+                        }
+                    },
+                    {
+                        name: 'About · switch to jaimin.py',
+                        run: async () => {
+                            document.getElementById('about')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            await sleep(500);
+                            await e2eClick(document.getElementById('btnPython'), cursor);
+                            await sleep(500);
+                            await e2eClick(document.getElementById('btnHuman'), cursor);
+                        }
+                    },
+                    {
+                        name: 'Experience · scroll career index',
+                        run: async () => {
+                            document.getElementById('experience')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            await sleep(900);
+                            const card = document.querySelector('#experience .career-entry');
+                            if (card) { e2eFlash(card); await e2eMoveCursor(card, cursor); }
+                        }
+                    },
+                    {
+                        name: 'Projects · inspect flagship card',
+                        run: async () => {
+                            document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            await sleep(700);
+                            const card = document.querySelector('#projects .card');
+                            if (card) { e2eFlash(card); await e2eMoveCursor(card, cursor); }
+                        }
+                    },
+                    {
+                        name: 'Skills · scan stack panels',
+                        run: async () => {
+                            document.getElementById('skills')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            await sleep(700);
+                            const panel = document.querySelector('#skills .skill-panel');
+                            if (panel) { e2eFlash(panel); await e2eMoveCursor(panel, cursor); }
+                        }
+                    },
+                    {
+                        name: 'Certifications · verify credentials grid',
+                        run: async () => {
+                            document.getElementById('certifications')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            await sleep(700);
+                            const cert = document.querySelector('#certifications .cert-card');
+                            if (cert) { e2eFlash(cert); await e2eMoveCursor(cert, cursor); }
+                        }
+                    },
+                    {
+                        name: 'API playground · GET profile & contact',
+                        run: async () => {
+                            document.getElementById('api-gateway')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            await sleep(600);
+                            const profileBtn = document.querySelector('#apiSidebar [data-endpoint="profile"]');
+                            const certBtn = document.querySelector('#apiSidebar [data-endpoint="certifications"]');
+                            const contactBtn = document.getElementById('apiContactBtn');
+                            if (profileBtn) await e2eClick(profileBtn, cursor);
+                            await sleep(350);
+                            if (certBtn) await e2eClick(certBtn, cursor);
+                            await sleep(350);
+                            if (contactBtn) await e2eClick(contactBtn, cursor);
+                            await sleep(500);
+                        }
+                    },
+                    {
+                        name: 'Pipeline demo · run CI/CD',
+                        run: async () => {
+                            document.getElementById('automation')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            await sleep(600);
+                            const runBtn = document.getElementById('runTestsBtn');
+                            if (runBtn && runBtn.style.display !== 'none') {
+                                await e2eClick(runBtn, cursor);
+                                await sleep(2200);
+                            } else {
+                                await e2eMoveCursor(document.getElementById('term-content'), cursor);
+                            }
+                        }
+                    },
+                    {
+                        name: 'Triage lab · reclassify a defect',
+                        run: async () => {
+                            document.getElementById('labs')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            await sleep(700);
+                            const sev = document.querySelector('#triageList .sev-btn:not(.is-active)');
+                            if (sev) await e2eClick(sev, cursor);
+                            else {
+                                const row = document.querySelector('#triageList .bug-row');
+                                if (row) await e2eMoveCursor(row, cursor);
+                            }
+                            await sleep(400);
+                        }
+                    },
+                    {
+                        name: 'Contact · fill ticket form fields',
+                        run: async () => {
+                            document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            await sleep(600);
+                            const sev = document.getElementById('ticketSev');
+                            const title = document.getElementById('ticketTitle');
+                            const desc = document.getElementById('ticketDesc');
+                            if (sev) {
+                                await e2eMoveCursor(sev, cursor);
+                                sev.value = 'HIGH';
+                                sev.dispatchEvent(new Event('change', { bubbles: true }));
+                                e2eFlash(sev);
+                                await sleep(300);
+                            }
+                            await e2eType(title, 'E2E automation coverage request', cursor);
+                            await e2eType(desc, 'Simulated Playwright run verified interactive labs.', cursor);
+                            // Clear so we don't leave junk for the visitor
+                            if (title) title.value = '';
+                            if (desc) desc.value = '';
+                            if (sev) sev.value = 'MEDIUM';
+                        }
+                    },
+                    {
+                        name: 'Chrome · theme toggle smoke test',
+                        run: async () => {
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                            await sleep(500);
+                            if (themeToggle) {
+                                await e2eClick(themeToggle, cursor);
+                                await sleep(550);
+                                await e2eClick(themeToggle, cursor);
+                            }
+                        }
+                    }
+                ];
 
-                cursor.style.opacity = "0"; showToast("E2E Simulation Passed. 0 Errors.", "success");
-                logSysEvent("E2E Simulation Completed Successfully", "ACTION");
-                setTimeout(() => { cursor.style.top = '50%'; cursor.style.left = '50%'; }, 1000);
+                const total = steps.length;
+                e2eSetHud({ step: 'Bootstrapping suite…', index: 0, total, status: 'running', elapsed: 0 });
+
+                try {
+                    for (let i = 0; i < steps.length; i++) {
+                        const s = steps[i];
+                        e2eSetHud({
+                            step: s.name,
+                            index: i,
+                            total,
+                            status: 'running',
+                            elapsed: (performance.now() - started) / 1000
+                        });
+                        logSysEvent(`E2E step ${i + 1}/${total}: ${s.name}`, 'INFO');
+                        await s.run();
+                        e2eSetHud({
+                            step: `✓ ${s.name}`,
+                            index: i + 1,
+                            total,
+                            status: 'running',
+                            elapsed: (performance.now() - started) / 1000
+                        });
+                        await sleep(220);
+                    }
+
+                    const secs = ((performance.now() - started) / 1000).toFixed(1);
+                    e2eSetHud({
+                        step: `All ${total} checks passed`,
+                        index: total,
+                        total,
+                        status: 'passed',
+                        elapsed: Number(secs)
+                    });
+                    showToast(`E2E passed · ${total} steps · ${secs}s · 0 failures`, 'success', 4200);
+                    logSysEvent(`E2E Simulation Completed Successfully (${total} steps, ${secs}s)`, 'SUCCESS');
+                    await sleep(1600);
+                } catch (err) {
+                    showToast('E2E suite interrupted', 'warn');
+                    logSysEvent(`E2E error: ${err && err.message ? err.message : 'unknown'}`, 'ERR');
+                } finally {
+                    clearInterval(e2eTimerIv);
+                    e2eTimerIv = null;
+                    cursor.style.opacity = '0';
+                    document.body.classList.remove('e2e-running');
+                    document.querySelectorAll('.e2e-target-flash').forEach(n => n.classList.remove('e2e-target-flash'));
+                    e2eRunning = false;
+                    setTimeout(() => {
+                        cursor.style.top = '50%';
+                        cursor.style.left = '50%';
+                        e2eHideHud();
+                    }, 900);
+                }
             }
 
             window.executeSecret = function(cmd) {
