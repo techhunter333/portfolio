@@ -349,6 +349,11 @@
         }
         .boot-orbit-node { fill: rgba(255,255,255,0.8); }
         @keyframes bootOrbitSpin { to { transform: rotate(360deg); } }
+        @keyframes siteOrbitsDrift {
+            from { transform: translate(-50%, -50%) translateZ(0) rotate(0deg); }
+            to { transform: translate(-50%, -50%) translateZ(0) rotate(360deg); }
+        }
+        @keyframes orbitDashTravel { to { stroke-dashoffset: -280; } }
         .boot-floor {
             position: absolute; left: -20%; right: -20%; bottom: -8%;
             height: 48%;
@@ -2153,21 +2158,46 @@
             :root {
                 --nav-height: 56px;
                 --page-gutter: max(1rem, env(safe-area-inset-left));
-                --glass: color-mix(in srgb, var(--bg-surface) 92%, transparent);
+                --glass: color-mix(in srgb, var(--bg-surface) 74%, transparent);
                 --glass-blur: 0px;
             }
             html { scroll-behavior: auto; }
             body { touch-action: manipulation; }
 
-            /* Drop cinematic paint cost so scroll stays snappy */
+            /* Keep orbit rings; drop the rest of the cinematic paint cost */
             #siteCanvas,
             .site-aurora,
-            .site-orbits,
             .site-floor,
             .site-horizon,
             .site-bloom,
             .site-grain { display: none !important; }
-            .site-aurora, .site-orbit, .site-floor, .site-bloom { animation: none !important; }
+            .site-aurora, .site-floor, .site-bloom { animation: none !important; }
+            .site-orbits {
+                display: block !important;
+                width: 190vw;
+                height: 92vh;
+                top: 30%;
+                opacity: 0.82;
+                filter: none;
+                will-change: transform;
+                animation: siteOrbitsDrift 64s linear infinite;
+            }
+            .site-orbit {
+                stroke: color-mix(in srgb, var(--text-main) 44%, transparent);
+                stroke-width: 1.35;
+                animation: bootOrbitSpin 36s linear infinite;
+            }
+            .site-orbit.o2 {
+                stroke: color-mix(in srgb, var(--text-main) 32%, transparent);
+                stroke-width: 1.15;
+                animation: bootOrbitSpin 56s linear infinite reverse, orbitDashTravel 22s linear infinite;
+            }
+            .site-orbit.o3 {
+                stroke: color-mix(in srgb, var(--text-main) 24%, transparent);
+                stroke-width: 1;
+                animation-duration: 72s;
+            }
+            body.light-mode .site-orbits { opacity: 0.55; }
 
             header,
             .card,
@@ -2390,17 +2420,22 @@
         }
         @media (pointer: coarse) {
             :root {
-                --glass: color-mix(in srgb, var(--bg-surface) 92%, transparent);
+                --glass: color-mix(in srgb, var(--bg-surface) 74%, transparent);
                 --glass-blur: 0px;
             }
             html { scroll-behavior: auto; }
             #siteCanvas,
             .site-aurora,
-            .site-orbits,
             .site-floor,
             .site-horizon,
             .site-bloom,
             .site-grain { display: none !important; }
+            .site-orbits {
+                display: block !important;
+                filter: none;
+                opacity: 0.82;
+                animation: siteOrbitsDrift 64s linear infinite;
+            }
             header,
             .card,
             .lab-shell, .career-shell, .edu-shell, .cicd-panel, .terminal-window, .ticket-form,
