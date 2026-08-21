@@ -1869,19 +1869,26 @@
             .career-desc { font-size: 0.875rem; max-width: none; }
             .career-tags { margin-top: 0.85rem; }
 
-            /* API sandbox */
+            /* API sandbox — stack all endpoints (no hidden horizontal scroll) */
             .api-container { flex-direction: column; min-height: 0; }
             .api-sidebar {
-                width: 100%; border-right: none; border-bottom: 1px solid var(--border-subtle);
-                display: flex; flex-direction: row; overflow-x: auto; -webkit-overflow-scrolling: touch;
-                scrollbar-width: none; gap: 0.35rem; padding: 0.55rem;
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--border-subtle);
+                display: flex;
+                flex-direction: column;
+                overflow: visible;
+                gap: 0.35rem;
+                padding: 0.65rem 0.65rem 0.7rem;
             }
-            .api-sidebar-label { display: none; }
-            .api-sidebar::-webkit-scrollbar { display: none; }
+            .api-sidebar-label { display: block; padding: 0.2rem 0.45rem 0.35rem; }
             .api-endpoint {
-                flex: 0 0 auto; min-width: 9.5rem; white-space: normal;
+                flex: none;
+                width: 100%;
+                min-width: 0;
                 padding: 0.65rem 0.7rem;
             }
+            .api-path { overflow-wrap: anywhere; }
             .api-viewer { min-height: 240px; }
             .api-viewer-body { padding: 0.9rem; }
             .json-code { font-size: 0.74rem; }
