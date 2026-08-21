@@ -101,6 +101,35 @@ for i, (name, price, due) in enumerate(rows):
         d.line([(72, y + 52), (888, y + 52)], fill="#262626", width=1)
 sg.save(PROJ / "subguard.png", "PNG", optimize=True)
 
+# Expense Tracker still
+ex = Image.new("RGB", (960, 540), "#111111")
+d = ImageDraw.Draw(ex)
+ui_chrome(d, 960, 540, "expense tracker  ·  budgets & charts")
+stats = [("$2,480", "Spent"), ("$720", "Left"), ("6", "Categories")]
+for i, (n, lab) in enumerate(stats):
+    x = 48 + i * 300
+    d.rounded_rectangle([x, 100, x + 280, 196], radius=14, fill="#141414", outline="#2a2a2a")
+    d.text((x + 24, 128), n, font=font(26, True), fill="#ffffff", anchor="lm")
+    d.text((x + 24, 168), lab, font=font(14), fill="#888888", anchor="lm")
+d.rounded_rectangle([48, 216, 560, 500], radius=14, fill="#121212", outline="#2a2a2a")
+d.text((72, 246), "This month", font=font(15, True), fill="#f5f5f5", anchor="lm")
+bars = [("Groceries", 0.78), ("Rent", 0.92), ("Transport", 0.46), ("Utilities", 0.58)]
+for i, (name, pct) in enumerate(bars):
+    y = 286 + i * 50
+    d.text((72, y), name, font=font(14), fill="#a3a3a3", anchor="lm")
+    d.rounded_rectangle([220, y - 6, 532, y + 10], radius=5, fill="#1c1c1c")
+    d.rounded_rectangle([220, y - 6, 220 + int(312 * pct), y + 10], radius=5, fill="#e5e5e5")
+d.rounded_rectangle([580, 216, 912, 500], radius=14, fill="#121212", outline="#2a2a2a")
+tx = [("Market", "-$64.20"), ("Salary", "+$2,400"), ("Fuel", "-$28.00"), ("Power", "-$41.50")]
+d.text((604, 246), "Recent", font=font(15, True), fill="#f5f5f5", anchor="lm")
+for i, (name, amt) in enumerate(tx):
+    y = 292 + i * 48
+    d.text((604, y), name, font=font(14), fill="#d4d4d4", anchor="lm")
+    d.text((888, y), amt, font=font(14, True), fill="#fafafa", anchor="rm")
+    if i < 3:
+        d.line([(604, y + 22), (888, y + 22)], fill="#262626", width=1)
+ex.save(PROJ / "expense.png", "PNG", optimize=True)
+
 # --- Resume PDF ---
 out = ROOT / "resume.pdf"
 c = pdfcanvas.Canvas(str(out), pagesize=letter)
@@ -296,4 +325,4 @@ for item in certs:
     y -= 13
 
 c.save()
-print("wrote", ASSETS / "og.png", PROJ / "cybersuite.png", PROJ / "subguard.png", out)
+print("wrote", ASSETS / "og.png", PROJ / "cybersuite.png", PROJ / "subguard.png", PROJ / "expense.png", out)
