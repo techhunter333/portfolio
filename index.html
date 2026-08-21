@@ -145,24 +145,14 @@
             filter: blur(80px); mix-blend-mode: screen; opacity: 0.28;
             animation: bootAurora 14s ease-in-out infinite;
         }
-        .site-aurora.a1 {
-            width: 50vw; height: 38vw; min-width: 260px; left: -10%; top: 6%;
-            background: radial-gradient(circle, rgba(255,255,255,0.2), transparent 68%);
-        }
-        .site-aurora.a2 {
-            width: 40vw; height: 32vw; right: -12%; bottom: 4%;
-            background: radial-gradient(circle, rgba(230,230,240,0.14), transparent 70%);
-            animation-delay: -5s; animation-duration: 18s;
-        }
         .site-aurora.a3 {
-            width: 26vw; height: 26vw; left: 48%; top: 42%;
-            background: radial-gradient(circle, rgba(255,255,255,0.08), transparent 70%);
-            animation-delay: -9s;
+            width: 28vw; height: 22vw; left: 50%; top: 18%;
+            transform: translateX(-50%);
+            background: radial-gradient(circle, rgba(255,255,255,0.07), transparent 72%);
+            animation-delay: -4s;
         }
-        body.light-mode .site-aurora { mix-blend-mode: multiply; opacity: 0.18; filter: blur(70px); }
-        body.light-mode .site-aurora.a1 { background: radial-gradient(circle, rgba(0,0,0,0.14), transparent 68%); }
-        body.light-mode .site-aurora.a2 { background: radial-gradient(circle, rgba(0,0,0,0.08), transparent 70%); }
-        body.light-mode .site-aurora.a3 { background: radial-gradient(circle, rgba(0,0,0,0.06), transparent 70%); }
+        body.light-mode .site-aurora { mix-blend-mode: multiply; opacity: 0.12; filter: blur(70px); }
+        body.light-mode .site-aurora.a3 { background: radial-gradient(circle, rgba(0,0,0,0.06), transparent 72%); }
         .site-orbits {
             position: absolute; left: 50%; top: 38%;
             width: min(1100px, 140vw); height: min(620px, 80vh);
@@ -191,33 +181,30 @@
             opacity: 0.55;
         }
         .site-horizon {
-            position: absolute; left: -8%; right: -8%; top: 58%;
+            position: absolute; left: 22%; right: 22%; top: 58%;
             height: 1px;
-            background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--text-main) 18%, transparent) 20%, color-mix(in srgb, var(--text-main) 40%, transparent) 50%, color-mix(in srgb, var(--text-main) 18%, transparent) 80%, transparent);
-            box-shadow: 0 0 50px 4px color-mix(in srgb, var(--text-main) 8%, transparent);
-            animation: bootHorizonPulse 6s ease-in-out infinite;
-            opacity: 0.7;
+            background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--text-main) 16%, transparent) 50%, transparent);
+            opacity: 0.35;
         }
         .site-bloom {
             position: absolute;
-            width: 55vw; height: 55vw;
-            min-width: 280px; min-height: 280px;
-            left: 20%; top: 10%;
+            width: 36vw; height: 28vw;
+            min-width: 200px; min-height: 180px;
+            left: 50%; top: 22%;
+            transform: translateX(-50%);
             border-radius: 50%;
-            background: radial-gradient(circle, color-mix(in srgb, var(--text-main) 9%, transparent) 0%, transparent 68%);
-            filter: blur(28px);
-            animation: siteBloomDrift 22s ease-in-out infinite;
+            background: radial-gradient(circle, color-mix(in srgb, var(--text-main) 6%, transparent) 0%, transparent 70%);
+            filter: blur(32px);
+            animation: siteBloomDrift 26s ease-in-out infinite;
             pointer-events: none;
         }
         @keyframes siteBloomDrift {
-            0%   { transform: translate(0, 0) scale(1); opacity: 0.45; }
-            35%  { transform: translate(28vw, 18vh) scale(1.15); opacity: 0.7; }
-            65%  { transform: translate(-8vw, 32vh) scale(0.9); opacity: 0.4; }
-            100% { transform: translate(0, 0) scale(1); opacity: 0.45; }
+            0%, 100% { transform: translateX(-50%) translateY(0) scale(1); opacity: 0.35; }
+            50% { transform: translateX(-50%) translateY(8vh) scale(1.08); opacity: 0.5; }
         }
         .site-vignette {
             position: absolute; inset: 0;
-            background: radial-gradient(ellipse at 50% 30%, transparent 20%, color-mix(in srgb, var(--bg-base) 55%, transparent) 100%);
+            background: linear-gradient(180deg, color-mix(in srgb, var(--bg-base) 35%, transparent) 0%, transparent 18%, transparent 84%, color-mix(in srgb, var(--bg-base) 45%, transparent) 100%);
         }
         .site-grain {
             position: absolute; inset: 0; opacity: 0.07;
@@ -2326,8 +2313,6 @@
 
     <div id="siteStage" aria-hidden="true">
         <canvas id="siteCanvas"></canvas>
-        <div class="site-aurora a1"></div>
-        <div class="site-aurora a2"></div>
         <div class="site-aurora a3"></div>
         <div class="site-orbits">
             <svg viewBox="0 0 800 500" preserveAspectRatio="xMidYMid meet">
