@@ -132,9 +132,89 @@
             width: 100%;
             -webkit-font-smoothing: antialiased;
             transition: background-color 0.25s var(--ease), color 0.25s var(--ease);
-            background-image: radial-gradient(1000px 420px at 12% -8%, color-mix(in srgb, var(--text-main) 5%, transparent), transparent 55%);
-            background-attachment: fixed;
         }
+
+        /* Persistent cinematic stage (same world as boot) */
+        #siteStage {
+            position: fixed; inset: 0; z-index: 0;
+            pointer-events: none; overflow: hidden;
+        }
+        #siteCanvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+        .site-aurora {
+            position: absolute; border-radius: 50%;
+            filter: blur(80px); mix-blend-mode: screen; opacity: 0.28;
+            animation: bootAurora 14s ease-in-out infinite;
+        }
+        .site-aurora.a1 {
+            width: 50vw; height: 38vw; min-width: 260px; left: -10%; top: 6%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2), transparent 68%);
+        }
+        .site-aurora.a2 {
+            width: 40vw; height: 32vw; right: -12%; bottom: 4%;
+            background: radial-gradient(circle, rgba(230,230,240,0.14), transparent 70%);
+            animation-delay: -5s; animation-duration: 18s;
+        }
+        .site-aurora.a3 {
+            width: 26vw; height: 26vw; left: 48%; top: 42%;
+            background: radial-gradient(circle, rgba(255,255,255,0.08), transparent 70%);
+            animation-delay: -9s;
+        }
+        body.light-mode .site-aurora { mix-blend-mode: multiply; opacity: 0.18; filter: blur(70px); }
+        body.light-mode .site-aurora.a1 { background: radial-gradient(circle, rgba(0,0,0,0.14), transparent 68%); }
+        body.light-mode .site-aurora.a2 { background: radial-gradient(circle, rgba(0,0,0,0.08), transparent 70%); }
+        body.light-mode .site-aurora.a3 { background: radial-gradient(circle, rgba(0,0,0,0.06), transparent 70%); }
+        .site-orbits {
+            position: absolute; left: 50%; top: 38%;
+            width: min(1100px, 140vw); height: min(620px, 80vh);
+            transform: translate(-50%, -50%); opacity: 0.35;
+        }
+        .site-orbits svg { width: 100%; height: 100%; overflow: visible; }
+        .site-orbit {
+            fill: none; stroke: color-mix(in srgb, var(--text-main) 14%, transparent);
+            stroke-width: 0.6; transform-origin: 50% 50%;
+            animation: bootOrbitSpin 48s linear infinite;
+        }
+        .site-orbit.o2 { animation-duration: 72s; animation-direction: reverse; opacity: 0.7; }
+        .site-orbit.o3 { animation-duration: 96s; opacity: 0.5; }
+        .site-floor {
+            position: absolute; left: -20%; right: -20%; bottom: -12%;
+            height: 42%;
+            background-image:
+                linear-gradient(color-mix(in srgb, var(--text-main) 5%, transparent) 1px, transparent 1px),
+                linear-gradient(90deg, color-mix(in srgb, var(--text-main) 5%, transparent) 1px, transparent 1px);
+            background-size: 56px 56px;
+            transform: perspective(560px) rotateX(64deg);
+            transform-origin: center top;
+            mask-image: linear-gradient(180deg, color-mix(in srgb, var(--text-main) 40%, transparent), transparent 80%);
+            -webkit-mask-image: linear-gradient(180deg, color-mix(in srgb, var(--text-main) 40%, transparent), transparent 80%);
+            animation: bootFloorDrift 18s linear infinite;
+            opacity: 0.55;
+        }
+        .site-horizon {
+            position: absolute; left: -8%; right: -8%; top: 58%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--text-main) 18%, transparent) 20%, color-mix(in srgb, var(--text-main) 40%, transparent) 50%, color-mix(in srgb, var(--text-main) 18%, transparent) 80%, transparent);
+            box-shadow: 0 0 50px 4px color-mix(in srgb, var(--text-main) 8%, transparent);
+            animation: bootHorizonPulse 6s ease-in-out infinite;
+            opacity: 0.7;
+        }
+        .site-scan {
+            position: absolute; left: 0; right: 0; height: 14%;
+            background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--text-main) 5%, transparent), transparent);
+            animation: bootScan 16s ease-in-out infinite;
+        }
+        .site-vignette {
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse at 50% 30%, transparent 20%, color-mix(in srgb, var(--bg-base) 55%, transparent) 100%);
+        }
+        .site-grain {
+            position: absolute; inset: 0; opacity: 0.07;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n2)'/%3E%3C/svg%3E");
+            background-size: 220px 220px; mix-blend-mode: overlay;
+        }
+        header, .mobile-menu, .system-telemetry, section, .hero { position: relative; z-index: 1; }
+        header { z-index: 100; }
+        .mobile-menu { z-index: 200; }
 
         /* MOBILE FIX: Prevent Code & Terminal Text Overflows */
         pre, code, .terminal-output p, .json-code {
@@ -149,7 +229,7 @@
         #boot-screen {
             position: fixed; inset: 0; z-index: 9999;
             display: flex; align-items: center; justify-content: center;
-            background: #020203;
+            background: color-mix(in srgb, #020203 42%, transparent);
             color: #fff;
             padding: max(1.5rem, env(safe-area-inset-top)) max(1.5rem, env(safe-area-inset-right)) max(1.5rem, env(safe-area-inset-bottom)) max(1.5rem, env(safe-area-inset-left));
             overflow: hidden;
@@ -160,7 +240,7 @@
             filter: blur(10px) saturate(0.7);
         }
         .boot-ambient {
-            position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+            display: none; /* site stage is the shared world */
         }
         #bootCanvas {
             position: absolute; inset: 0; width: 100%; height: 100%;
@@ -509,7 +589,10 @@
             backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
             border-bottom: 1px solid var(--border-subtle);
             z-index: 100;
-            transition: background 0.25s ease, border-color 0.25s ease;
+            transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+        header.is-scrolled {
+            box-shadow: 0 10px 30px rgba(0,0,0,0.18);
         }
         body.light-mode header { background: rgba(255, 255, 255, 0.88); }
         nav { display: flex; justify-content: space-between; align-items: center; width: 100%; }
@@ -706,21 +789,23 @@
         /* BENTO / CARDS — premium product surfaces */
         .bento-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
         .card { 
-            background: var(--bg-surface);
+            background: color-mix(in srgb, var(--bg-surface) 78%, transparent);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-lg);
             padding: 1.5rem 1.6rem;
             position: relative;
             box-shadow: var(--shadow-bento);
             display: flex; flex-direction: column;
-            transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease), transform 0.2s var(--ease);
+            transition: border-color 0.35s var(--ease), box-shadow 0.35s var(--ease), transform 0.45s var(--ease);
             max-width: 100%;
             overflow: hidden;
         }
         .card:hover {
             border-color: color-mix(in srgb, var(--text-main) 16%, var(--border-subtle));
-            box-shadow: 0 1px 0 color-mix(in srgb, var(--text-main) 6%, transparent) inset, 0 16px 40px rgba(0,0,0,0.35);
-            transform: translateY(-2px);
+            box-shadow: 0 1px 0 color-mix(in srgb, var(--text-main) 6%, transparent) inset, 0 18px 48px rgba(0,0,0,0.38);
+            transform: translateY(-5px) scale(1.012);
         }
         body.light-mode .card:hover { box-shadow: 0 1px 0 rgba(255,255,255,0.9) inset, 0 16px 36px rgba(0,0,0,0.08); }
         .card::after { content: none; }
@@ -1808,9 +1893,47 @@
         .tel-val { color: var(--text-main); font-weight: 600; }
         .pulse-green { display: inline-block; width: 6px; height: 6px; background: var(--success); border-radius: 50%; animation: pulse-dot 2s infinite ease-in-out; }
 
-        .scroll-animate { opacity: 0; transform: translateY(20px); }
-        .scroll-animate.visible { animation: scrollFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        @keyframes scrollFadeUp { to { opacity: 1; transform: translateY(0); } }
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(28px) scale(0.985);
+            filter: blur(6px);
+            will-change: opacity, transform, filter;
+        }
+        .scroll-animate.visible {
+            animation: scrollReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes scrollReveal {
+            to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+        .section-header.scroll-animate,
+        .section-header {
+            opacity: 0;
+            transform: translateY(18px);
+        }
+        .section-header.visible,
+        .section-header.scroll-animate.visible {
+            animation: headerReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes headerReveal {
+            to { opacity: 1; transform: none; }
+        }
+        .bento-grid .card,
+        .certs-grid .cert-card,
+        .skills-grid .skill-panel,
+        .career-entry,
+        .edu-row {
+            transition: transform 0.45s var(--ease), border-color 0.35s var(--ease), box-shadow 0.35s var(--ease);
+        }
+        .lab-shell, .career-shell, .edu-shell, .cicd-panel, .terminal-window, .ticket-form {
+            background: color-mix(in srgb, var(--bg-surface) 80%, transparent);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: transform 0.45s var(--ease), border-color 0.35s var(--ease), box-shadow 0.35s var(--ease);
+        }
+        .lab-shell:hover, .career-shell:hover, .edu-shell:hover {
+            transform: translateY(-3px);
+            border-color: color-mix(in srgb, var(--text-main) 14%, var(--border-subtle));
+        }
 
         /* Languages + certs */
         .lang-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.25rem; }
@@ -2060,10 +2183,13 @@
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .hero-element, .scroll-animate, .scroll-animate.visible {
-                animation: none !important; opacity: 1 !important; transform: none !important;
+            .hero-element, .scroll-animate, .scroll-animate.visible,
+            .section-header, .section-header.visible,
+            .site-aurora, .site-orbit, .site-floor, .site-horizon, .site-scan {
+                animation: none !important; opacity: 1 !important; transform: none !important; filter: none !important;
             }
             html { scroll-behavior: auto; }
+            #siteStage { display: none; }
         }
     </style>
 </head>
@@ -2178,7 +2304,24 @@
     <!-- MATRIX CANVAS (SUDO MODE) -->
     <canvas id="matrixCanvas"></canvas>
 
-    <div class="bg-grid"></div>
+    <div id="siteStage" aria-hidden="true">
+        <canvas id="siteCanvas"></canvas>
+        <div class="site-aurora a1"></div>
+        <div class="site-aurora a2"></div>
+        <div class="site-aurora a3"></div>
+        <div class="site-orbits">
+            <svg viewBox="0 0 800 500" preserveAspectRatio="xMidYMid meet">
+                <ellipse class="site-orbit o1" cx="400" cy="250" rx="340" ry="168"></ellipse>
+                <ellipse class="site-orbit o2" cx="400" cy="250" rx="270" ry="210"></ellipse>
+                <ellipse class="site-orbit o3" cx="400" cy="250" rx="390" ry="120"></ellipse>
+            </svg>
+        </div>
+        <div class="site-floor"></div>
+        <div class="site-horizon"></div>
+        <div class="site-scan"></div>
+        <div class="site-vignette"></div>
+        <div class="site-grain"></div>
+    </div>
     <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true">
         <div class="toast-card">
             <span class="toast-icon" id="toastIcon" aria-hidden="true"><i data-lucide="info" size="14"></i></span>
@@ -3378,6 +3521,78 @@ jaimin = QAEngineer()</pre>
                 logSysEvent(`Visitor tally updated · ${finalN.toLocaleString('en-US')}`, 'INFO');
             })();
 
+            // --- SITE STAGE (persistent cinematic background) ---
+            (function startSiteStage() {
+                const canvas = document.getElementById('siteCanvas');
+                const stage = document.getElementById('siteStage');
+                if (!canvas || !stage) return;
+                if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    stage.style.display = 'none';
+                    return;
+                }
+                const ctx = canvas.getContext('2d');
+                if (!ctx) return;
+                let raf = 0;
+                const isMobile = window.matchMedia('(max-width: 720px)').matches;
+                const resize = () => {
+                    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+                    canvas.width = Math.floor(window.innerWidth * dpr);
+                    canvas.height = Math.floor(window.innerHeight * dpr);
+                    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                };
+                resize();
+                const density = isMobile ? 22000 : 15000;
+                const count = Math.min(isMobile ? 70 : 130, Math.floor((window.innerWidth * window.innerHeight) / density));
+                const stars = Array.from({ length: count }, () => ({
+                    x: Math.random() * window.innerWidth,
+                    y: Math.random() * window.innerHeight,
+                    r: Math.random() * 1.25 + 0.15,
+                    a: Math.random() * 0.45 + 0.08,
+                    vx: (Math.random() - 0.5) * 0.12,
+                    vy: (Math.random() - 0.4) * 0.08,
+                    tw: Math.random() * Math.PI * 2,
+                    ts: 0.006 + Math.random() * 0.014
+                }));
+                const particle = () => document.body.classList.contains('light-mode')
+                    ? '0,0,0' : '255,255,255';
+                const draw = () => {
+                    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+                    const rgb = particle();
+                    for (const s of stars) {
+                        s.x += s.vx; s.y += s.vy; s.tw += s.ts;
+                        if (s.x < -4) s.x = window.innerWidth + 4;
+                        if (s.x > window.innerWidth + 4) s.x = -4;
+                        if (s.y < -4) s.y = window.innerHeight + 4;
+                        if (s.y > window.innerHeight + 4) s.y = -4;
+                        const alpha = s.a * (0.5 + 0.5 * Math.sin(s.tw));
+                        ctx.beginPath();
+                        ctx.fillStyle = `rgba(${rgb},${alpha})`;
+                        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    ctx.strokeStyle = `rgba(${rgb},0.03)`;
+                    ctx.lineWidth = 0.55;
+                    for (let i = 0; i < stars.length; i += 8) {
+                        const a = stars[i], b = stars[(i + 13) % stars.length];
+                        const dx = a.x - b.x, dy = a.y - b.y;
+                        if (dx * dx + dy * dy < 12000) {
+                            ctx.beginPath();
+                            ctx.moveTo(a.x, a.y);
+                            ctx.lineTo(b.x, b.y);
+                            ctx.stroke();
+                        }
+                    }
+                    raf = requestAnimationFrame(draw);
+                };
+                const play = () => { if (!raf) draw(); };
+                const pause = () => { if (raf) cancelAnimationFrame(raf); raf = 0; };
+                document.addEventListener('visibilitychange', () => {
+                    document.hidden ? pause() : play();
+                });
+                window.addEventListener('resize', resize, { passive: true });
+                play();
+            })();
+
             // --- THEME ---
             if(localStorage.getItem('theme') === 'light') { 
                 document.body.classList.add('light-mode'); 
@@ -3548,7 +3763,6 @@ jaimin = QAEngineer()</pre>
             }
 
             if (!sessionStorage.getItem('booted') && bootScreen) {
-                startBootCanvas();
                 bootSetProgress(0);
 
                 // Staged sequence — long enough to watch the stage (~5.6s)
@@ -4291,8 +4505,27 @@ jaimin = QAEngineer()</pre>
             document.getElementById('closeDiagBtn').addEventListener('click', () => document.getElementById('diagModal').classList.remove('active'));
 
             // --- SCROLL ANIMATIONS ---
-            const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } }); }, { threshold: 0.1 });
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    const el = entry.target;
+                    el.classList.add('visible');
+                    const kids = el.querySelectorAll(':scope > .card, :scope > .cert-card, :scope > .skill-panel, :scope > .career-entry, :scope > .edu-row, :scope > article');
+                    kids.forEach((kid, i) => {
+                        kid.style.transitionDelay = `${Math.min(i * 70, 420)}ms`;
+                    });
+                    observer.unobserve(el);
+                });
+            }, { threshold: 0.08, rootMargin: '0px 0px -8% 0px' });
             document.querySelectorAll('.section-header, .scroll-animate').forEach(el => observer.observe(el));
+
+            const headerEl = document.querySelector('header');
+            const onScrollHeader = () => {
+                if (!headerEl) return;
+                headerEl.classList.toggle('is-scrolled', window.scrollY > 12);
+            };
+            window.addEventListener('scroll', onScrollHeader, { passive: true });
+            onScrollHeader();
 
             // --- HACKER TEXT EFFECT ---
             const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*"; const headerText = document.querySelector(".hacker-text"); let hackerInterval = null; 
