@@ -20,9 +20,15 @@
     <meta property="og:title" content="Jaimin Rana — QA Engineer &amp; Python Developer">
     <meta property="og:description" content="Product QA · Python · Cybersecurity. Projects: CyberSuite, SubGuard, Expense Tracker. Portfolio at optimusbot.dev.">
     <meta property="og:site_name" content="Jaimin Rana">
-    <meta name="twitter:card" content="summary">
+    <meta property="og:image" content="https://optimusbot.dev/assets/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Jaimin Rana — QA Engineer and Python Developer">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Jaimin Rana — QA Engineer &amp; Python Developer">
     <meta name="twitter:description" content="Product QA · Python · Cybersecurity. Live projects and certifications.">
+    <meta name="twitter:image" content="https://optimusbot.dev/assets/og.png">
+    <meta name="twitter:image:alt" content="Jaimin Rana — QA Engineer and Python Developer">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23000'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='system-ui,sans-serif' font-size='14' font-weight='700' fill='%23fff'%3EJR%3C/text%3E%3C/svg%3E">
     
     <!-- Fonts -->
@@ -121,6 +127,19 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html { scroll-behavior: smooth; }
+        .skip-link {
+            position: fixed; top: 0.75rem; left: 0.75rem; z-index: 10001;
+            padding: 0.65rem 0.95rem;
+            background: var(--text-main); color: var(--bg-base);
+            border-radius: 8px; font-weight: 600; font-size: 0.85rem;
+            transform: translateY(-180%);
+            transition: transform 0.15s ease;
+        }
+        .skip-link:focus {
+            transform: none;
+            outline: 2px solid var(--text-main);
+            outline-offset: 3px;
+        }
 
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-base); }
@@ -956,6 +975,18 @@
         .card h3 { font-size: 1.05rem; font-weight: 600; letter-spacing: -0.02em; color: var(--text-main); line-height: 1.3; }
         .card-link { display: inline-flex; align-items: center; gap: 0.35rem; margin-top: 1rem; font-size: 0.8rem; font-weight: 550; color: var(--text-main); }
         .card-link:hover { opacity: 0.75; }
+        .card-still {
+            margin: 0 0 1rem;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-subtle);
+            background: #111;
+            aspect-ratio: 16 / 9;
+        }
+        .card-still img {
+            display: block; width: 100%; height: 100%;
+            object-fit: cover;
+        }
         .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: auto; padding-top: 1.15rem; }
         .tag {
             font-size: 0.7rem; font-weight: 500; font-family: Inter, sans-serif;
@@ -2003,6 +2034,7 @@
         }
         .scroll-animate.visible {
             animation: scrollReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            will-change: auto;
         }
         @keyframes scrollReveal {
             to { opacity: 1; transform: translateY(0) scale(1); }
@@ -2121,6 +2153,53 @@
             :root {
                 --nav-height: 56px;
                 --page-gutter: max(1rem, env(safe-area-inset-left));
+                --glass: color-mix(in srgb, var(--bg-surface) 92%, transparent);
+                --glass-blur: 0px;
+            }
+            html { scroll-behavior: auto; }
+            body { touch-action: manipulation; }
+
+            /* Drop cinematic paint cost so scroll stays snappy */
+            #siteCanvas,
+            .site-aurora,
+            .site-orbits,
+            .site-floor,
+            .site-horizon,
+            .site-bloom,
+            .site-grain { display: none !important; }
+            .site-aurora, .site-orbit, .site-floor, .site-bloom { animation: none !important; }
+
+            header,
+            .card,
+            .lab-shell, .career-shell, .edu-shell, .cicd-panel, .terminal-window, .ticket-form,
+            .skill-panel, .cert-card, .contact-item, .gauge-card, .edu-row, .career-entry {
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+            }
+            header { background: var(--bg-elevated); }
+            header.is-scrolled { box-shadow: none; }
+            .card:hover,
+            .lab-shell:hover, .career-shell:hover, .edu-shell:hover,
+            a.cert-card:hover,
+            .skill-panel.card:hover {
+                transform: none;
+            }
+            .scroll-animate,
+            .section-header.scroll-animate {
+                transform: none;
+                will-change: opacity;
+            }
+            .scroll-animate.visible,
+            .section-header.scroll-animate.visible {
+                animation: scrollRevealFade 0.32s ease forwards;
+            }
+            @keyframes scrollRevealFade {
+                to { opacity: 1; }
+            }
+            #experience, #projects, #skills, #certifications,
+            #api-gateway, #automation, #labs, #contact {
+                content-visibility: auto;
+                contain-intrinsic-size: auto 720px;
             }
 
             .nav-links { display: none !important; }
@@ -2301,6 +2380,35 @@
             .status-pill { font-size: 0.65rem; }
         }
 
+        @media (hover: none), (pointer: coarse) {
+            .card:hover,
+            .lab-shell:hover, .career-shell:hover, .edu-shell:hover,
+            a.cert-card:hover,
+            .skill-panel.card:hover {
+                transform: none;
+            }
+        }
+        @media (pointer: coarse) {
+            :root {
+                --glass: color-mix(in srgb, var(--bg-surface) 92%, transparent);
+                --glass-blur: 0px;
+            }
+            html { scroll-behavior: auto; }
+            #siteCanvas,
+            .site-aurora,
+            .site-orbits,
+            .site-floor,
+            .site-horizon,
+            .site-bloom,
+            .site-grain { display: none !important; }
+            header,
+            .card,
+            .lab-shell, .career-shell, .edu-shell, .cicd-panel, .terminal-window, .ticket-form,
+            .skill-panel, .cert-card, .contact-item, .gauge-card, .edu-row, .career-entry {
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+            }
+        }
         @media (prefers-reduced-motion: reduce) {
             .hero-element, .scroll-animate, .scroll-animate.visible,
             .section-header, .section-header.visible,
@@ -2313,6 +2421,7 @@
     </style>
 </head>
 <body>
+    <a class="skip-link" href="#home">Skip to content</a>
 
     <!-- GHOST CURSOR (E2E) -->
     <div id="ghost-cursor" aria-hidden="true">
@@ -2898,6 +3007,9 @@ jaimin = <span class="py-class">QAEngineer</span>()</pre>
                         <span class="ticket-id"><i data-lucide="check-circle-2" size="14"></i> FLAGSHIP</span>
                         <span class="ticket-status">LIVE</span>
                     </div>
+                    <div class="card-still">
+                        <img src="assets/projects/cybersuite.png" alt="CyberSuite security suite dashboard" width="960" height="540" loading="lazy" decoding="async">
+                    </div>
                     <h3>CyberSuite</h3>
                     <p>Production multi-tool cybersecurity platform — modular Flask blueprints, crypto utilities, hashing, secure paste, file locker, OTP, encoders, and more. Built and maintained as a live product.</p>
                     <div class="tags"><span class="tag">Python</span><span class="tag">Flask</span><span class="tag">Security</span><span class="tag">MySQL / SQLite</span></div>
@@ -2911,6 +3023,9 @@ jaimin = <span class="py-class">QAEngineer</span>()</pre>
                     <div class="ticket-header">
                         <span class="ticket-id"><i data-lucide="check-circle-2" size="14"></i> APP-001</span>
                         <span class="ticket-status">LIVE</span>
+                    </div>
+                    <div class="card-still">
+                        <img src="assets/projects/subguard.png" alt="SubGuard subscription manager dashboard" width="960" height="540" loading="lazy" decoding="async">
                     </div>
                     <h3>SubGuard</h3>
                     <p>Local-first subscription manager — renewals, budgets, analytics, import/export, command palette, and security-hardened Flask architecture. Monochrome product UI.</p>
@@ -3685,8 +3800,12 @@ jaimin = <span class="py-class">QAEngineer</span>()</pre>
                 const canvas = document.getElementById('siteCanvas');
                 const stage = document.getElementById('siteStage');
                 if (!canvas || !stage) return;
-                if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                    stage.style.display = 'none';
+                const liteStage = window.matchMedia('(prefers-reduced-motion: reduce), (max-width: 768px), (pointer: coarse)').matches;
+                if (liteStage) {
+                    stage.classList.add('is-lite');
+                    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                        stage.style.display = 'none';
+                    }
                     return;
                 }
                 const ctx = canvas.getContext('2d');
@@ -3777,7 +3896,7 @@ jaimin = <span class="py-class">QAEngineer</span>()</pre>
             let bootCanvasRaf = 0;
             function startBootCanvas() {
                 const canvas = document.getElementById('bootCanvas');
-                if (!canvas || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+                if (!canvas || window.matchMedia('(prefers-reduced-motion: reduce), (max-width: 768px), (pointer: coarse)').matches) return;
                 const ctx = canvas.getContext('2d');
                 if (!ctx) return;
                 const resize = () => {
@@ -4556,21 +4675,23 @@ jaimin = <span class="py-class">QAEngineer</span>()</pre>
                 });
             }
 
-            // --- MAGNETIC 3D BENTO CARDS ---
-            document.querySelectorAll('.card').forEach(card => {
-                card.addEventListener('mousemove', e => {
-                    const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left; const y = e.clientY - rect.top;
-                    card.style.setProperty('--mouse-x', `${x}px`); card.style.setProperty('--mouse-y', `${y}px`);
-                    const centerX = rect.width / 2; const centerY = rect.height / 2;
-                    const rotateX = ((y - centerY) / centerY) * -5; 
-                    const rotateY = ((x - centerX) / centerX) * 5;
-                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            // --- MAGNETIC 3D BENTO CARDS (fine pointer only) ---
+            if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+                document.querySelectorAll('.card').forEach(card => {
+                    card.addEventListener('mousemove', e => {
+                        const rect = card.getBoundingClientRect();
+                        const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+                        card.style.setProperty('--mouse-x', `${x}px`); card.style.setProperty('--mouse-y', `${y}px`);
+                        const centerX = rect.width / 2; const centerY = rect.height / 2;
+                        const rotateX = ((y - centerY) / centerY) * -5;
+                        const rotateY = ((x - centerX) / centerX) * 5;
+                        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                    });
+                    card.addEventListener('mouseleave', () => {
+                        card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)`;
+                    });
                 });
-                card.addEventListener('mouseleave', () => {
-                    card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)`;
-                });
-            });
+            }
 
             // --- API SANDBOX LOGIC ---
             const apiData = {
