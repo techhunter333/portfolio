@@ -154,18 +154,36 @@
         body.light-mode .site-aurora { mix-blend-mode: multiply; opacity: 0.12; filter: blur(70px); }
         body.light-mode .site-aurora.a3 { background: radial-gradient(circle, rgba(0,0,0,0.06), transparent 72%); }
         .site-orbits {
-            position: absolute; left: 50%; top: 38%;
-            width: min(1100px, 140vw); height: min(620px, 80vh);
-            transform: translate(-50%, -50%); opacity: 0.35;
+            position: absolute; left: 50%; top: 36%;
+            width: min(1180px, 150vw); height: min(680px, 86vh);
+            transform: translate(-50%, -50%);
+            opacity: 0.92;
+            filter: drop-shadow(0 0 10px color-mix(in srgb, var(--text-main) 18%, transparent));
         }
         .site-orbits svg { width: 100%; height: 100%; overflow: visible; }
         .site-orbit {
-            fill: none; stroke: color-mix(in srgb, var(--text-main) 14%, transparent);
-            stroke-width: 0.6; transform-origin: 50% 50%;
+            fill: none;
+            stroke: color-mix(in srgb, var(--text-main) 42%, transparent);
+            stroke-width: 1.15;
+            transform-origin: 50% 50%;
             animation: bootOrbitSpin 48s linear infinite;
         }
-        .site-orbit.o2 { animation-duration: 72s; animation-direction: reverse; opacity: 0.7; }
-        .site-orbit.o3 { animation-duration: 96s; opacity: 0.5; }
+        .site-orbit.o2 {
+            animation-duration: 72s; animation-direction: reverse;
+            stroke: color-mix(in srgb, var(--text-main) 32%, transparent);
+            stroke-width: 0.95;
+            stroke-dasharray: 8 14;
+        }
+        .site-orbit.o3 {
+            animation-duration: 96s;
+            stroke: color-mix(in srgb, var(--text-main) 26%, transparent);
+            stroke-width: 0.8;
+        }
+        .site-orbit-node {
+            fill: var(--text-main);
+            filter: drop-shadow(0 0 6px color-mix(in srgb, var(--text-main) 55%, transparent));
+        }
+        body.light-mode .site-orbits { opacity: 0.55; }
         .site-floor {
             position: absolute; left: -20%; right: -20%; bottom: -12%;
             height: 42%;
@@ -2319,6 +2337,18 @@
                 <ellipse class="site-orbit o1" cx="400" cy="250" rx="340" ry="168"></ellipse>
                 <ellipse class="site-orbit o2" cx="400" cy="250" rx="270" ry="210"></ellipse>
                 <ellipse class="site-orbit o3" cx="400" cy="250" rx="390" ry="120"></ellipse>
+                <circle class="site-orbit-node" r="3.2" cx="740" cy="250">
+                    <animateMotion dur="48s" repeatCount="indefinite"
+                        path="M740,250 a340,168 0 1,1 -680,0 a340,168 0 1,1 680,0" />
+                </circle>
+                <circle class="site-orbit-node" r="2.4" cx="400" cy="40" opacity="0.85">
+                    <animateMotion dur="72s" repeatCount="indefinite"
+                        path="M400,40 a270,210 0 1,0 0,420 a270,210 0 1,0 0,-420" />
+                </circle>
+                <circle class="site-orbit-node" r="2" cx="790" cy="250" opacity="0.7">
+                    <animateMotion dur="96s" repeatCount="indefinite"
+                        path="M790,250 a390,120 0 1,1 -780,0 a390,120 0 1,1 780,0" />
+                </circle>
             </svg>
         </div>
         <div class="site-floor"></div>
