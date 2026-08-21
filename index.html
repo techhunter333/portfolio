@@ -1407,15 +1407,28 @@
             width: 28px; height: 28px; border-radius: 999px;
             border: 1px solid currentColor; display: flex; align-items: center; justify-content: center;
             background: color-mix(in srgb, var(--text-main) 4%, transparent);
+            transition: transform 0.35s var(--ease), background 0.3s, box-shadow 0.3s;
         }
         .cicd-step.passed .cicd-step-icon {
             background: var(--text-main); color: var(--bg-base); border-color: var(--text-main);
+            transform: scale(1.05);
         }
         .cicd-step.active .cicd-step-icon {
-            box-shadow: 0 0 0 3px color-mix(in srgb, var(--text-main) 12%, transparent);
+            box-shadow: 0 0 0 4px color-mix(in srgb, var(--text-main) 14%, transparent);
+            animation: cicdPulse 1.1s ease-in-out infinite;
+        }
+        @keyframes cicdPulse {
+            0%, 100% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--text-main) 10%, transparent); }
+            50% { box-shadow: 0 0 0 7px color-mix(in srgb, var(--text-main) 18%, transparent); }
         }
         .cicd-line { flex: 1; height: 2px; background: var(--border-subtle); margin: 0 12px; position: relative; overflow: hidden; min-width: 28px; }
-        .cicd-line-progress { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: var(--text-main); transition: width 0.5s var(--ease); }
+        .cicd-line-progress { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: var(--text-main); transition: width 0.7s var(--ease); box-shadow: 0 0 10px color-mix(in srgb, var(--text-main) 40%, transparent); }
+        .cicd-step-meta {
+            display: block; font-family: 'JetBrains Mono', monospace;
+            font-size: 0.58rem; color: var(--text-muted); margin-top: 0.15rem;
+        }
+        .cicd-step { flex-direction: column; align-items: flex-start; gap: 0.35rem; }
+        .cicd-step-row { display: flex; align-items: center; gap: 0.5rem; }
 
         .terminal-window {
             background: var(--bg-base); border: 1px solid var(--border-subtle);
@@ -1442,175 +1455,99 @@
             display: flex; flex-direction: column; color: var(--text-main);
             position: relative; overflow: hidden;
         }
-        .terminal-output { flex: 1 1 auto; min-height: 0; margin-bottom: 1rem; }
+        .terminal-output { flex: 1 1 auto; min-height: 0; margin-bottom: 1rem; max-height: 220px; overflow: auto; }
         .terminal-output p { margin-bottom: 6px; font-size: 0.84rem; opacity: 0; transform: translateY(5px); animation: termFade 0.2s forwards; line-height: 1.45; }
         @keyframes termFade { to { opacity: 1; transform: translateY(0); } }
         #runTestsBtn { align-self: flex-start; font-size: 0.8rem; min-height: 40px; }
+        .gauge-card.is-live .gauge-val { animation: gaugeTick 0.6s var(--ease); }
+        @keyframes gaugeTick { from { opacity: 0.4; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 
-        /* BUG TRIAGE LAB */
-        .triage-body { padding: 1rem 1.05rem 1.1rem; }
-        .triage-layout {
+        /* TRACE STUDIO */
+        .trace-layout {
             display: grid;
-            grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.45fr);
+            grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.35fr);
             gap: 0.85rem;
-            align-items: start;
+            padding: 1rem 1.05rem 1.1rem;
         }
-        .triage-side { min-width: 0; }
-        .triage-stats {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 0.65rem;
-            margin-bottom: 0.85rem;
+        .trace-journeys { display: flex; flex-direction: column; gap: 0.5rem; }
+        .trace-card {
+            text-align: left;
+            width: 100%;
+            border: 1px solid var(--border-subtle);
+            background: color-mix(in srgb, var(--bg-base) 55%, transparent);
+            color: inherit;
+            border-radius: 14px;
+            padding: 0.85rem 0.95rem;
+            cursor: pointer;
+            font-family: Inter, sans-serif;
+            transition: border-color 0.2s, background 0.2s, transform 0.2s;
         }
-        .triage-stat {
+        .trace-card:hover { border-color: color-mix(in srgb, var(--text-main) 18%, var(--border-subtle)); }
+        .trace-card.is-active {
+            border-color: color-mix(in srgb, var(--text-main) 28%, var(--border-subtle));
+            background: color-mix(in srgb, var(--text-main) 6%, transparent);
+        }
+        .trace-card-kicker {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase;
+            color: var(--text-muted); margin-bottom: 0.25rem;
+        }
+        .trace-card-title { font-size: 0.95rem; font-weight: 600; color: var(--text-main); letter-spacing: -0.02em; }
+        .trace-card-meta { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
+        .trace-run {
+            margin-top: 0.75rem;
+            width: 100%;
+        }
+        .trace-stage {
             border: 1px solid var(--border-subtle);
             border-radius: 14px;
-            background:
-                linear-gradient(165deg, color-mix(in srgb, var(--text-main) 4%, transparent) 0%, transparent 50%),
-                var(--bg-surface);
-            box-shadow: var(--shadow-bento);
-            padding: 0.95rem 1rem;
-            min-width: 0;
-        }
-        .triage-stat-label {
-            font-size: 0.65rem; font-weight: 650; letter-spacing: 0.08em;
-            text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.35rem;
-        }
-        .triage-stat-val {
-            font-size: 1.55rem; font-weight: 650; letter-spacing: -0.03em;
-            color: var(--text-main); font-variant-numeric: tabular-nums; line-height: 1.1;
-        }
-        .triage-hint {
-            font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; margin: 0 0 0.85rem;
-        }
-        .triage-hint-full { display: inline; }
-        .triage-hint-short { display: none; }
-        .triage-list {
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-lg);
-            background: var(--bg-base);
-            box-shadow: none;
+            background: color-mix(in srgb, var(--bg-base) 50%, transparent);
             overflow: hidden;
-            min-width: 0;
+            min-height: 280px;
+            display: flex; flex-direction: column;
         }
-        .triage-list-head {
-            display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
-            padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-subtle);
-            background: color-mix(in srgb, var(--text-main) 3%, var(--bg-surface));
-        }
-        .triage-list-head h3 {
-            margin: 0; font-size: 0.8rem; font-weight: 600; color: var(--text-main);
-        }
-        .bug-row {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) auto;
-            gap: 0.75rem 1rem;
-            align-items: center;
-            padding: 0.9rem 1rem;
-            border-bottom: 1px solid var(--border-subtle);
-            transition: background 0.15s var(--ease);
-        }
-        .bug-row:last-child { border-bottom: none; }
-        .bug-row:hover { background: color-mix(in srgb, var(--text-main) 3%, transparent); }
-        .bug-row.is-done { opacity: 0.55; }
-        .bug-row.is-done .bug-title { text-decoration: line-through; color: var(--text-muted); }
-        .bug-main { min-width: 0; }
-        .bug-id {
+        .trace-stage-head {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--border-subtle);
             font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--text-muted);
-            margin-bottom: 0.2rem;
         }
-        .bug-title {
-            font-size: 0.88rem; font-weight: 550; color: var(--text-main);
-            letter-spacing: -0.015em; line-height: 1.35;
-            overflow-wrap: anywhere;
-        }
-        .bug-meta {
-            font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;
-            overflow-wrap: anywhere;
-        }
-        .sev-group {
-            display: flex; flex-wrap: wrap; gap: 0.3rem; justify-content: flex-end;
-        }
-        .sev-btn {
-            border: 1px solid var(--border-subtle);
-            background: var(--bg-surface);
+        .trace-stage-head strong { color: var(--text-main); font-weight: 600; }
+        .trace-steps { list-style: none; margin: 0; padding: 0.55rem 0.65rem; flex: 1; }
+        .trace-step {
+            display: grid;
+            grid-template-columns: 22px 1fr auto;
+            gap: 0.55rem; align-items: center;
+            padding: 0.55rem 0.45rem;
+            border-radius: 10px;
             color: var(--text-muted);
-            font-size: 0.65rem; font-weight: 650; letter-spacing: 0.04em;
-            text-transform: uppercase;
-            padding: 0.35rem 0.55rem;
-            border-radius: 999px;
-            cursor: pointer;
-            transition: all 0.15s var(--ease);
-            font-family: Inter, sans-serif;
-            white-space: nowrap;
-            -webkit-tap-highlight-color: transparent;
+            font-size: 0.82rem;
+            opacity: 0.45;
+            transition: opacity 0.3s, background 0.3s, color 0.3s;
         }
-        .sev-btn .sev-short { display: none; }
-        .sev-btn:hover { color: var(--text-main); border-color: color-mix(in srgb, var(--text-main) 20%, var(--border-subtle)); }
-        .sev-btn.is-active {
-            background: var(--text-main); color: var(--bg-base); border-color: var(--text-main);
+        .trace-step.is-run {
+            opacity: 1; color: var(--text-main);
+            background: color-mix(in srgb, var(--text-main) 6%, transparent);
         }
-        .sev-btn.sev-done.is-active {
-            background: transparent; color: var(--text-main);
-            border-color: color-mix(in srgb, var(--text-main) 35%, var(--border-subtle));
+        .trace-step.is-pass { opacity: 0.9; color: var(--text-main); }
+        .trace-dot {
+            width: 10px; height: 10px; border-radius: 50%;
+            border: 1.5px solid var(--border-strong);
+            background: transparent;
         }
-        #resetTriageBtn { width: 100%; }
-        .labs-stack { display: flex; flex-direction: column; gap: 2.5rem; }
-
-        /* Triage — tablet / mobile */
-        @media (max-width: 900px) {
-            .triage-layout { grid-template-columns: 1fr; gap: 0.75rem; }
-            .triage-body { padding: 0.8rem 0.8rem 0.9rem; }
-            .triage-stats {
-                grid-template-columns: repeat(4, minmax(0, 1fr));
-                gap: 0.4rem;
-                margin-bottom: 0.7rem;
-            }
-            .triage-stat {
-                padding: 0.6rem 0.35rem;
-                border-radius: 11px;
-                text-align: center;
-                box-shadow: none;
-            }
-            .triage-stat-label {
-                font-size: 0.55rem; letter-spacing: 0.04em; margin-bottom: 0.2rem;
-            }
-            .triage-stat-val { font-size: 1.15rem; }
-            .triage-hint { font-size: 0.76rem; margin-bottom: 0.7rem; }
-            .triage-hint-full { display: none; }
-            .triage-hint-short { display: inline; }
-            .bug-row {
-                grid-template-columns: 1fr;
-                gap: 0.7rem;
-                align-items: stretch;
-                padding: 0.85rem 0.8rem;
-            }
-            .sev-group {
-                display: grid;
-                grid-template-columns: repeat(4, minmax(0, 1fr));
-                gap: 0.35rem;
-                width: 100%;
-                justify-content: stretch;
-            }
-            .sev-btn {
-                width: 100%;
-                min-height: 40px;
-                padding: 0.4rem 0.15rem;
-                border-radius: 9px;
-                font-size: 0.62rem;
-                letter-spacing: 0.02em;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-            }
-            .sev-btn .sev-full { display: none; }
-            .sev-btn .sev-short { display: inline; }
-            #resetTriageBtn { min-height: 42px; margin-bottom: 0.15rem; }
+        .trace-step.is-run .trace-dot {
+            border-color: var(--text-main); background: var(--text-main);
+            box-shadow: 0 0 0 4px color-mix(in srgb, var(--text-main) 14%, transparent);
+            animation: cicdPulse 1s ease-in-out infinite;
         }
-        @media (max-width: 380px) {
-            .triage-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-            .triage-stat { padding: 0.65rem 0.55rem; text-align: left; }
-            .sev-btn { font-size: 0.58rem; min-height: 38px; }
+        .trace-step.is-pass .trace-dot { background: var(--text-main); border-color: var(--text-main); box-shadow: none; animation: none; }
+        .trace-ms { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--text-muted); }
+        .trace-verdict {
+            padding: 0.7rem 0.9rem; border-top: 1px solid var(--border-subtle);
+            font-size: 0.8rem; color: var(--text-muted);
+        }
+        .trace-verdict.is-pass { color: var(--text-main); font-weight: 550; }
+        @media (max-width: 800px) {
+            .trace-layout { grid-template-columns: 1fr; }
         }
         
         /* Blinking Terminal Cursor */
@@ -2462,7 +2399,7 @@
                         <span class="boot-mod-icon" aria-hidden="true">○</span>
                     </div>
                     <div class="boot-mod-name">Labs</div>
-                    <div class="boot-mod-meta">API · pipeline · triage</div>
+                    <div class="boot-mod-meta">API · pipeline · trace</div>
                 </div>
                 <div class="boot-mod" data-mod="3">
                     <div class="boot-mod-top">
@@ -2586,7 +2523,7 @@
                 <div class="cmd-item" data-action="link" data-target="https://www.cybersuite.in/"><i data-lucide="globe" size="18"></i> Open CyberSuite <kbd>⏎</kbd></div>
                 <div class="cmd-item" data-action="link" data-target="https://github.com/techhunter333/subguard"><i data-lucide="github" size="18"></i> Open SubGuard repo <kbd>⏎</kbd></div>
                 <div class="cmd-item" data-action="navigate" data-target="#automation"><i data-lucide="terminal" size="18"></i> Go to Automation <kbd>⏎</kbd></div>
-                <div class="cmd-item" data-action="navigate" data-target="#labs"><i data-lucide="list-checks" size="18"></i> Go to Triage Lab <kbd>⏎</kbd></div>
+                <div class="cmd-item" data-action="navigate" data-target="#labs"><i data-lucide="waypoints" size="18"></i> Go to Trace Studio <kbd>⏎</kbd></div>
                 <div class="cmd-item" data-action="theme" data-target=""><i data-lucide="sun-moon" size="18"></i> Toggle Light/Dark Theme <kbd>T</kbd></div>
                 <div class="cmd-item" data-action="debug" data-target=""><i data-lucide="layout" size="18"></i> Toggle QA Debug Outline <kbd>Ctrl+D</kbd></div>
                 <div class="cmd-item" data-action="shortcuts" data-target=""><i data-lucide="keyboard" size="18"></i> View Keyboard Shortcuts <kbd>?</kbd></div>
@@ -2615,7 +2552,7 @@
             <a href="#certifications" class="mobile-nav-link">Certifications</a>
             <a href="#api-gateway" class="mobile-nav-link">API Sandbox</a>
             <a href="#automation" class="mobile-nav-link">Automation</a>
-            <a href="#labs" class="mobile-nav-link">Triage Lab</a>
+            <a href="#labs" class="mobile-nav-link">Trace Studio</a>
             <a href="#contact" class="mobile-nav-link">Contact</a>
             <a href="resume.pdf" download="Jaimin_Rana_Resume.pdf" class="btn btn-primary">Download resume</a>
         </div>
@@ -3002,7 +2939,7 @@ jaimin = <span class="py-class">QAEngineer</span>()</pre>
                         <span class="ticket-status">LIVE</span>
                     </div>
                     <h3>Personal portfolio</h3>
-                    <p>This site — interactive monochrome portfolio with command palette, API sandbox, pipeline demo, and bug triage lab.</p>
+                    <p>This site — interactive monochrome portfolio with command palette, API sandbox, pipeline demo, and journey trace studio.</p>
                     <div class="tags"><span class="tag">HTML / CSS / JS</span><span class="tag">UX</span><span class="tag">Inter</span></div>
                     <div class="project-links">
                         <a class="card-link" href="https://optimusbot.dev/" target="_blank" rel="noopener noreferrer">Live →</a>
@@ -3229,7 +3166,7 @@ jaimin = <span class="py-class">QAEngineer</span>()</pre>
             <div class="section-header scroll-animate">
                 <div class="section-badge">Automation</div>
                 <h2 class="section-title">Pipeline demo</h2>
-                <p class="section-lead">Illustrative QA metrics and a click-to-run build → test → security → deploy console.</p>
+                <p class="section-lead">Live-feel release console — coverage, automation, then a staged build → test → security → deploy.</p>
             </div>
 
             <div class="dashboard-header scroll-animate">
@@ -3272,19 +3209,23 @@ jaimin = <span class="py-class">QAEngineer</span>()</pre>
                 </div>
                 <div class="cicd-container">
                     <div class="cicd-step active" id="cicd-build">
-                        <div class="cicd-step-icon"><i data-lucide="package" size="12"></i></div> Build
+                        <div class="cicd-step-row"><div class="cicd-step-icon"><i data-lucide="package" size="12"></i></div> Build</div>
+                        <span class="cicd-step-meta" id="meta-build">queued</span>
                     </div>
                     <div class="cicd-line"><div class="cicd-line-progress" id="line-1"></div></div>
                     <div class="cicd-step" id="cicd-test">
-                        <div class="cicd-step-icon"><i data-lucide="test-tube" size="12"></i></div> Test
+                        <div class="cicd-step-row"><div class="cicd-step-icon"><i data-lucide="test-tube" size="12"></i></div> Test</div>
+                        <span class="cicd-step-meta" id="meta-test">—</span>
                     </div>
                     <div class="cicd-line"><div class="cicd-line-progress" id="line-2"></div></div>
                     <div class="cicd-step" id="cicd-sec">
-                        <div class="cicd-step-icon"><i data-lucide="shield" size="12"></i></div> Security
+                        <div class="cicd-step-row"><div class="cicd-step-icon"><i data-lucide="shield" size="12"></i></div> Security</div>
+                        <span class="cicd-step-meta" id="meta-sec">—</span>
                     </div>
                     <div class="cicd-line"><div class="cicd-line-progress" id="line-3"></div></div>
                     <div class="cicd-step" id="cicd-deploy">
-                        <div class="cicd-step-icon"><i data-lucide="rocket" size="12"></i></div> Deploy
+                        <div class="cicd-step-row"><div class="cicd-step-icon"><i data-lucide="rocket" size="12"></i></div> Deploy</div>
+                        <span class="cicd-step-meta" id="meta-deploy">—</span>
                     </div>
                 </div>
             </div>
@@ -3305,58 +3246,53 @@ jaimin = <span class="py-class">QAEngineer</span>()</pre>
         </div>
     </section>
 
-    <!-- TRIAGE LAB -->
+    <!-- TRACE STUDIO -->
     <section id="labs">
         <div class="container">
             <div class="section-header scroll-animate">
                 <div class="section-badge">Interactive</div>
-                <h2 class="section-title">Triage lab</h2>
-                <p class="section-lead">Interactive defect board — reclassify bugs and mark them done, same flow as real triage.</p>
+                <h2 class="section-title">Trace studio</h2>
+                <p class="section-lead">Replay a QA journey — pick a path, watch steps resolve, and read the verdict. Same instinct as a Playwright trace.</p>
             </div>
 
-            <div class="labs-stack">
-                <!-- Bug triage -->
-                <div class="scroll-animate">
-                    <div class="lab-shell">
-                        <div class="lab-chrome">
-                            <div class="lab-chrome-left">
-                                <div class="lab-chrome-dots" aria-hidden="true"><span></span><span></span><span></span></div>
-                                <span class="lab-chrome-title">triage.desk · defect board</span>
-                            </div>
-                            <span class="lab-chrome-meta" id="triageMeta">5 open</span>
+            <div class="lab-shell scroll-animate">
+                <div class="lab-chrome">
+                    <div class="lab-chrome-left">
+                        <div class="lab-chrome-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+                        <span class="lab-chrome-title">trace.studio · journey replay</span>
+                    </div>
+                    <span class="lab-chrome-meta" id="traceMeta">idle</span>
+                </div>
+                <div class="trace-layout">
+                    <div>
+                        <div class="trace-journeys" id="traceJourneys">
+                            <button type="button" class="trace-card is-active" data-journey="android">
+                                <div class="trace-card-kicker">Journey 01</div>
+                                <div class="trace-card-title">Android smoke</div>
+                                <div class="trace-card-meta">Launch → auth → home feed</div>
+                            </button>
+                            <button type="button" class="trace-card" data-journey="i18n">
+                                <div class="trace-card-kicker">Journey 02</div>
+                                <div class="trace-card-title">Localization pass</div>
+                                <div class="trace-card-meta">Locale switch · string overflow</div>
+                            </button>
+                            <button type="button" class="trace-card" data-journey="security">
+                                <div class="trace-card-kicker">Journey 03</div>
+                                <div class="trace-card-title">Security scan</div>
+                                <div class="trace-card-meta">Headers · XSS · session</div>
+                            </button>
                         </div>
-                        <div class="triage-body">
-                            <div class="triage-layout">
-                                <div class="triage-side">
-                                    <p class="triage-hint">
-                                        <span class="triage-hint-full">Click a severity to reclassify. Mark <strong style="color:var(--text-main);font-weight:600;">Done</strong> when verified. Counts update live — same muscle memory as real bug triage.</span>
-                                        <span class="triage-hint-short">Tap a severity to reclassify. Mark <strong style="color:var(--text-main);font-weight:600;">Done</strong> when verified.</span>
-                                    </p>
-                                    <div class="triage-stats">
-                                        <div class="triage-stat">
-                                            <div class="triage-stat-label">Critical</div>
-                                            <div class="triage-stat-val" id="statCritical">0</div>
-                                        </div>
-                                        <div class="triage-stat">
-                                            <div class="triage-stat-label">Major</div>
-                                            <div class="triage-stat-val" id="statMajor">0</div>
-                                        </div>
-                                        <div class="triage-stat">
-                                            <div class="triage-stat-label">Minor</div>
-                                            <div class="triage-stat-val" id="statMinor">0</div>
-                                        </div>
-                                        <div class="triage-stat">
-                                            <div class="triage-stat-label">Done</div>
-                                            <div class="triage-stat-val" id="statDone">0</div>
-                                        </div>
-                                    </div>
-                                    <button type="button" class="btn btn-secondary btn-sm" id="resetTriageBtn">
-                                        <i data-lucide="rotate-ccw" size="14"></i> Reset board
-                                    </button>
-                                </div>
-                                <div class="triage-list" id="triageList" aria-label="Bug list"></div>
-                            </div>
+                        <button type="button" class="btn btn-primary btn-sm trace-run" id="traceRunBtn">
+                            <i data-lucide="play" size="14"></i> Replay journey
+                        </button>
+                    </div>
+                    <div class="trace-stage">
+                        <div class="trace-stage-head">
+                            <span><strong id="traceNow">Android smoke</strong></span>
+                            <span id="traceClock">0.0s</span>
                         </div>
+                        <ol class="trace-steps" id="traceSteps"></ol>
+                        <div class="trace-verdict" id="traceVerdict">Select a journey and press replay.</div>
                     </div>
                 </div>
             </div>
@@ -3996,7 +3932,7 @@ jaimin = <span class="py-class">QAEngineer</span>()</pre>
                     { delay: 1600, pct: 38, mod: 1, state: 'active', status: 'Loading experience ledger…', meta: 'career · load' },
                     { delay: 2300, pct: 52, mod: 1, state: 'done',   status: 'Experience ledger mounted', meta: 'career · ok' },
                     { delay: 2800, pct: 66, mod: 2, state: 'active', status: 'Warming interactive labs…', meta: 'labs · warm' },
-                    { delay: 3550, pct: 78, mod: 2, state: 'done',   status: 'Labs online (API · pipeline · triage)', meta: 'labs · ok' },
+                    { delay: 3550, pct: 78, mod: 2, state: 'done',   status: 'Labs online (API · pipeline · trace)', meta: 'labs · ok' },
                     { delay: 4050, pct: 90, mod: 3, state: 'active', status: 'Applying security surface…', meta: 'sec · check' },
                     { delay: 4700, pct: 97, mod: 3, state: 'done',   status: 'Security checks passed', meta: 'sec · ok' },
                     { delay: 5150, pct: 100, mod: 3, state: 'done',  status: 'Handing off to portfolio…', meta: 'handoff' }
@@ -4436,16 +4372,15 @@ jaimin = <span class="py-class">QAEngineer</span>()</pre>
                         }
                     },
                     {
-                        name: 'Triage · reclassify + reset',
+                        name: 'Trace studio · replay a journey',
                         run: async () => {
                             document.getElementById('labs')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            await sleep(450);
-                            const sev = document.querySelector('#triageList .sev-btn:not(.is-active)');
-                            if (sev) await e2eClick(sev, cursor);
-                            const done = document.querySelector('#triageList .sev-btn.sev-done');
-                            if (done) await e2eClick(done, cursor);
-                            const reset = document.getElementById('resetTriageBtn');
-                            if (reset) await e2eClick(reset, cursor);
+                            await sleep(400);
+                            const card = document.querySelector('#traceJourneys .trace-card:not(.is-active)') || document.querySelector('#traceJourneys .trace-card');
+                            if (card) await e2eClick(card, cursor);
+                            const run = document.getElementById('traceRunBtn');
+                            if (run) await e2eClick(run, cursor);
+                            await sleep(900);
                         }
                     },
                     {
@@ -4923,27 +4858,45 @@ jaimin = <span class="py-class">QAEngineer</span>()</pre>
             const line1 = document.getElementById('line-1'); const line2 = document.getElementById('line-2'); const line3 = document.getElementById('line-3');
 
             if(runTestsBtn && termContent) {
+                let pipeBusy = false;
                 const testScript = [
-                    { action: 'build_start', text: "<span class='cmd'>jaimin@sys</span>:~/portfolio$ Starting CI/CD build process...", delay: 600 },
-                    { action: 'test_start', text: "====================== test session starts ======================", delay: 500 },
-                    { action: 'testing', text: "test_ui_rendering.py::test_responsive_grid <span class='pass'>PASSED</span> [ 33%]", delay: 500 },
-                    { action: 'testing', text: "test_ui_rendering.py::test_dark_mode_toggle <span class='pass'>PASSED</span> [ 66%]", delay: 500 },
-                    { action: 'sec_start', text: "test_security.py::test_owasp_headers <span class='pass'>PASSED</span> [100%]", delay: 700 },
-                    { action: 'sec_scan', text: "<br><span class='cmd'>Running Static Application Security Testing (SAST)...</span>", delay: 800 },
-                    { action: 'sec_scan', text: "No vulnerabilities found. Security scan <span class='pass'>PASSED</span>.", delay: 600 },
-                    { action: 'deploy_start', text: "<br><span class='pass' style='font-weight:bold;'>All checks passed. Triggering deployment to production...</span>", delay: 800 },
-                    { action: 'done', text: "<span class='pass'>Deployment Successful. System Live.</span>", delay: 200 }
+                    { action: 'build_start', text: "<span class='cmd'>jaimin@sys</span>:~/release$ workflow dispatch · main", delay: 520 },
+                    { action: 'build_start', text: "→ compiling assets · hashing static · 1.8s", delay: 480 },
+                    { action: 'test_start', text: "====================== pytest · 3 collected ======================", delay: 420 },
+                    { action: 'testing', text: "test_ui.py::test_responsive_grid <span class='pass'>PASSED</span>   [ 33%]", delay: 420 },
+                    { action: 'testing', text: "test_ui.py::test_theme_toggle <span class='pass'>PASSED</span>      [ 66%]", delay: 420 },
+                    { action: 'sec_start', text: "test_sec.py::test_owasp_headers <span class='pass'>PASSED</span>    [100%]", delay: 520 },
+                    { action: 'sec_scan', text: "<span class='cmd'>sast</span> · scanning Flask surfaces…", delay: 620 },
+                    { action: 'sec_scan', text: "0 high · 0 medium · findings empty <span class='pass'>PASS</span>", delay: 480 },
+                    { action: 'deploy_start', text: "<span class='pass'>gates green</span> · promoting artifact to prod", delay: 620 },
+                    { action: 'done', text: "<span class='pass'>live</span> · optimusbot.dev · sha 28d332b", delay: 240 }
                 ];
 
+                const setStep = (node, state, label, icon) => {
+                    if (!node) return;
+                    node.className = 'cicd-step ' + state;
+                    node.querySelector('.cicd-step-row').innerHTML = `<div class="cicd-step-icon"><i data-lucide="${icon}" size="12"${icon === 'loader' ? ' class="spin"' : ''}></i></div> ${label}`;
+                };
+
                 runTestsBtn.addEventListener('click', () => {
-                    runTestsBtn.style.display = 'none'; termContent.innerHTML = ''; let currentStep = 0;
+                    if (pipeBusy) return;
+                    pipeBusy = true;
+                    runTestsBtn.disabled = true;
+                    runTestsBtn.innerHTML = '<i data-lucide="loader" size="14" class="spin"></i> Running';
+                    termContent.innerHTML = ''; let currentStep = 0;
                     logSysEvent("CI/CD Automation Pipeline Triggered", "ACTION");
                     if (pipelineStatusText) pipelineStatusText.textContent = 'Running';
+                    document.querySelectorAll('.gauge-card').forEach(g => g.classList.add('is-live'));
                     
-                    // Reset CI/CD UI
-                    buildNode.className = 'cicd-step active'; testNode.className = 'cicd-step'; secNode.className = 'cicd-step'; depNode.className = 'cicd-step';
-                    line1.style.width = '0%'; line2.style.width = '0%'; line3.style.width = '0%';
-                    buildNode.innerHTML = `<div class="cicd-step-icon"><i data-lucide="loader" size="12" class="spin"></i></div> Build`;
+                    if (buildNode) { buildNode.className = 'cicd-step active'; setStep(buildNode, 'active', 'Build', 'loader'); }
+                    if (testNode) { testNode.className = 'cicd-step'; setStep(testNode, '', 'Test', 'test-tube'); }
+                    if (secNode) { secNode.className = 'cicd-step'; setStep(secNode, '', 'Security', 'shield'); }
+                    if (depNode) { depNode.className = 'cicd-step'; setStep(depNode, '', 'Deploy', 'rocket'); }
+                    if (line1) line1.style.width = '0%'; if (line2) line2.style.width = '0%'; if (line3) line3.style.width = '0%';
+                    const mb = document.getElementById('meta-build'); const mt = document.getElementById('meta-test');
+                    const ms = document.getElementById('meta-sec'); const md = document.getElementById('meta-deploy');
+                    if (mb) mb.textContent = 'running';
+                    if (mt) mt.textContent = '—'; if (ms) ms.textContent = '—'; if (md) md.textContent = '—';
                     lucide.createIcons();
 
                     function printLine() {
@@ -4952,31 +4905,27 @@ jaimin = <span class="py-class">QAEngineer</span>()</pre>
                             const p = document.createElement('p'); p.innerHTML = step.text; termContent.appendChild(p);
                             termContent.scrollTop = termContent.scrollHeight;
                             
-                            // Sync CI/CD Visualizer
                             if(step.action === 'test_start') {
-                                buildNode.className = 'cicd-step passed';
-                                buildNode.innerHTML = `<div class="cicd-step-icon"><i data-lucide="check" size="12"></i></div> Build`;
-                                line1.style.width = '100%';
-                                testNode.className = 'cicd-step active';
-                                testNode.innerHTML = `<div class="cicd-step-icon"><i data-lucide="loader" size="12" class="spin"></i></div> Test`;
+                                setStep(buildNode, 'passed', 'Build', 'check');
+                                if (line1) line1.style.width = '100%';
+                                setStep(testNode, 'active', 'Test', 'loader');
+                                if (mb) mb.textContent = '1.8s'; if (mt) mt.textContent = 'running';
                                 if (pipelineStatusText) pipelineStatusText.textContent = 'Testing';
                             } else if(step.action === 'sec_start') {
-                                testNode.className = 'cicd-step passed';
-                                testNode.innerHTML = `<div class="cicd-step-icon"><i data-lucide="check" size="12"></i></div> Test`;
-                                line2.style.width = '100%';
-                                secNode.className = 'cicd-step active';
-                                secNode.innerHTML = `<div class="cicd-step-icon"><i data-lucide="loader" size="12" class="spin"></i></div> Security`;
+                                setStep(testNode, 'passed', 'Test', 'check');
+                                if (line2) line2.style.width = '100%';
+                                setStep(secNode, 'active', 'Security', 'loader');
+                                if (mt) mt.textContent = '3 passed'; if (ms) ms.textContent = 'running';
                                 if (pipelineStatusText) pipelineStatusText.textContent = 'Security scan';
                             } else if(step.action === 'deploy_start') {
-                                secNode.className = 'cicd-step passed';
-                                secNode.innerHTML = `<div class="cicd-step-icon"><i data-lucide="check" size="12"></i></div> Security`;
-                                line3.style.width = '100%';
-                                depNode.className = 'cicd-step active';
-                                depNode.innerHTML = `<div class="cicd-step-icon"><i data-lucide="loader" size="12" class="spin"></i></div> Deploy`;
+                                setStep(secNode, 'passed', 'Security', 'check');
+                                if (line3) line3.style.width = '100%';
+                                setStep(depNode, 'active', 'Deploy', 'loader');
+                                if (ms) ms.textContent = 'clean'; if (md) md.textContent = 'promoting';
                                 if (pipelineStatusText) pipelineStatusText.textContent = 'Deploying';
                             } else if (step.action === 'done') {
-                                depNode.className = 'cicd-step passed';
-                                depNode.innerHTML = `<div class="cicd-step-icon"><i data-lucide="check" size="12"></i></div> Deploy`;
+                                setStep(depNode, 'passed', 'Deploy', 'check');
+                                if (md) md.textContent = 'live';
                                 if (pipelineStatusText) pipelineStatusText.textContent = 'Passed';
                                 logSysEvent("Pipeline Execution Passed", "ACTION");
                             }
@@ -4985,92 +4934,123 @@ jaimin = <span class="py-class">QAEngineer</span>()</pre>
                             setTimeout(() => { currentStep++; printLine(); }, step.delay);
                         } else {
                             setTimeout(() => {
-                                const resetP = document.createElement('p'); resetP.innerHTML = "<br><span class='cmd'>jaimin@sys</span>:~/portfolio$ <span class='terminal-cursor' style='opacity:0.7'>awaiting next commit…</span>";
-                                termContent.appendChild(resetP); runTestsBtn.innerHTML = '<i data-lucide="rotate-cw" size="14"></i> Run again';
-                                runTestsBtn.style.display = 'inline-flex'; lucide.createIcons();
+                                const resetP = document.createElement('p'); resetP.innerHTML = "<span class='cmd'>jaimin@sys</span>:~/release$ <span class='terminal-cursor' style='opacity:0.7'>awaiting next commit…</span>";
+                                termContent.appendChild(resetP);
+                                runTestsBtn.innerHTML = '<i data-lucide="rotate-cw" size="14"></i> Run again';
+                                runTestsBtn.disabled = false;
+                                lucide.createIcons();
+                                pipeBusy = false;
+                                document.querySelectorAll('.gauge-card').forEach(g => g.classList.remove('is-live'));
                                 if (pipelineStatusText) pipelineStatusText.textContent = 'Idle';
-                            }, 1000);
+                            }, 700);
                         }
                     }
                     printLine();
                 });
             }
 
-            // --- QA LABS: BUG TRIAGE ---
-            const triageSeed = [
-                { id: 'BUG-2401', title: 'Login CTA double-submits on slow network', meta: 'Web · Auth · Chrome', severity: 'critical' },
-                { id: 'BUG-2408', title: 'Empty-state illustration clipped on iPhone SE', meta: 'Mobile · iOS · Layout', severity: 'major' },
-                { id: 'BUG-2412', title: 'Toast dismiss misses keyboard focus return', meta: 'A11y · Focus trap', severity: 'minor' },
-                { id: 'BUG-2419', title: 'CSV export encoding breaks Hindi characters', meta: 'i18n · Reports', severity: 'major' },
-                { id: 'BUG-2425', title: 'Pipeline badge stale after failed deploy', meta: 'CI · Dashboard', severity: 'minor' }
-            ];
-            let triageBugs = triageSeed.map(b => ({ ...b }));
-            const triageList = document.getElementById('triageList');
-            const triageMeta = document.getElementById('triageMeta');
-            const resetTriageBtn = document.getElementById('resetTriageBtn');
+            // --- TRACE STUDIO ---
+            const journeys = {
+                android: {
+                    title: 'Android smoke',
+                    steps: [
+                        { name: 'Cold start application', ms: '412ms' },
+                        { name: 'Auth token handshake', ms: '188ms' },
+                        { name: 'Home feed first paint', ms: '640ms' },
+                        { name: 'Gesture + rotation check', ms: '255ms' }
+                    ]
+                },
+                i18n: {
+                    title: 'Localization pass',
+                    steps: [
+                        { name: 'Switch locale → Gujarati', ms: '90ms' },
+                        { name: 'Measure string overflow', ms: '140ms' },
+                        { name: 'RTL / wrap regression', ms: '210ms' },
+                        { name: 'Screenshot compare', ms: '330ms' }
+                    ]
+                },
+                security: {
+                    title: 'Security scan',
+                    steps: [
+                        { name: 'Collect response headers', ms: '70ms' },
+                        { name: 'Probe reflected XSS', ms: '260ms' },
+                        { name: 'Session cookie flags', ms: '95ms' },
+                        { name: 'OWASP checklist', ms: '180ms' }
+                    ]
+                }
+            };
+            let currentJourney = 'android';
+            let traceBusy = false;
+            const traceStepsEl = document.getElementById('traceSteps');
+            const traceNow = document.getElementById('traceNow');
+            const traceClock = document.getElementById('traceClock');
+            const traceVerdict = document.getElementById('traceVerdict');
+            const traceMeta = document.getElementById('traceMeta');
+            const traceRunBtn = document.getElementById('traceRunBtn');
 
-            function updateTriageStats() {
-                const counts = { critical: 0, major: 0, minor: 0, done: 0 };
-                triageBugs.forEach(b => { counts[b.severity] = (counts[b.severity] || 0) + 1; });
-                const set = (id, n) => { const el = document.getElementById(id); if (el) el.textContent = String(n); };
-                set('statCritical', counts.critical);
-                set('statMajor', counts.major);
-                set('statMinor', counts.minor);
-                set('statDone', counts.done);
-                const open = counts.critical + counts.major + counts.minor;
-                if (triageMeta) triageMeta.textContent = open === 0 ? 'all clear' : `${open} open`;
+            function renderTraceSteps(key) {
+                const j = journeys[key];
+                if (!j || !traceStepsEl) return;
+                traceStepsEl.innerHTML = j.steps.map((s, i) => (
+                    `<li class="trace-step" data-i="${i}"><span class="trace-dot"></span><span>${s.name}</span><span class="trace-ms">${s.ms}</span></li>`
+                )).join('');
+                if (traceNow) traceNow.textContent = j.title;
+                if (traceVerdict) {
+                    traceVerdict.classList.remove('is-pass');
+                    traceVerdict.textContent = 'Ready to replay.';
+                }
             }
+            renderTraceSteps(currentJourney);
 
-            function renderTriage() {
-                if (!triageList) return;
-                const order = { critical: 0, major: 1, minor: 2, done: 3 };
-                const sorted = [...triageBugs].sort((a, b) => (order[a.severity] - order[b.severity]) || a.id.localeCompare(b.id));
-                const sevLabels = {
-                    critical: { full: 'Critical', short: 'Crit' },
-                    major: { full: 'Major', short: 'Maj' },
-                    minor: { full: 'Minor', short: 'Min' },
-                    done: { full: 'Done', short: 'Done' }
-                };
-                triageList.innerHTML = sorted.map(bug => {
-                    const sevs = ['critical', 'major', 'minor', 'done'];
-                    const btns = sevs.map(s => {
-                        const extra = s === 'done' ? ' sev-done' : '';
-                        const active = bug.severity === s ? ' is-active' : '';
-                        const lab = sevLabels[s];
-                        return `<button type="button" class="sev-btn${extra}${active}" data-id="${bug.id}" data-sev="${s}" aria-label="${lab.full}" title="${lab.full}"><span class="sev-full">${lab.full}</span><span class="sev-short">${lab.short}</span></button>`;
-                    }).join('');
-                    return `<div class="bug-row${bug.severity === 'done' ? ' is-done' : ''}" data-id="${bug.id}">
-                        <div class="bug-main">
-                            <div class="bug-id">${bug.id}</div>
-                            <div class="bug-title">${bug.title}</div>
-                            <div class="bug-meta">${bug.meta}</div>
-                        </div>
-                        <div class="sev-group" role="group" aria-label="Severity for ${bug.id}">${btns}</div>
-                    </div>`;
-                }).join('');
-                updateTriageStats();
-            }
-
-            if (triageList) {
-                renderTriage();
-                triageList.addEventListener('click', (e) => {
-                    const btn = e.target.closest('.sev-btn');
-                    if (!btn) return;
-                    const id = btn.dataset.id;
-                    const sev = btn.dataset.sev;
-                    const bug = triageBugs.find(b => b.id === id);
-                    if (!bug || bug.severity === sev) return;
-                    const prev = bug.severity;
-                    bug.severity = sev;
-                    renderTriage();
-                    logSysEvent(`Triage ${id}: ${prev} → ${sev}`, sev === 'done' ? 'SUCCESS' : 'ACTION');
+            document.querySelectorAll('#traceJourneys .trace-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    if (traceBusy) return;
+                    document.querySelectorAll('#traceJourneys .trace-card').forEach(c => c.classList.remove('is-active'));
+                    card.classList.add('is-active');
+                    currentJourney = card.dataset.journey;
+                    renderTraceSteps(currentJourney);
+                    if (traceMeta) traceMeta.textContent = 'idle';
+                    logSysEvent(`Trace loaded · ${journeys[currentJourney].title}`, 'INFO');
                 });
-            }
-            if (resetTriageBtn) {
-                resetTriageBtn.addEventListener('click', () => {
-                    triageBugs = triageSeed.map(b => ({ ...b }));
-                    renderTriage();
-                    logSysEvent('Triage board reset', 'INFO');
+            });
+
+            if (traceRunBtn) {
+                traceRunBtn.addEventListener('click', async () => {
+                    if (traceBusy) return;
+                    const j = journeys[currentJourney];
+                    if (!j) return;
+                    traceBusy = true;
+                    traceRunBtn.disabled = true;
+                    traceRunBtn.innerHTML = '<i data-lucide="loader" size="14" class="spin"></i> Replaying';
+                    lucide.createIcons();
+                    if (traceMeta) traceMeta.textContent = 'replaying';
+                    if (traceVerdict) { traceVerdict.classList.remove('is-pass'); traceVerdict.textContent = 'Running…'; }
+                    const started = performance.now();
+                    const clockIv = setInterval(() => {
+                        if (traceClock) traceClock.textContent = ((performance.now() - started) / 1000).toFixed(1) + 's';
+                    }, 80);
+                    const nodes = traceStepsEl ? [...traceStepsEl.querySelectorAll('.trace-step')] : [];
+                    nodes.forEach(n => n.classList.remove('is-run', 'is-pass'));
+                    logSysEvent(`Trace replay · ${j.title}`, 'ACTION');
+                    for (let i = 0; i < nodes.length; i++) {
+                        nodes[i].classList.add('is-run');
+                        await new Promise(r => setTimeout(r, 520 + Math.random() * 220));
+                        nodes[i].classList.remove('is-run');
+                        nodes[i].classList.add('is-pass');
+                    }
+                    clearInterval(clockIv);
+                    const secs = ((performance.now() - started) / 1000).toFixed(1);
+                    if (traceClock) traceClock.textContent = secs + 's';
+                    if (traceVerdict) {
+                        traceVerdict.classList.add('is-pass');
+                        traceVerdict.textContent = `Passed · ${j.steps.length} steps · ${secs}s · 0 flakes`;
+                    }
+                    if (traceMeta) traceMeta.textContent = 'passed';
+                    traceRunBtn.disabled = false;
+                    traceRunBtn.innerHTML = '<i data-lucide="rotate-cw" size="14"></i> Replay again';
+                    lucide.createIcons();
+                    traceBusy = false;
+                    logSysEvent(`Trace passed · ${j.title} · ${secs}s`, 'SUCCESS');
                 });
             }
 
