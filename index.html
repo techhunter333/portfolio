@@ -831,6 +831,9 @@
             overflow: hidden;
             background: color-mix(in srgb, var(--bg-base) 72%, transparent);
             box-shadow: var(--shadow-bento);
+            display: flex;
+            flex-direction: column;
+            max-height: min(560px, 72vh);
         }
         .ide-chrome {
             display: flex; align-items: center; gap: 0.65rem;
@@ -867,11 +870,15 @@
             transition: color 0.15s, border-color 0.15s, background 0.15s;
         }
         .ide-icon-btn:hover { color: var(--text-main); border-color: color-mix(in srgb, var(--text-main) 22%, var(--border-subtle)); }
+        .ide-chrome, .ide-status { flex-shrink: 0; }
         .ide-body {
             display: grid;
-            grid-template-columns: auto 1fr;
-            min-height: 280px;
-            max-height: min(480px, 62vh);
+            grid-template-columns: auto minmax(0, 1fr);
+            flex: 1 1 auto;
+            min-height: 240px;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
         }
         .ide-gutter {
             font-family: 'JetBrains Mono', monospace;
@@ -879,26 +886,31 @@
             line-height: 1.7;
             color: var(--text-muted);
             text-align: right;
-            padding: 1rem 0.7rem 1rem 0.9rem;
+            padding: 1rem 0.7rem 1.4rem 0.9rem;
             border-right: 1px solid var(--border-subtle);
             user-select: none;
             background: color-mix(in srgb, var(--text-main) 2.5%, transparent);
             font-variant-numeric: tabular-nums;
+            white-space: pre;
+            overflow: visible;
         }
         .ide-code {
             margin: 0;
-            padding: 1rem 1rem 1.1rem 0.95rem;
+            padding: 1rem 1rem 1.4rem 0.95rem;
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.8rem;
             line-height: 1.7;
             color: var(--text-main);
             outline: none;
-            overflow: auto;
+            overflow: visible;
             tab-size: 4;
             background: transparent;
             border: none;
             box-shadow: none;
             min-width: 0;
+            white-space: pre !important;
+            word-break: normal !important;
+            overflow-wrap: normal !important;
         }
         .ide-code:focus {
             background: color-mix(in srgb, var(--text-main) 3%, transparent);
@@ -2210,9 +2222,10 @@
             .view-toggle button { flex: 1; text-align: center; }
             .profile-content { min-height: 0; }
             .profile-view.mono pre { font-size: 0.72rem !important; padding: 12px !important; line-height: 1.55 !important; }
-            .ide-code { font-size: 0.72rem; padding: 0.85rem 0.75rem; }
-            .ide-gutter { font-size: 0.66rem; padding: 0.85rem 0.5rem 0.85rem 0.65rem; }
-            .ide-body { max-height: min(420px, 58vh); }
+            .ide-code { font-size: 0.72rem; padding: 0.85rem 0.75rem 1.2rem; }
+            .ide-gutter { font-size: 0.66rem; padding: 0.85rem 0.5rem 1.2rem 0.65rem; }
+            .ide-shell { max-height: min(520px, 68vh); }
+            .ide-body { min-height: 200px; }
 
             /* Experience career index */
             .career-desc { font-size: 0.875rem; max-width: none; }
@@ -2662,7 +2675,7 @@
                 </div>
             </div>
             
-            <div class="card scroll-animate" style="max-width: 100%;">
+            <div class="card scroll-animate" style="max-width: 100%; overflow: visible;">
                 <div class="profile-content">
                     
                     <!-- Human View -->
