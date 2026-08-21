@@ -1805,11 +1805,18 @@
 
         /* GHOST CURSOR + E2E TOUR */
         #ghost-cursor {
-            position: fixed; top: 50%; left: 50%; width: 24px; height: 24px;
+            position: fixed; top: 50%; left: 50%; width: 22px; height: 22px;
             color: var(--text-main); z-index: 100050; pointer-events: none; opacity: 0;
-            transition: top 0.65s cubic-bezier(0.22, 1, 0.36, 1), left 0.65s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
+            transition: top 0.48s cubic-bezier(0.22, 1, 0.36, 1), left 0.48s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease, transform 0.12s ease;
             filter: drop-shadow(0 4px 10px rgba(0,0,0,0.45));
-            margin-left: -2px; margin-top: -2px;
+            margin-left: -3px; margin-top: -2px;
+        }
+        #ghost-cursor.is-click { transform: scale(0.78); }
+        #ghost-cursor .e2e-cursor-ring {
+            position: absolute; inset: -8px;
+            border: 1.5px solid var(--text-main);
+            border-radius: 50%;
+            opacity: 0.35;
         }
         body.e2e-running { cursor: none; }
         body.e2e-running a, body.e2e-running button { pointer-events: none; }
@@ -1876,11 +1883,19 @@
             border-color: color-mix(in srgb, var(--text-main) 30%, var(--border-subtle));
         }
         .e2e-hud-step {
-            font-size: 0.84rem; font-weight: 550;
+            font-size: 0.82rem; font-weight: 550;
             color: var(--text-main); letter-spacing: -0.015em;
-            line-height: 1.35; margin-bottom: 0.65rem;
-            min-height: 2.4em;
+            line-height: 1.35; margin-bottom: 0.45rem;
+            min-height: 1.3em;
         }
+        .e2e-hud-log {
+            list-style: none; margin: 0 0 0.55rem; padding: 0;
+            max-height: 5.4em; overflow: hidden;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem; color: var(--text-muted); line-height: 1.45;
+        }
+        .e2e-hud-log li { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .e2e-hud-log li.is-ok { color: var(--text-main); }
         .e2e-hud-bar {
             height: 3px; border-radius: 999px;
             background: var(--border-subtle); overflow: hidden;
@@ -2364,7 +2379,8 @@
 
     <!-- GHOST CURSOR (E2E) -->
     <div id="ghost-cursor" aria-hidden="true">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="var(--bg-base)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 4 7.07 17 2.51-7.39L21 11.07z"/></svg>
+        <span class="e2e-cursor-ring"></span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" stroke="var(--bg-base)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 4 7.07 17 2.51-7.39L21 11.07z"/></svg>
     </div>
 
     <!-- E2E RUN HUD -->
@@ -2374,6 +2390,7 @@
             <span class="e2e-hud-status" id="e2eHudStatus">running</span>
         </div>
         <div class="e2e-hud-step" id="e2eHudStep">Starting suite…</div>
+        <ul class="e2e-hud-log" id="e2eHudLog"></ul>
         <div class="e2e-hud-bar"><div id="e2eHudBar"></div></div>
         <div class="e2e-hud-meta">
             <span id="e2eHudMeta">0 / 0</span>
@@ -4127,13 +4144,14 @@ jaimin = <span class="py-class">QAEngineer</span>()</pre>
             let e2eRunning = false;
             let e2eTimerIv = null;
 
-            function e2eSetHud({ step, index, total, status, elapsed }) {
+            function e2eSetHud({ step, index, total, status, elapsed, logLine }) {
                 const hud = document.getElementById('e2eHud');
                 const stepEl = document.getElementById('e2eHudStep');
                 const barEl = document.getElementById('e2eHudBar');
                 const metaEl = document.getElementById('e2eHudMeta');
                 const statusEl = document.getElementById('e2eHudStatus');
                 const timerEl = document.getElementById('e2eHudTimer');
+                const logEl = document.getElementById('e2eHudLog');
                 if (stepEl && step != null) stepEl.textContent = step;
                 if (barEl && total) barEl.style.width = `${Math.round((index / total) * 100)}%`;
                 if (metaEl && total) metaEl.textContent = `${index} / ${total} passed`;
@@ -4142,6 +4160,13 @@ jaimin = <span class="py-class">QAEngineer</span>()</pre>
                     statusEl.classList.toggle('is-pass', status === 'passed');
                 }
                 if (timerEl && elapsed != null) timerEl.textContent = `${elapsed.toFixed(1)}s`;
+                if (logEl && logLine) {
+                    const li = document.createElement('li');
+                    li.className = 'is-ok';
+                    li.textContent = logLine;
+                    logEl.appendChild(li);
+                    while (logEl.children.length > 4) logEl.removeChild(logEl.firstChild);
+                }
                 if (hud) {
                     hud.hidden = false;
                     hud.classList.add('is-visible');
@@ -4170,32 +4195,63 @@ jaimin = <span class="py-class">QAEngineer</span>()</pre>
                 setTimeout(() => el.classList.remove('e2e-target-flash'), 700);
             }
 
+            function e2eIsVisible(el) {
+                if (!el) return false;
+                const r = el.getBoundingClientRect();
+                const st = window.getComputedStyle(el);
+                return r.width > 2 && r.height > 2 && st.visibility !== 'hidden' && st.display !== 'none' && r.bottom > 8 && r.top < window.innerHeight - 8;
+            }
+
+            function e2eIsExternal(el) {
+                if (!el || el.tagName !== 'A') return false;
+                const href = el.getAttribute('href') || '';
+                return href.startsWith('http') || href.startsWith('mailto:') || el.hasAttribute('download');
+            }
+
             async function e2eMoveCursor(el, cursor) {
                 if (!el || !cursor) return null;
                 el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
-                await sleep(550);
+                for (let i = 0; i < 6 && !e2eIsVisible(el); i++) {
+                    await sleep(180);
+                    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                await sleep(280);
                 const rect = el.getBoundingClientRect();
-                // Prefer visible center
-                const x = rect.left + Math.min(Math.max(rect.width / 2, 12), rect.width - 12);
-                const y = rect.top + Math.min(Math.max(rect.height / 2, 12), rect.height - 12);
+                if (rect.width < 2 || rect.height < 2) return null;
+                const x = rect.left + Math.min(Math.max(rect.width / 2, 10), rect.width - 10);
+                const y = rect.top + Math.min(Math.max(rect.height / 2, 10), rect.height - 10);
                 cursor.style.top = `${y}px`;
                 cursor.style.left = `${x}px`;
-                await sleep(650);
+                await sleep(420);
                 return { x, y, el };
             }
 
             async function e2eClick(el, cursor) {
                 const pos = await e2eMoveCursor(el, cursor);
-                if (!pos) return;
+                if (!pos) return false;
                 e2eFlash(el);
                 e2eRippleAt(pos.x, pos.y);
-                await sleep(180);
-                // Temporarily allow the click on this target
+                cursor.classList.add('is-click');
+                await sleep(120);
                 const prev = el.style.pointerEvents;
                 el.style.pointerEvents = 'auto';
                 try { el.click(); } catch (_) { /* ignore */ }
                 el.style.pointerEvents = prev;
-                await sleep(420);
+                cursor.classList.remove('is-click');
+                await sleep(280);
+                return true;
+            }
+
+            async function e2eInspect(el, cursor) {
+                const pos = await e2eMoveCursor(el, cursor);
+                if (!pos) return false;
+                e2eFlash(el);
+                e2eRippleAt(pos.x, pos.y);
+                cursor.classList.add('is-click');
+                await sleep(160);
+                cursor.classList.remove('is-click');
+                await sleep(180);
+                return true;
             }
 
             async function e2eType(input, text, cursor) {
@@ -4207,9 +4263,9 @@ jaimin = <span class="py-class">QAEngineer</span>()</pre>
                 for (let i = 0; i < text.length; i++) {
                     input.value += text[i];
                     input.dispatchEvent(new Event('input', { bubbles: true }));
-                    await sleep(35 + Math.random() * 40);
+                    await sleep(28 + Math.random() * 28);
                 }
-                await sleep(400);
+                await sleep(220);
             }
 
             window.runE2ESimulator = async function() {
@@ -4220,159 +4276,219 @@ jaimin = <span class="py-class">QAEngineer</span>()</pre>
                 const cursor = document.getElementById('ghost-cursor');
                 if (!cursor) return;
 
-                // Close overlays that would block the tour
                 try { closeCmd(); } catch (_) {}
                 if (typeof window.toggleMenu === 'function') window.toggleMenu(true);
                 document.getElementById('shortcutsModal')?.classList.remove('active');
                 document.getElementById('diagModal')?.classList.remove('active');
+                const logEl = document.getElementById('e2eHudLog');
+                if (logEl) logEl.innerHTML = '';
 
                 e2eRunning = true;
                 document.body.classList.add('e2e-running');
                 cursor.style.opacity = '1';
-                cursor.style.top = '40%';
-                cursor.style.left = '50%';
+                cursor.style.top = '18%';
+                cursor.style.left = '18%';
 
                 const started = performance.now();
                 e2eTimerIv = setInterval(() => {
                     e2eSetHud({ elapsed: (performance.now() - started) / 1000 });
                 }, 100);
 
-                showToast('Playwright E2E suite started — touring the site', 'notice', 2800);
+                showToast('Playwright E2E — full coverage run', 'notice', 2600);
                 logSysEvent('E2E UI Simulation Script Started', 'WARN');
 
                 const steps = [
                     {
-                        name: 'Home · open projects CTA',
+                        name: 'Chrome · brand + theme',
                         run: async () => {
-                            const home = document.getElementById('home');
-                            home?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                            await sleep(500);
-                            await e2eClick(document.getElementById('e2e-btn-target'), cursor);
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                            await sleep(400);
+                            const brand = document.querySelector('header .brand');
+                            if (brand) await e2eClick(brand, cursor);
+                            if (themeToggle && e2eIsVisible(themeToggle)) {
+                                await e2eClick(themeToggle, cursor);
+                                await sleep(380);
+                                await e2eClick(themeToggle, cursor);
+                            }
+                            const search = document.getElementById('openCmdBtn');
+                            if (search && e2eIsVisible(search)) {
+                                await e2eInspect(search, cursor);
+                            }
                         }
                     },
                     {
-                        name: 'About · switch to jaimin.py',
+                        name: 'Nav · in-page routes',
+                        run: async () => {
+                            const links = Array.from(document.querySelectorAll('header .nav-links a[href^="#"]'))
+                                .filter(e2eIsVisible);
+                            for (const link of links.slice(0, 5)) {
+                                await e2eClick(link, cursor);
+                                await sleep(220);
+                            }
+                        }
+                    },
+                    {
+                        name: 'Home · hero CTAs',
+                        run: async () => {
+                            document.getElementById('home')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            await sleep(400);
+                            await e2eClick(document.getElementById('e2e-btn-target'), cursor);
+                            const resume = document.querySelector('.hero a[href="resume.pdf"]');
+                            if (resume) await e2eInspect(resume, cursor);
+                            const contactCta = document.querySelector('.hero a[href="#contact"]');
+                            if (contactCta) await e2eClick(contactCta, cursor);
+                        }
+                    },
+                    {
+                        name: 'About · jaimin.py editor',
                         run: async () => {
                             document.getElementById('about')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            await sleep(500);
+                            await sleep(400);
                             await e2eClick(document.getElementById('btnPython'), cursor);
-                            await sleep(500);
+                            await sleep(350);
+                            const copyBtn = document.getElementById('pyCopyBtn');
+                            if (copyBtn) await e2eClick(copyBtn, cursor);
+                            await sleep(200);
+                            const resetBtn = document.getElementById('pyResetBtn');
+                            if (resetBtn) await e2eClick(resetBtn, cursor);
                             await e2eClick(document.getElementById('btnHuman'), cursor);
                         }
                     },
                     {
-                        name: 'Experience · scroll career index',
+                        name: 'Experience · career + education',
                         run: async () => {
                             document.getElementById('experience')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                            await sleep(900);
-                            const card = document.querySelector('#experience .career-entry');
-                            if (card) { e2eFlash(card); await e2eMoveCursor(card, cursor); }
+                            await sleep(500);
+                            const roles = document.querySelectorAll('#experience .career-entry');
+                            for (const role of roles) {
+                                e2eFlash(role);
+                                await e2eMoveCursor(role, cursor);
+                                await sleep(160);
+                            }
+                            const edu = document.querySelector('#experience .edu-row');
+                            if (edu) await e2eInspect(edu, cursor);
                         }
                     },
                     {
-                        name: 'Projects · inspect flagship card',
+                        name: 'Projects · cards + links',
                         run: async () => {
                             document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                            await sleep(700);
-                            const card = document.querySelector('#projects .card');
-                            if (card) { e2eFlash(card); await e2eMoveCursor(card, cursor); }
+                            await sleep(450);
+                            const cards = document.querySelectorAll('#projects .card');
+                            for (const card of Array.from(cards).slice(0, 4)) {
+                                e2eFlash(card);
+                                await e2eMoveCursor(card, cursor);
+                                const link = card.querySelector('a.card-link');
+                                if (link) {
+                                    if (e2eIsExternal(link)) await e2eInspect(link, cursor);
+                                    else await e2eClick(link, cursor);
+                                }
+                            }
                         }
                     },
                     {
-                        name: 'Skills · scan stack panels',
+                        name: 'Skills · all stack panels',
                         run: async () => {
                             document.getElementById('skills')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            await sleep(700);
-                            const panel = document.querySelector('#skills .skill-panel');
-                            if (panel) { e2eFlash(panel); await e2eMoveCursor(panel, cursor); }
+                            await sleep(400);
+                            for (const panel of document.querySelectorAll('#skills .skill-panel')) {
+                                e2eFlash(panel);
+                                await e2eMoveCursor(panel, cursor);
+                                await sleep(120);
+                            }
                         }
                     },
                     {
-                        name: 'Certifications · verify credentials grid',
+                        name: 'Certifications · credential cards',
                         run: async () => {
                             document.getElementById('certifications')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                            await sleep(700);
-                            const cert = document.querySelector('#certifications .cert-card');
-                            if (cert) { e2eFlash(cert); await e2eMoveCursor(cert, cursor); }
+                            await sleep(400);
+                            const certs = document.querySelectorAll('#certifications .cert-card');
+                            for (const cert of Array.from(certs).slice(0, 4)) {
+                                if (e2eIsExternal(cert)) await e2eInspect(cert, cursor);
+                                else await e2eClick(cert, cursor);
+                            }
                         }
                     },
                     {
-                        name: 'API playground · GET profile & contact',
+                        name: 'API playground · all endpoints',
                         run: async () => {
                             document.getElementById('api-gateway')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            await sleep(600);
-                            const profileBtn = document.querySelector('#apiSidebar [data-endpoint="profile"]');
-                            const certBtn = document.querySelector('#apiSidebar [data-endpoint="certifications"]');
-                            const contactBtn = document.getElementById('apiContactBtn');
-                            if (profileBtn) await e2eClick(profileBtn, cursor);
-                            await sleep(350);
-                            if (certBtn) await e2eClick(certBtn, cursor);
-                            await sleep(350);
-                            if (contactBtn) await e2eClick(contactBtn, cursor);
-                            await sleep(500);
+                            await sleep(400);
+                            for (const btn of document.querySelectorAll('#apiSidebar .api-endpoint')) {
+                                await e2eClick(btn, cursor);
+                                await sleep(280);
+                            }
                         }
                     },
                     {
-                        name: 'Pipeline demo · run CI/CD',
+                        name: 'Pipeline · run CI/CD',
                         run: async () => {
                             document.getElementById('automation')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            await sleep(600);
+                            await sleep(400);
                             const runBtn = document.getElementById('runTestsBtn');
-                            if (runBtn && runBtn.style.display !== 'none') {
+                            if (runBtn && runBtn.offsetParent !== null && runBtn.style.display !== 'none') {
                                 await e2eClick(runBtn, cursor);
-                                await sleep(2200);
+                                await sleep(1800);
                             } else {
                                 await e2eMoveCursor(document.getElementById('term-content'), cursor);
                             }
                         }
                     },
                     {
-                        name: 'Triage lab · reclassify a defect',
+                        name: 'Triage · reclassify + reset',
                         run: async () => {
                             document.getElementById('labs')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            await sleep(700);
+                            await sleep(450);
                             const sev = document.querySelector('#triageList .sev-btn:not(.is-active)');
                             if (sev) await e2eClick(sev, cursor);
-                            else {
-                                const row = document.querySelector('#triageList .bug-row');
-                                if (row) await e2eMoveCursor(row, cursor);
-                            }
-                            await sleep(400);
+                            const done = document.querySelector('#triageList .sev-btn.sev-done');
+                            if (done) await e2eClick(done, cursor);
+                            const reset = document.getElementById('resetTriageBtn');
+                            if (reset) await e2eClick(reset, cursor);
                         }
                     },
                     {
-                        name: 'Contact · fill ticket form fields',
+                        name: 'Contact · form + links',
                         run: async () => {
                             document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            await sleep(600);
+                            await sleep(400);
                             const sev = document.getElementById('ticketSev');
                             const title = document.getElementById('ticketTitle');
                             const desc = document.getElementById('ticketDesc');
                             if (sev) {
                                 await e2eMoveCursor(sev, cursor);
-                                sev.value = 'HIGH';
+                                const opt = sev.querySelector('option[value*="Project"]') || sev.options[0];
+                                if (opt) sev.value = opt.value;
                                 sev.dispatchEvent(new Event('change', { bubbles: true }));
                                 e2eFlash(sev);
-                                await sleep(300);
+                                await sleep(200);
                             }
-                            await e2eType(title, 'E2E automation coverage request', cursor);
-                            await e2eType(desc, 'Simulated Playwright run verified interactive labs.', cursor);
-                            // Clear so we don't leave junk for the visitor
+                            await e2eType(title, 'E2E coverage request', cursor);
+                            await e2eType(desc, 'Playwright suite verified labs and forms.', cursor);
+                            const send = document.getElementById('submitTicketBtn');
+                            if (send) await e2eInspect(send, cursor);
                             if (title) title.value = '';
                             if (desc) desc.value = '';
-                            if (sev) sev.value = 'MEDIUM';
+                            if (sev && sev.options[0]) sev.value = sev.options[0].value;
+                            for (const item of Array.from(document.querySelectorAll('#contact .contact-item')).slice(0, 3)) {
+                                if (e2eIsExternal(item) || (item.getAttribute('href') || '').startsWith('mailto:')) {
+                                    await e2eInspect(item, cursor);
+                                } else {
+                                    await e2eClick(item, cursor);
+                                }
+                            }
                         }
                     },
                     {
-                        name: 'Chrome · theme toggle smoke test',
+                        name: 'Footer · visitors + brand',
                         run: async () => {
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
-                            await sleep(500);
-                            if (themeToggle) {
-                                await e2eClick(themeToggle, cursor);
-                                await sleep(550);
-                                await e2eClick(themeToggle, cursor);
-                            }
+                            document.querySelector('.system-telemetry')?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                            await sleep(350);
+                            const vis = document.getElementById('visitorCount');
+                            if (vis) await e2eInspect(vis.closest('.site-footer-visitors') || vis, cursor);
+                            const footLink = document.querySelector('.site-footer-links a');
+                            if (footLink) await e2eInspect(footLink, cursor);
                         }
                     }
                 ];
@@ -4397,7 +4513,8 @@ jaimin = <span class="py-class">QAEngineer</span>()</pre>
                             index: i + 1,
                             total,
                             status: 'running',
-                            elapsed: (performance.now() - started) / 1000
+                            elapsed: (performance.now() - started) / 1000,
+                            logLine: `ok  ${s.name}`
                         });
                         await sleep(220);
                     }
