@@ -816,7 +816,106 @@
         .profile-view.mono pre { padding: 16px; border-radius: 8px; border: 1px solid transparent; transition: all 0.2s ease; outline: none; }
         .profile-view.mono pre:focus { background: color-mix(in srgb, var(--text-main) 5%, transparent); border-color: color-mix(in srgb, var(--text-main) 22%, var(--border-subtle)); box-shadow: 0 0 0 3px color-mix(in srgb, var(--text-main) 8%, transparent); }
         
-        .py-keyword { color: var(--py-keyword); font-weight: 600; } .py-class { color: var(--py-class); } .py-string { color: var(--py-string); } .py-comment { color: var(--py-comment); font-style: italic; }
+        .py-keyword { color: var(--py-keyword); font-weight: 600; }
+        .py-class { color: var(--py-class); font-weight: 600; }
+        .py-fn { color: var(--text-main); font-weight: 550; }
+        .py-self { color: var(--text-body); }
+        .py-string { color: var(--py-string); }
+        .py-comment { color: var(--py-comment); font-style: italic; }
+        .py-num { color: var(--json-num); }
+
+        /* IDE — jaimin.py */
+        .ide-shell {
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            overflow: hidden;
+            background: color-mix(in srgb, var(--bg-base) 72%, transparent);
+            box-shadow: var(--shadow-bento);
+        }
+        .ide-chrome {
+            display: flex; align-items: center; gap: 0.65rem;
+            padding: 0.65rem 0.85rem;
+            border-bottom: 1px solid var(--border-subtle);
+            background: color-mix(in srgb, var(--text-main) 4%, transparent);
+        }
+        .ide-filename {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem; font-weight: 600;
+            color: var(--text-main); letter-spacing: -0.01em;
+        }
+        .ide-pill {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem; letter-spacing: 0.04em;
+            color: var(--text-muted);
+            padding: 0.15rem 0.45rem;
+            border-radius: 999px;
+            border: 1px solid var(--border-subtle);
+        }
+        .ide-chrome-actions {
+            margin-left: auto;
+            display: flex; align-items: center; gap: 0.35rem;
+        }
+        .ide-icon-btn {
+            width: 30px; height: 30px;
+            display: inline-flex; align-items: center; justify-content: center;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-base);
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0;
+            transition: color 0.15s, border-color 0.15s, background 0.15s;
+        }
+        .ide-icon-btn:hover { color: var(--text-main); border-color: color-mix(in srgb, var(--text-main) 22%, var(--border-subtle)); }
+        .ide-body {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            min-height: 280px;
+            max-height: min(480px, 62vh);
+        }
+        .ide-gutter {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            line-height: 1.7;
+            color: var(--text-muted);
+            text-align: right;
+            padding: 1rem 0.7rem 1rem 0.9rem;
+            border-right: 1px solid var(--border-subtle);
+            user-select: none;
+            background: color-mix(in srgb, var(--text-main) 2.5%, transparent);
+            font-variant-numeric: tabular-nums;
+        }
+        .ide-code {
+            margin: 0;
+            padding: 1rem 1rem 1.1rem 0.95rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            line-height: 1.7;
+            color: var(--text-main);
+            outline: none;
+            overflow: auto;
+            tab-size: 4;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            min-width: 0;
+        }
+        .ide-code:focus {
+            background: color-mix(in srgb, var(--text-main) 3%, transparent);
+            box-shadow: none;
+            border: none;
+        }
+        .ide-status {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 0.75rem; flex-wrap: wrap;
+            padding: 0.45rem 0.85rem;
+            border-top: 1px solid var(--border-subtle);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem; color: var(--text-muted);
+            letter-spacing: 0.03em;
+            background: color-mix(in srgb, var(--text-main) 3%, transparent);
+        }
+        .ide-status strong { color: var(--text-main); font-weight: 600; }
 
         /* BENTO / CARDS — premium product surfaces */
         .bento-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
@@ -2111,6 +2210,9 @@
             .view-toggle button { flex: 1; text-align: center; }
             .profile-content { min-height: 0; }
             .profile-view.mono pre { font-size: 0.72rem !important; padding: 12px !important; line-height: 1.55 !important; }
+            .ide-code { font-size: 0.72rem; padding: 0.85rem 0.75rem; }
+            .ide-gutter { font-size: 0.66rem; padding: 0.85rem 0.5rem 0.85rem 0.65rem; }
+            .ide-body { max-height: min(420px, 58vh); }
 
             /* Experience career index */
             .career-desc { font-size: 0.875rem; max-width: none; }
@@ -2584,29 +2686,57 @@
                         </div>
                     </div>
 
-                    <!-- Python View (Interactive Editor Fix) -->
-                    <div id="viewPython" class="profile-view mono">
-                        <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
-                            <span class="tag" style="display: inline-flex; align-items: center; gap: 6px;">
-                                <i data-lucide="edit-2" size="12"></i> Editable
-                            </span>
-                        </div>
-<pre style="font-size: 0.85rem; line-height: 1.6; padding: 16px; background: var(--bg-base); border-radius: 8px; border: 1px solid var(--border-strong); transition: all 0.2s ease; outline: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);" spellcheck="false" contenteditable="true" title="Go ahead, edit the code!"><span class="py-keyword">class</span> <span class="py-class">QAEngineer</span>(Developer):
-    <span class="py-keyword">def</span> <span class="py-class">__init__</span>(<span class="py-keyword">self</span>):
-        <span class="py-keyword">self</span>.name = <span class="py-string">"Jaimin Rana"</span>
-        <span class="py-keyword">self</span>.current_role = <span class="py-string">"Product QA at SpaceXAI"</span>
-        <span class="py-keyword">self</span>.specialties = [
-            <span class="py-string">"Functional Testing"</span>, 
-            <span class="py-string">"Regression QA"</span>, 
-            <span class="py-string">"Python Automation"</span>
-        ]
-        
-    <span class="py-keyword">def</span> <span class="py-class">get_summary</span>(<span class="py-keyword">self</span>):
-        <span class="py-comment"># Detail-oriented SDET with strong cyber fundamentals</span>
-        <span class="py-keyword">return</span> <span class="py-keyword">self</span>.specialties
+                    <!-- Python View -->
+                    <div id="viewPython" class="profile-view">
+                        <div class="ide-shell">
+                            <div class="ide-chrome">
+                                <div class="lab-chrome-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+                                <span class="ide-filename">jaimin.py</span>
+                                <span class="ide-pill">3.12</span>
+                                <div class="ide-chrome-actions">
+                                    <button type="button" class="ide-icon-btn" id="pyCopyBtn" title="Copy" aria-label="Copy code">
+                                        <i data-lucide="copy" size="13"></i>
+                                    </button>
+                                    <button type="button" class="ide-icon-btn" id="pyResetBtn" title="Reset" aria-label="Reset code">
+                                        <i data-lucide="rotate-ccw" size="13"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="ide-body">
+                                <div class="ide-gutter" id="pyGutter" aria-hidden="true"></div>
+<pre class="ide-code" id="pyEditor" spellcheck="false" contenteditable="true" role="textbox" aria-label="Editable Python profile" title="Edit the source"><span class="py-keyword">from</span> __future__ <span class="py-keyword">import</span> annotations
 
-<span class="py-comment"># Instantiate profile</span>
-jaimin = QAEngineer()</pre>
+<span class="py-keyword">class</span> <span class="py-class">QAEngineer</span>:
+    <span class="py-string">"""Product QA · Python · Security."""</span>
+
+    <span class="py-keyword">def</span> <span class="py-fn">__init__</span>(<span class="py-self">self</span>) -&gt; <span class="py-class">None</span>:
+        <span class="py-self">self</span>.name = <span class="py-string">"Jaimin Rana"</span>
+        <span class="py-self">self</span>.role = <span class="py-string">"Product QA @ SpaceXAI"</span>
+        <span class="py-self">self</span>.base = <span class="py-string">"Surat, IN"</span>
+        <span class="py-self">self</span>.stack = [
+            <span class="py-string">"Functional"</span>,
+            <span class="py-string">"Regression"</span>,
+            <span class="py-string">"Mobile QA"</span>,
+            <span class="py-string">"Python / Flask"</span>,
+        ]
+        <span class="py-self">self</span>.locale = [<span class="py-string">"gu"</span>, <span class="py-string">"hi"</span>, <span class="py-string">"en"</span>]
+
+    <span class="py-keyword">def</span> <span class="py-fn">ship</span>(<span class="py-self">self</span>, build: <span class="py-class">str</span>) -&gt; <span class="py-class">bool</span>:
+        <span class="py-comment"># test → track → verify → ship</span>
+        <span class="py-keyword">assert</span> build, <span class="py-string">"empty build"</span>
+        <span class="py-keyword">return</span> <span class="py-self">self</span>.ready(build)
+
+    <span class="py-keyword">def</span> <span class="py-fn">ready</span>(<span class="py-self">self</span>, build: <span class="py-class">str</span>) -&gt; <span class="py-class">bool</span>:
+        <span class="py-keyword">return</span> <span class="py-keyword">bool</span>(build <span class="py-keyword">and</span> <span class="py-self">self</span>.stack)
+
+<span class="py-comment"># instantiate</span>
+jaimin = <span class="py-class">QAEngineer</span>()</pre>
+                            </div>
+                            <div class="ide-status">
+                                <span><strong id="pyLineMeta">Ln 1</strong> · <span id="pyColMeta">Col 1</span></span>
+                                <span>UTF-8 · LF · editable</span>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -4295,6 +4425,57 @@ jaimin = QAEngineer()</pre>
             }
 
             // --- PROFILE VIEW TOGGLE ---
+            const pyEditor = document.getElementById('pyEditor');
+            const pyGutter = document.getElementById('pyGutter');
+            const pyLineMeta = document.getElementById('pyLineMeta');
+            const pyCopyBtn = document.getElementById('pyCopyBtn');
+            const pyResetBtn = document.getElementById('pyResetBtn');
+            const pySeed = pyEditor ? pyEditor.innerHTML : '';
+
+            function pySyncGutter() {
+                if (!pyEditor || !pyGutter) return;
+                const lines = (pyEditor.innerText || '').split('\n').length || 1;
+                pyGutter.textContent = Array.from({ length: lines }, (_, i) => i + 1).join('\n');
+            }
+            function pyUpdateCaret() {
+                if (!pyEditor || !pyLineMeta) return;
+                const sel = window.getSelection();
+                if (!sel || !sel.rangeCount || !pyEditor.contains(sel.anchorNode)) return;
+                const range = sel.getRangeAt(0).cloneRange();
+                range.selectNodeContents(pyEditor);
+                range.setEnd(sel.anchorNode, sel.anchorOffset);
+                const pre = range.toString();
+                const line = (pre.match(/\n/g) || []).length + 1;
+                const col = pre.length - pre.lastIndexOf('\n');
+                pyLineMeta.textContent = `Ln ${line}`;
+                const pyColMeta = document.getElementById('pyColMeta');
+                if (pyColMeta) pyColMeta.textContent = `Col ${col}`;
+            }
+            pySyncGutter();
+            if (pyEditor) {
+                pyEditor.addEventListener('input', pySyncGutter);
+                pyEditor.addEventListener('keyup', pyUpdateCaret);
+                pyEditor.addEventListener('click', pyUpdateCaret);
+            }
+            if (pyCopyBtn && pyEditor) {
+                pyCopyBtn.addEventListener('click', async () => {
+                    try {
+                        await navigator.clipboard.writeText(pyEditor.innerText);
+                        showToast('jaimin.py copied', 'success');
+                    } catch (_) {
+                        showToast('Copy failed', 'warn');
+                    }
+                });
+            }
+            if (pyResetBtn && pyEditor) {
+                pyResetBtn.addEventListener('click', () => {
+                    pyEditor.innerHTML = pySeed;
+                    pySyncGutter();
+                    showToast('jaimin.py reset', 'notice');
+                    if (typeof lucide !== 'undefined') lucide.createIcons();
+                });
+            }
+
             if(btnHuman && btnPython) {
                 btnHuman.addEventListener('click', () => {
                     btnPython.classList.remove('active'); btnHuman.classList.add('active');
@@ -4304,6 +4485,8 @@ jaimin = QAEngineer()</pre>
                 btnPython.addEventListener('click', () => {
                     btnHuman.classList.remove('active'); btnPython.classList.add('active');
                     document.getElementById('viewHuman').classList.remove('active'); document.getElementById('viewPython').classList.add('active');
+                    pySyncGutter();
+                    if (typeof lucide !== 'undefined') lucide.createIcons();
                     logSysEvent("Profile view set to Python Class", "ACTION");
                 });
             }
