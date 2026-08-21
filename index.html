@@ -249,7 +249,7 @@
         #boot-screen {
             position: fixed; inset: 0; z-index: 9999;
             display: flex; align-items: center; justify-content: center;
-            background: color-mix(in srgb, #020203 42%, transparent);
+            background: #050506;
             color: #fff;
             padding: max(1.5rem, env(safe-area-inset-top)) max(1.5rem, env(safe-area-inset-right)) max(1.5rem, env(safe-area-inset-bottom)) max(1.5rem, env(safe-area-inset-left));
             overflow: hidden;
@@ -260,7 +260,7 @@
             filter: blur(10px) saturate(0.7);
         }
         .boot-ambient {
-            display: none; /* site stage is the shared world */
+            position: absolute; inset: 0; pointer-events: none; overflow: hidden;
         }
         #bootCanvas {
             position: absolute; inset: 0; width: 100%; height: 100%;
@@ -303,21 +303,32 @@
             70% { transform: translate(-5%, 4%) scale(0.94); opacity: 0.32; }
         }
         .boot-orbits {
-            position: absolute; left: 50%; top: 46%;
-            width: min(920px, 130vw); height: min(520px, 78vh);
+            position: absolute; left: 50%; top: 44%;
+            width: min(1240px, 155vw); height: min(700px, 90vh);
             transform: translate(-50%, -50%);
-            opacity: 0.55;
+            opacity: 0.7;
+            filter: drop-shadow(0 0 6px rgba(255,255,255,0.12));
         }
         .boot-orbits svg { width: 100%; height: 100%; overflow: visible; }
         .boot-orbit {
             fill: none;
-            stroke: rgba(255,255,255,0.14);
-            stroke-width: 0.6;
+            stroke: rgba(255,255,255,0.32);
+            stroke-width: 0.95;
             transform-origin: 50% 50%;
-            animation: bootOrbitSpin 28s linear infinite;
+            animation: bootOrbitSpin 48s linear infinite;
         }
-        .boot-orbit.o2 { animation-duration: 42s; animation-direction: reverse; stroke: rgba(255,255,255,0.08); }
-        .boot-orbit.o3 { animation-duration: 56s; stroke: rgba(255,255,255,0.06); }
+        .boot-orbit.o2 {
+            animation-duration: 72s; animation-direction: reverse;
+            stroke: rgba(255,255,255,0.22);
+            stroke-width: 0.8;
+            stroke-dasharray: 7 15;
+        }
+        .boot-orbit.o3 {
+            animation-duration: 96s;
+            stroke: rgba(255,255,255,0.16);
+            stroke-width: 0.65;
+        }
+        .boot-orbit-node { fill: rgba(255,255,255,0.8); }
         @keyframes bootOrbitSpin { to { transform: rotate(360deg); } }
         .boot-floor {
             position: absolute; left: -20%; right: -20%; bottom: -8%;
@@ -337,27 +348,16 @@
             to { background-position: 0 56px; }
         }
         .boot-horizon {
-            position: absolute; left: -10%; right: -10%; top: 54%;
+            position: absolute; left: 22%; right: 22%; top: 54%;
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12) 18%, rgba(255,255,255,0.55) 50%, rgba(255,255,255,0.12) 82%, transparent);
-            box-shadow: 0 0 40px 2px rgba(255,255,255,0.12), 0 0 120px 20px rgba(255,255,255,0.05);
-            animation: bootHorizonPulse 4.5s ease-in-out infinite;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22) 50%, transparent);
+            opacity: 0.45;
         }
         @keyframes bootHorizonPulse {
             0%, 100% { opacity: 0.55; }
             50% { opacity: 1; }
         }
-        .boot-scan {
-            position: absolute; left: 0; right: 0; height: 18%;
-            background: linear-gradient(180deg, transparent, rgba(255,255,255,0.06), transparent);
-            animation: bootScan 7s ease-in-out infinite;
-        }
-        @keyframes bootScan {
-            0% { top: -20%; opacity: 0; }
-            15% { opacity: 1; }
-            85% { opacity: 0.7; }
-            100% { top: 110%; opacity: 0; }
-        }
+        .boot-scan { display: none; }
         .boot-grain {
             position: absolute; inset: 0;
             opacity: 0.11;
@@ -375,16 +375,16 @@
             width: min(920px, 100%);
             display: flex; flex-direction: column;
             padding: 2rem 2.15rem 1.4rem;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.12);
             border-radius: 22px;
             background:
-                linear-gradient(180deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.015) 40%, rgba(0,0,0,0.2) 100%),
-                rgba(12,12,14,0.62);
+                linear-gradient(180deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.02) 42%, rgba(0,0,0,0.18) 100%),
+                rgba(12,12,14,0.48);
             box-shadow:
-                0 1px 0 rgba(255,255,255,0.08) inset,
+                0 1px 0 rgba(255,255,255,0.1) inset,
                 0 40px 90px rgba(0,0,0,0.5);
-            backdrop-filter: blur(22px);
-            -webkit-backdrop-filter: blur(22px);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             animation: bootPanelIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
         }
         @keyframes bootPanelIn {
@@ -411,6 +411,18 @@
             font-size: 0.82rem; font-weight: 750;
             letter-spacing: -0.04em;
             box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+            position: relative;
+        }
+        .boot-mark::after {
+            content: '';
+            position: absolute; inset: -7px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.28);
+            animation: bootMarkRing 2.8s ease-in-out infinite;
+        }
+        @keyframes bootMarkRing {
+            0%, 100% { opacity: 0.35; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.06); }
         }
         .boot-copy { min-width: 0; }
         .boot-eyebrow {
@@ -2258,27 +2270,28 @@
     <div id="boot-screen" role="status" aria-live="polite" aria-label="Loading portfolio">
         <div class="boot-ambient" aria-hidden="true">
             <canvas id="bootCanvas"></canvas>
-            <div class="boot-aurora a1"></div>
-            <div class="boot-aurora a2"></div>
             <div class="boot-aurora a3"></div>
             <div class="boot-orbits">
                 <svg viewBox="0 0 800 500" preserveAspectRatio="xMidYMid meet">
                     <ellipse class="boot-orbit o1" cx="400" cy="250" rx="340" ry="168"></ellipse>
                     <ellipse class="boot-orbit o2" cx="400" cy="250" rx="270" ry="210"></ellipse>
                     <ellipse class="boot-orbit o3" cx="400" cy="250" rx="390" ry="120"></ellipse>
-                    <circle cx="740" cy="250" r="2.2" fill="#fff" opacity="0.85">
-                        <animateMotion dur="28s" repeatCount="indefinite" rotate="auto"
+                    <circle class="boot-orbit-node" r="3.2" cx="740" cy="250">
+                        <animateMotion dur="48s" repeatCount="indefinite"
                             path="M740,250 a340,168 0 1,1 -680,0 a340,168 0 1,1 680,0" />
                     </circle>
-                    <circle cx="400" cy="40" r="1.6" fill="#fff" opacity="0.65">
-                        <animateMotion dur="42s" repeatCount="indefinite"
+                    <circle class="boot-orbit-node" r="2.4" cx="400" cy="40" opacity="0.85">
+                        <animateMotion dur="72s" repeatCount="indefinite"
                             path="M400,40 a270,210 0 1,0 0,420 a270,210 0 1,0 0,-420" />
+                    </circle>
+                    <circle class="boot-orbit-node" r="2" cx="790" cy="250" opacity="0.7">
+                        <animateMotion dur="96s" repeatCount="indefinite"
+                            path="M790,250 a390,120 0 1,1 -780,0 a390,120 0 1,1 780,0" />
                     </circle>
                 </svg>
             </div>
             <div class="boot-floor"></div>
             <div class="boot-horizon"></div>
-            <div class="boot-scan"></div>
             <div class="boot-vignette"></div>
             <div class="boot-grain"></div>
         </div>
@@ -3813,6 +3826,7 @@ jaimin = QAEngineer()</pre>
             }
 
             if (!sessionStorage.getItem('booted') && bootScreen) {
+                startBootCanvas();
                 bootSetProgress(0);
 
                 // Staged sequence — long enough to watch the stage (~5.6s)
