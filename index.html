@@ -145,224 +145,212 @@
             max-width: 100%;
         }
 
-        /* BOOT SCREEN — cinematic monochrome product load */
+        /* BOOT SCREEN — wide cinematic / horizontal */
         #boot-screen {
             position: fixed; inset: 0; z-index: 9999;
             display: flex; align-items: center; justify-content: center;
-            background: #000;
+            background:
+                radial-gradient(1200px 380px at 50% -10%, rgba(255,255,255,0.07), transparent 55%),
+                radial-gradient(900px 420px at 80% 110%, rgba(255,255,255,0.04), transparent 50%),
+                linear-gradient(180deg, #0c0c0f 0%, #050506 48%, #000 100%);
             color: #fff;
-            padding: max(1.5rem, env(safe-area-inset-top)) max(1.25rem, env(safe-area-inset-right)) max(1.5rem, env(safe-area-inset-bottom)) max(1.25rem, env(safe-area-inset-left));
+            padding: max(1.5rem, env(safe-area-inset-top)) max(1.5rem, env(safe-area-inset-right)) max(1.5rem, env(safe-area-inset-bottom)) max(1.5rem, env(safe-area-inset-left));
             overflow: hidden;
-            transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.7s, filter 0.7s;
+            transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.75s, filter 0.75s;
         }
         #boot-screen.is-done {
             opacity: 0; visibility: hidden; pointer-events: none;
-            filter: blur(6px);
+            filter: blur(8px);
         }
         .boot-ambient {
             position: absolute; inset: 0; pointer-events: none; overflow: hidden;
         }
-        .boot-ambient-glow {
-            position: absolute; left: 50%; top: 42%;
-            width: min(720px, 140vw); height: min(420px, 70vh);
-            transform: translate(-50%, -50%);
-            background: radial-gradient(ellipse at center, rgba(255,255,255,0.09) 0%, transparent 62%);
-            animation: bootGlowPulse 3.2s ease-in-out infinite;
+        .boot-horizon {
+            position: absolute; left: -10%; right: -10%; top: 52%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18) 20%, rgba(255,255,255,0.28) 50%, rgba(255,255,255,0.18) 80%, transparent);
+            box-shadow: 0 0 80px 8px rgba(255,255,255,0.06);
         }
-        @keyframes bootGlowPulse {
-            0%, 100% { opacity: 0.55; transform: translate(-50%, -50%) scale(1); }
-            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.06); }
+        .boot-sweep {
+            position: absolute; inset: 0;
+            background: linear-gradient(105deg, transparent 38%, rgba(255,255,255,0.07) 50%, transparent 62%);
+            background-size: 220% 100%;
+            animation: bootSweep 5.2s ease-in-out infinite;
         }
-        .boot-ambient-grid {
-            position: absolute; inset: -20%;
-            background-image:
-                linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
-            background-size: 48px 48px;
-            mask-image: radial-gradient(ellipse at center, #000 15%, transparent 68%);
-            -webkit-mask-image: radial-gradient(ellipse at center, #000 15%, transparent 68%);
-            animation: bootGridDrift 18s linear infinite;
-            opacity: 0.7;
+        @keyframes bootSweep {
+            0% { background-position: 120% 0; }
+            100% { background-position: -120% 0; }
         }
-        @keyframes bootGridDrift {
-            from { transform: translateY(0); }
-            to { transform: translateY(48px); }
+        .boot-grain {
+            position: absolute; inset: 0;
+            opacity: 0.09;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size: 180px 180px;
+            mix-blend-mode: overlay;
         }
-        .boot-ambient-orb {
-            position: absolute; border-radius: 50%;
-            filter: blur(40px); opacity: 0.22;
-            background: #fff;
-            animation: bootOrb 8s ease-in-out infinite;
-        }
-        .boot-ambient-orb.o1 { width: 180px; height: 180px; top: 12%; left: 8%; animation-delay: 0s; }
-        .boot-ambient-orb.o2 { width: 140px; height: 140px; bottom: 14%; right: 10%; animation-delay: -3s; opacity: 0.12; }
-        @keyframes bootOrb {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(18px, -14px); }
+        .boot-lines {
+            position: absolute; inset: 0;
+            background-image: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 3px,
+                rgba(255,255,255,0.015) 3px,
+                rgba(255,255,255,0.015) 4px
+            );
         }
         .boot-panel {
             position: relative; z-index: 1;
-            width: min(400px, 100%);
-            display: flex; flex-direction: column; align-items: stretch;
-            text-align: center;
-            padding: 1.75rem 1.5rem 1.35rem;
-            border: 1px solid rgba(255,255,255,0.08);
+            width: min(920px, 100%);
+            display: flex; flex-direction: column;
+            padding: 2rem 2.15rem 1.4rem;
+            border: 1px solid rgba(255,255,255,0.1);
             border-radius: 22px;
             background:
-                linear-gradient(165deg, rgba(255,255,255,0.05) 0%, transparent 42%),
-                rgba(10,10,10,0.72);
+                linear-gradient(180deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.015) 40%, rgba(0,0,0,0.2) 100%),
+                rgba(12,12,14,0.62);
             box-shadow:
-                0 1px 0 rgba(255,255,255,0.06) inset,
-                0 30px 80px rgba(0,0,0,0.55);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-            animation: bootPanelIn 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+                0 1px 0 rgba(255,255,255,0.08) inset,
+                0 40px 90px rgba(0,0,0,0.5);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            animation: bootPanelIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
         }
         @keyframes bootPanelIn {
-            from { opacity: 0; transform: translateY(18px) scale(0.97); }
+            from { opacity: 0; transform: translateY(16px) scale(0.985); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
-        .boot-mark-wrap {
-            position: relative;
-            width: 88px; height: 88px;
-            margin: 0 auto 1.35rem;
-            display: flex; align-items: center; justify-content: center;
+        .boot-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.25rem;
+            margin-bottom: 1.65rem;
         }
-        .boot-ring {
-            position: absolute; inset: 0;
-            width: 100%; height: 100%;
-            transform: rotate(-90deg);
-        }
-        .boot-ring-bg {
-            fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 2;
-        }
-        .boot-ring-fg {
-            fill: none; stroke: #fff; stroke-width: 2.2;
-            stroke-linecap: round;
-            stroke-dasharray: 251.2;
-            stroke-dashoffset: 251.2;
-            transition: stroke-dashoffset 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+        .boot-identity {
+            display: flex; align-items: center; gap: 0.95rem;
+            min-width: 0; text-align: left;
         }
         .boot-mark {
-            width: 56px; height: 56px;
+            width: 48px; height: 48px; flex-shrink: 0;
             display: flex; align-items: center; justify-content: center;
-            border-radius: 16px;
+            border-radius: 13px;
             background: #fff; color: #000;
             font-family: Inter, sans-serif;
-            font-size: 0.95rem; font-weight: 750;
+            font-size: 0.82rem; font-weight: 750;
             letter-spacing: -0.04em;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            animation: bootMarkIn 0.9s 0.15s cubic-bezier(0.22, 1, 0.36, 1) both;
-            position: relative; z-index: 1;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.35);
         }
-        @keyframes bootMarkIn {
-            from { opacity: 0; transform: scale(0.82); }
-            to { opacity: 1; transform: scale(1); }
-        }
+        .boot-copy { min-width: 0; }
         .boot-eyebrow {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.62rem; font-weight: 600;
+            font-size: 0.6rem; font-weight: 600;
             letter-spacing: 0.16em; text-transform: uppercase;
-            color: #737373;
-            margin: 0 0 0.55rem;
-            animation: bootFadeUp 0.7s 0.2s both;
+            color: #737373; margin: 0 0 0.22rem;
         }
         .boot-title {
             font-family: Inter, sans-serif;
-            font-size: clamp(1.45rem, 4vw, 1.75rem); font-weight: 650;
-            letter-spacing: -0.045em; color: #fff;
-            margin: 0 0 0.4rem; line-height: 1.15;
-            animation: bootFadeUp 0.7s 0.28s both;
+            font-size: clamp(1.25rem, 2.6vw, 1.7rem); font-weight: 650;
+            letter-spacing: -0.04em; color: #fff;
+            margin: 0; line-height: 1.15;
         }
         .boot-sub {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem; font-weight: 500;
+            font-size: 0.68rem; font-weight: 500;
             letter-spacing: 0.08em; text-transform: uppercase;
-            color: #a3a3a3;
-            margin: 0 0 1.5rem;
-            animation: bootFadeUp 0.7s 0.35s both;
+            color: #a3a3a3; margin: 0.28rem 0 0;
+        }
+        .boot-pct {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(1.6rem, 3.2vw, 2.15rem); font-weight: 500;
+            letter-spacing: -0.05em;
+            color: #fff;
+            font-variant-numeric: tabular-nums;
+            line-height: 1;
         }
         .boot-modules {
-            display: flex; flex-direction: column; gap: 0.4rem;
-            text-align: left;
-            margin: 0 0 1.35rem;
-            animation: bootFadeUp 0.7s 0.42s both;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 0.65rem;
+            margin: 0 0 1.45rem;
+            position: relative;
         }
         .boot-mod {
-            display: flex; align-items: center; gap: 0.65rem;
-            padding: 0.55rem 0.7rem;
-            border-radius: 11px;
-            border: 1px solid rgba(255,255,255,0.06);
-            background: rgba(0,0,0,0.35);
-            opacity: 0.35;
-            transform: translateX(-4px);
+            position: relative;
+            display: flex; flex-direction: column; align-items: flex-start;
+            gap: 0.4rem;
+            padding: 0.85rem 0.9rem 0.8rem;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.07);
+            background: rgba(0,0,0,0.28);
+            opacity: 0.38;
+            transform: translateY(4px);
             transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s, background 0.3s;
+            text-align: left; min-width: 0;
         }
         .boot-mod.is-active {
             opacity: 1;
-            transform: translateX(0);
-            border-color: rgba(255,255,255,0.14);
-            background: rgba(255,255,255,0.04);
+            transform: translateY(0);
+            border-color: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.05);
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.04);
         }
         .boot-mod.is-done {
-            opacity: 0.85;
-            transform: translateX(0);
+            opacity: 0.92;
+            transform: translateY(0);
+            border-color: rgba(255,255,255,0.12);
+        }
+        .boot-mod-top {
+            display: flex; align-items: center; justify-content: space-between;
+            width: 100%; gap: 0.4rem;
+        }
+        .boot-mod-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem; letter-spacing: 0.1em;
+            color: #525252;
         }
         .boot-mod-icon {
-            width: 22px; height: 22px; flex-shrink: 0;
-            border-radius: 6px;
-            border: 1px solid rgba(255,255,255,0.12);
+            width: 18px; height: 18px; flex-shrink: 0;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.16);
             display: flex; align-items: center; justify-content: center;
-            font-size: 0.65rem; color: #737373;
-            background: #0a0a0a;
+            font-size: 0.58rem; color: #737373;
+            background: transparent;
             transition: color 0.3s, border-color 0.3s, background 0.3s;
         }
-        .boot-mod.is-active .boot-mod-icon,
-        .boot-mod.is-done .boot-mod-icon {
-            color: #fff;
-            border-color: rgba(255,255,255,0.28);
-            background: #111;
+        .boot-mod.is-active .boot-mod-icon {
+            color: #fff; border-color: #fff;
         }
         .boot-mod.is-done .boot-mod-icon {
             background: #fff; color: #000; border-color: #fff;
         }
-        .boot-mod-text { min-width: 0; flex: 1; }
         .boot-mod-name {
-            font-size: 0.78rem; font-weight: 550;
-            color: #e5e5e5; letter-spacing: -0.01em;
+            font-size: 0.84rem; font-weight: 560;
+            color: #f5f5f5; letter-spacing: -0.02em;
             line-height: 1.25;
         }
         .boot-mod-meta {
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.6rem; color: #525252;
-            margin-top: 0.12rem; letter-spacing: 0.02em;
+            letter-spacing: 0.02em;
         }
         .boot-mod.is-active .boot-mod-meta { color: #a3a3a3; }
         .boot-mod.is-done .boot-mod-meta { color: #737373; }
-        .boot-progress-row {
-            display: flex; align-items: center; gap: 0.75rem;
-            margin-bottom: 0.65rem;
-            animation: bootFadeUp 0.7s 0.48s both;
-        }
-        .boot-pct {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.72rem; font-weight: 600;
-            color: #fff; min-width: 2.6rem;
-            font-variant-numeric: tabular-nums;
-            text-align: left;
+        .boot-rail {
+            display: flex; align-items: center; gap: 0.85rem;
+            margin-bottom: 0.7rem;
         }
         .boot-progress {
-            flex: 1; height: 3px;
+            flex: 1; height: 2px;
             border-radius: 999px;
-            background: #262626;
+            background: rgba(255,255,255,0.1);
             overflow: hidden;
         }
         .boot-progress-bar {
             height: 100%; width: 0%;
-            background: linear-gradient(90deg, #a3a3a3, #fff);
+            background: linear-gradient(90deg, rgba(255,255,255,0.45), #fff);
             border-radius: inherit;
-            transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-            box-shadow: 0 0 12px rgba(255,255,255,0.35);
+            transition: width 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 0 0 16px rgba(255,255,255,0.35);
         }
         .boot-status {
             font-family: 'JetBrains Mono', monospace;
@@ -371,14 +359,16 @@
             min-height: 1.25em;
             letter-spacing: 0.02em;
             text-align: left;
-            margin-bottom: 1.15rem;
-            animation: bootFadeUp 0.7s 0.52s both;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 0 1 auto;
+            max-width: 52%;
         }
         .boot-status-dot {
             display: inline-block; width: 5px; height: 5px;
             border-radius: 50%; background: #fff;
             margin-right: 0.4rem; vertical-align: middle;
-            box-shadow: 0 0 0 0 rgba(255,255,255,0.4);
             animation: bootStatusPulse 1.4s ease-out infinite;
         }
         @keyframes bootStatusPulse {
@@ -388,22 +378,16 @@
         }
         .boot-footer {
             display: flex; align-items: center; justify-content: space-between;
-            padding-top: 0.85rem;
+            padding-top: 0.9rem;
             border-top: 1px solid rgba(255,255,255,0.08);
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.62rem; color: #525252;
-            letter-spacing: 0.04em;
-            animation: bootFadeUp 0.7s 0.58s both;
+            letter-spacing: 0.05em;
         }
         .boot-footer span:last-child { color: #737373; }
-        @keyframes bootFadeUp {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
         @media (prefers-reduced-motion: reduce) {
-            .boot-ambient-grid, .boot-ambient-glow, .boot-ambient-orb, .boot-status-dot { animation: none !important; }
-            .boot-panel, .boot-mark, .boot-eyebrow, .boot-title, .boot-sub, .boot-modules,
-            .boot-progress-row, .boot-status, .boot-footer { animation: none !important; opacity: 1 !important; transform: none !important; }
+            .boot-sweep, .boot-status-dot { animation: none !important; }
+            .boot-panel { animation: none !important; opacity: 1 !important; transform: none !important; }
         }
 
         /* MATRIX CANVAS */
@@ -1971,14 +1955,22 @@
             .cmd-item { padding: 14px; font-size: 0.9rem; min-height: 48px; }
             .shortcut-grid { grid-template-columns: 1fr; gap: 0.75rem; }
 
-            /* Boot screen */
-            .boot-panel { width: min(100%, 360px); padding: 1.4rem 1.15rem 1.15rem; border-radius: 18px; }
-            .boot-mark-wrap { width: 76px; height: 76px; margin-bottom: 1.1rem; }
-            .boot-mark { width: 48px; height: 48px; font-size: 0.84rem; border-radius: 13px; }
-            .boot-title { font-size: 1.3rem; }
-            .boot-sub { margin-bottom: 1.15rem; font-size: 0.65rem; }
-            .boot-mod { padding: 0.5rem 0.6rem; }
-            .boot-mod-name { font-size: 0.74rem; }
+            /* Boot screen — still horizontal, compact */
+            .boot-panel { width: 100%; padding: 1.2rem 1rem 1rem; border-radius: 16px; }
+            .boot-top { margin-bottom: 1.05rem; align-items: flex-start; }
+            .boot-mark { width: 40px; height: 40px; font-size: 0.72rem; border-radius: 11px; }
+            .boot-title { font-size: 1.15rem; }
+            .boot-sub { font-size: 0.6rem; }
+            .boot-pct { font-size: 1.35rem; }
+            .boot-modules {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 0.45rem;
+                margin-bottom: 1rem;
+            }
+            .boot-mod { padding: 0.65rem 0.65rem 0.6rem; }
+            .boot-mod-name { font-size: 0.75rem; }
+            .boot-rail { flex-direction: column; align-items: stretch; gap: 0.5rem; }
+            .boot-status { max-width: none; white-space: normal; }
         }
 
         @media (max-width: 380px) {
@@ -2020,59 +2012,63 @@
     <!-- BOOT SCREEN PRELOADER -->
     <div id="boot-screen" role="status" aria-live="polite" aria-label="Loading portfolio">
         <div class="boot-ambient" aria-hidden="true">
-            <div class="boot-ambient-glow"></div>
-            <div class="boot-ambient-grid"></div>
-            <div class="boot-ambient-orb o1"></div>
-            <div class="boot-ambient-orb o2"></div>
+            <div class="boot-horizon"></div>
+            <div class="boot-sweep"></div>
+            <div class="boot-grain"></div>
+            <div class="boot-lines"></div>
         </div>
         <div class="boot-panel">
-            <div class="boot-mark-wrap">
-                <svg class="boot-ring" viewBox="0 0 88 88" aria-hidden="true">
-                    <circle class="boot-ring-bg" cx="44" cy="44" r="40"></circle>
-                    <circle class="boot-ring-fg" id="bootRingFg" cx="44" cy="44" r="40"></circle>
-                </svg>
-                <div class="boot-mark">JR</div>
+            <div class="boot-top">
+                <div class="boot-identity">
+                    <div class="boot-mark">JR</div>
+                    <div class="boot-copy">
+                        <p class="boot-eyebrow">System boot</p>
+                        <h1 class="boot-title">Jaimin Rana</h1>
+                        <p class="boot-sub">QA · Python · Security</p>
+                    </div>
+                </div>
+                <div class="boot-pct" id="bootPct">0%</div>
             </div>
-            <p class="boot-eyebrow">System boot</p>
-            <h1 class="boot-title">Jaimin Rana</h1>
-            <p class="boot-sub">QA · Python · Security</p>
             <div class="boot-modules" id="bootModules">
                 <div class="boot-mod" data-mod="0">
-                    <span class="boot-mod-icon" aria-hidden="true">○</span>
-                    <div class="boot-mod-text">
-                        <div class="boot-mod-name">Interface shell</div>
-                        <div class="boot-mod-meta">nav · theme · command palette</div>
+                    <div class="boot-mod-top">
+                        <span class="boot-mod-num">01</span>
+                        <span class="boot-mod-icon" aria-hidden="true">○</span>
                     </div>
+                    <div class="boot-mod-name">Interface</div>
+                    <div class="boot-mod-meta">nav · theme · palette</div>
                 </div>
                 <div class="boot-mod" data-mod="1">
-                    <span class="boot-mod-icon" aria-hidden="true">○</span>
-                    <div class="boot-mod-text">
-                        <div class="boot-mod-name">Experience ledger</div>
-                        <div class="boot-mod-meta">career · education · logos</div>
+                    <div class="boot-mod-top">
+                        <span class="boot-mod-num">02</span>
+                        <span class="boot-mod-icon" aria-hidden="true">○</span>
                     </div>
+                    <div class="boot-mod-name">Experience</div>
+                    <div class="boot-mod-meta">career · education</div>
                 </div>
                 <div class="boot-mod" data-mod="2">
-                    <span class="boot-mod-icon" aria-hidden="true">○</span>
-                    <div class="boot-mod-text">
-                        <div class="boot-mod-name">Interactive labs</div>
-                        <div class="boot-mod-meta">API · pipeline · triage</div>
+                    <div class="boot-mod-top">
+                        <span class="boot-mod-num">03</span>
+                        <span class="boot-mod-icon" aria-hidden="true">○</span>
                     </div>
+                    <div class="boot-mod-name">Labs</div>
+                    <div class="boot-mod-meta">API · pipeline · triage</div>
                 </div>
                 <div class="boot-mod" data-mod="3">
-                    <span class="boot-mod-icon" aria-hidden="true">○</span>
-                    <div class="boot-mod-text">
-                        <div class="boot-mod-name">Security surface</div>
-                        <div class="boot-mod-meta">CSP · hardening · telemetry</div>
+                    <div class="boot-mod-top">
+                        <span class="boot-mod-num">04</span>
+                        <span class="boot-mod-icon" aria-hidden="true">○</span>
                     </div>
+                    <div class="boot-mod-name">Security</div>
+                    <div class="boot-mod-meta">CSP · telemetry</div>
                 </div>
             </div>
-            <div class="boot-progress-row">
-                <span class="boot-pct" id="bootPct">0%</span>
+            <div class="boot-rail">
                 <div class="boot-progress" aria-hidden="true">
                     <div class="boot-progress-bar" id="bootProgressBar"></div>
                 </div>
+                <div class="boot-status" id="bootStatus"><span class="boot-status-dot" aria-hidden="true"></span>Initializing…</div>
             </div>
-            <div class="boot-status" id="bootStatus"><span class="boot-status-dot" aria-hidden="true"></span>Initializing kernel…</div>
             <div class="boot-footer">
                 <span>optimusbot.dev</span>
                 <span id="bootBuildMeta">build · ready</span>
@@ -3009,17 +3005,15 @@ jaimin = QAEngineer()</pre>
         document.addEventListener('DOMContentLoaded', () => {
             
             console.log("%c Jaimin Rana | QA Engineer & Python Developer", "color: #fff; background:#000; font-size: 16px; font-weight: 600; padding: 4px 8px;");
-            console.log("%c Looking at the source? Let's talk — hunterlord469@gmail.com", "color: #a3a3a3; font-size: 13px;");
+            console.log("%c Looking at the source? Let's talk — techhunter333@proton.me", "color: #a3a3a3; font-size: 13px;");
 
             const themeToggle = document.getElementById('themeToggle');
             const bootScreen = document.getElementById('boot-screen');
             const bootStatus = document.getElementById('bootStatus');
             const bootProgressBar = document.getElementById('bootProgressBar');
             const bootPct = document.getElementById('bootPct');
-            const bootRingFg = document.getElementById('bootRingFg');
             const bootModules = document.getElementById('bootModules');
             const bootBuildMeta = document.getElementById('bootBuildMeta');
-            const BOOT_RING_LEN = 2 * Math.PI * 40; // r=40
             const matrixCanvas = document.getElementById('matrixCanvas');
             const toast = document.getElementById('toast');
             const toastMsg = document.getElementById('toastMsg');
@@ -3311,11 +3305,6 @@ jaimin = QAEngineer()</pre>
                 const p = Math.max(0, Math.min(100, pct));
                 if (bootProgressBar) bootProgressBar.style.width = `${p}%`;
                 if (bootPct) bootPct.textContent = `${Math.round(p)}%`;
-                if (bootRingFg) {
-                    const offset = BOOT_RING_LEN * (1 - p / 100);
-                    bootRingFg.style.strokeDasharray = String(BOOT_RING_LEN);
-                    bootRingFg.style.strokeDashoffset = String(offset);
-                }
             }
 
             function bootSetStatus(text) {
@@ -3388,10 +3377,6 @@ jaimin = QAEngineer()</pre>
             }
 
             if (!sessionStorage.getItem('booted') && bootScreen) {
-                if (bootRingFg) {
-                    bootRingFg.style.strokeDasharray = String(BOOT_RING_LEN);
-                    bootRingFg.style.strokeDashoffset = String(BOOT_RING_LEN);
-                }
                 bootSetProgress(0);
 
                 // Staged sequence — long enough to read (~4–4.5s total)
@@ -3913,7 +3898,7 @@ jaimin = QAEngineer()</pre>
                     "forage": ["Deloitte Cyber", "Mastercard Cybersecurity", "Tata Cybersecurity Analyst"]
                 },
                 contact: {
-                    "email": "hunterlord469@gmail.com",
+                    "email": "techhunter333@proton.me",
                     "linkedin": "https://www.linkedin.com/in/jaimin-r-cyber/",
                     "github": "https://github.com/techhunter333",
                     "portfolio": "https://optimusbot.dev/",
@@ -3982,7 +3967,7 @@ jaimin = QAEngineer()</pre>
                     logSysEvent(`Ticket generated: [${sev}]`, "ACTION");
                     const subject = encodeURIComponent(`[${sev}] ${title}`);
                     const bodyStr = encodeURIComponent(`SEVERITY: ${sev}\n\nDESCRIPTION / MESSAGE:\n${desc}\n\n---\nSent via Jaimin Rana portfolio`);
-                    window.location.assign(`mailto:hunterlord469@gmail.com?subject=${subject}&body=${bodyStr}`);
+                    window.location.assign(`mailto:techhunter333@proton.me?subject=${subject}&body=${bodyStr}`);
                 });
             }
 

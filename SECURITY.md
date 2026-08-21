@@ -23,4 +23,4 @@ Static portfolio site (`optimusbot.dev`) — no backend, no auth, no secrets.
 
 ## Reporting
 
-If you find a vulnerability in this site or related projects, email **hunterlord469@gmail.com** with steps to reproduce. Please allow reasonable time before public disclosure.
+If you find a vulnerability in this site or related projects, email **techhunter333@proton.me** with steps to reproduce. Please allow reasonable time before public disclosure.
