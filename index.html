@@ -1896,26 +1896,34 @@
         .scroll-animate {
             opacity: 0;
             transform: translateY(28px) scale(0.985);
-            filter: blur(6px);
-            will-change: opacity, transform, filter;
+            will-change: opacity, transform;
         }
         .scroll-animate.visible {
             animation: scrollReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         @keyframes scrollReveal {
-            to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
-        .section-header.scroll-animate,
-        .section-header {
+        /* Section titles stay sharp — no blur filter on headings */
+        .section-header,
+        .section-header.scroll-animate {
+            filter: none !important;
+            -webkit-font-smoothing: antialiased;
+        }
+        .section-header.scroll-animate {
             opacity: 0;
-            transform: translateY(18px);
+            transform: translateY(16px);
         }
         .section-header.visible,
         .section-header.scroll-animate.visible {
-            animation: headerReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: headerReveal 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            filter: none !important;
         }
         @keyframes headerReveal {
-            to { opacity: 1; transform: none; }
+            to { opacity: 1; transform: none; filter: none; }
+        }
+        .section-title, .section-badge, .section-lead {
+            filter: none !important;
         }
         .bento-grid .card,
         .certs-grid .cert-card,
